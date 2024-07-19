@@ -1,7 +1,9 @@
 import React from "react";
 import "../styles/Users.css";
 import { Link } from "react-router-dom";
+
 import advertise from "../assets/advertise.png";
+import profile from "../assets/myprofile.png";
 
 //
 // 마이페이지
@@ -11,11 +13,10 @@ const Users = () => {
   return (
     <div className="user-page">
       <div className="profile-section">
-        <img src="profile-pic-url.jpg" alt="Profile" className="profile-pic" />
+        <img src={profile} alt="Profile" className="profile-pic" />
         <div className="profile-info">
-          <h2 className="profile-name">John Doe</h2>
-          <p className="profile-email">johndoe@example.com</p>
-          <button className="edit-button">Edit Profile</button>
+          <h2 className="profile-name">빵사자</h2>
+          <p className="profile-email">likelion@example.com</p>
         </div>
       </div>
 
