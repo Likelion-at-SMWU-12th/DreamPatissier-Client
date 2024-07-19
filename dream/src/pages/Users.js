@@ -27,7 +27,7 @@ const Users = () => {
         <Link to="/users/orders" className="option-link">
           주문목록 &gt;
         </Link>
-        <Link to="/users/reviewㅌs" className="option-link">
+        <Link to="/users/reviews" className="option-link">
           My 리뷰 &gt;
         </Link>
         <Link to="/users/saved-recipes" className="option-link">
