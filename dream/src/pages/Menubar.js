@@ -1,28 +1,49 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
-// import "./Menubar.css";
+import "../styles/Menubar.css";
+import logo from "../assets/logo.png"; // 로고 이미지 경로
 
 const Menubar = () => {
   return (
     <>
       <div className="menubar">
-        <ul className="menu-list">
-          <li>
-            <Link to="/" className="menu-link">
-              Home
+        <div className="menu-row1">
+          <div className="logo">
+            <Link to="/bakery">
+              <img src={logo} alt="Logo" className="logo-image" />
             </Link>
-          </li>
-          <li>
-            <Link to="/" className="menu-link">
-              User
+          </div>
+          <div className="icons">
+            <Link to="/cart" className="icon">
+              <i className="fas fa-shopping-cart"></i>
             </Link>
-          </li>
-          <li>
-            <Link to="/" className="menu-link">
-              User
+            <Link to="/users" className="icon">
+              <i className="fas fa-user"></i>
             </Link>
-          </li>
-        </ul>
+            <Link to="/menu" className="icon">
+              <i className="fas fa-bars"></i>
+            </Link>
+          </div>
+        </div>
+        <div className="menu-row2">
+          <ul className="menu-list">
+            <li>
+              <Link to="/bakery" className="menu-link">
+                웰니스빵
+              </Link>
+            </li>
+            <li>
+              <Link to="/recipes" className="menu-link">
+                빵레시피
+              </Link>
+            </li>
+            <li>
+              <Link to="/diary" className="menu-link">
+                빵기록
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
       <Outlet />
     </>
