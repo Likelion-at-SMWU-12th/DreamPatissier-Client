@@ -1,0 +1,61 @@
+.user-page {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-pic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-right: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-name {
+  margin: 0;
+  font-size: 24px;
+}
+
+.profile-email {
+  margin: 5px 0;
+  color: gray;
+}
+
+.ad-banner img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.option-link {
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #f8f9fa;
+  border: 0;
+  border-radius: 5px;
+  text-align: left;
+  text-decoration: none;
+  color: black;
+}
+
+.option-link:hover {
+  background-color: #e2e6ea;
+}
