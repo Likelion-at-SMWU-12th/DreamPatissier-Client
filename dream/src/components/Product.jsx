@@ -2,6 +2,10 @@ import React from "react";
 import styled from "styled-components";
 
 const Product = ({ imgSrc, tags, title, price }) => {
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("en-US").format(price);
+  };
+
   return (
     <ProductBox>
       <ProductImgBox>
@@ -10,7 +14,7 @@ const Product = ({ imgSrc, tags, title, price }) => {
       <ProductText>
         <Keywords>{tags}</Keywords>
         <Titles>{title}</Titles>
-        <Prices>{price}원</Prices>
+        <Prices>{formatPrice(price)}원</Prices>
       </ProductText>
     </ProductBox>
   );
