@@ -6,6 +6,7 @@ import styled from "styled-components";
 // 컴포넌트
 
 import Product from "../components/Product";
+import Search from "../components/Search";
 
 // 이미지
 
@@ -27,7 +28,7 @@ function Bakery() {
           <BannerImg img src={bbangSlide} />
         </BannerBox>
       </div>
-      <div>검색바</div>
+      <Search></Search>
       <div>카테고리</div>
       <ProductBox>
         <Product
