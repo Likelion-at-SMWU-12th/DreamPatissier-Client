@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import "../../styles/Order.css";
+import "../../styles/Review.css";
 import profile from "./bread.png";
+import { FaTrash } from "react-icons/fa";
 
 const Review = () => {
   const [products, setProducts] = useState([
@@ -44,6 +45,13 @@ const Review = () => {
 
   const reviewedProducts = products.filter((product) => product.reviewed);
 
+  const handleDelete = (id) => {
+    const confirmed = window.confirm("정말로 이 리뷰를 삭제하시겠습니까?");
+    if (confirmed) {
+      setProducts(products.filter((product) => product.id !== id));
+    }
+  };
+
   return (
     <div className="order-list">
       <div className="orderlist-title">주문목록</div>
@@ -64,6 +72,12 @@ const Review = () => {
                   {product.price.toLocaleString()}원
                 </div>
               </div>
+              <button
+                className="delete-button"
+                onClick={() => handleDelete(product.id)}
+              >
+                <FaTrash />
+              </button>
             </div>
           </div>
         ))
