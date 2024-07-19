@@ -1,7 +1,3 @@
-//
-// 마이리뷰
-//
-
 import React, { useState } from "react";
 import "../../styles/Order.css";
 import profile from "./bread.png";
@@ -46,12 +42,14 @@ const Review = () => {
     },
   ]);
 
+  const reviewedProducts = products.filter((product) => product.reviewed);
+
   return (
     <div className="order-list">
       <div className="orderlist-title">주문목록</div>
-      {products.map((product) => (
-        <React.Fragment key={product.id}>
-          <div className="product-card">
+      {reviewedProducts.length > 0 ? (
+        reviewedProducts.map((product) => (
+          <div className="product-card" key={product.id}>
             <div className="product-date">{product.date}</div>
             <div className="product-show">
               <img
@@ -61,15 +59,17 @@ const Review = () => {
               />
               <div className="product-info">
                 <h3 className="product-name">{product.name}</h3>
-                <div className="product-tags">{product.tags.join("\t")}</div>
+                <div className="product-tags">{product.tags.join(" ")}</div>
                 <div className="product-price">
                   {product.price.toLocaleString()}원
                 </div>
               </div>
             </div>
           </div>
-        </React.Fragment>
-      ))}
+        ))
+      ) : (
+        <div className="no-reviews">리뷰가 있는 제품이 없습니다.</div>
+      )}
     </div>
   );
 };
