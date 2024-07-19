@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import SearchIcon from "../assets/search.svg";
 
 const Search = () => {
+  const [keywords, setKeywords] = useState("");
+
+  const handleInputChange = (e) => {
+    setKeywords(e.target.value);
+  };
+
+  const handleSearch = () => {
+    // 검색 로직
+    console.log("Searching for:", keywords);
+  };
+
   return (
     <SearchWrap>
       <SearchBox>
         <InputBox
           type="text"
           placeholder="#프로틴 #저당 등 웰니스 키워드를 검색해 주세요."
+          value={keywords}
+          onChange={handleInputChange}
         />
-        <SearchImg src={SearchIcon} alt="Search Icon" />
+        <SearchButton onClick={handleSearch}>
+          <SearchImg src={SearchIcon} alt="Search Icon" />
+        </SearchButton>
       </SearchBox>
     </SearchWrap>
   );
@@ -49,4 +64,11 @@ const InputBox = styled.input`
   background-color: #f8f8f8;
   padding: 15px;
   font-size: 13px;
+`;
+
+const SearchButton = styled.button`
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
 `;
