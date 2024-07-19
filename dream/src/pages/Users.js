@@ -3,6 +3,10 @@ import "../styles/Users.css";
 import { Link } from "react-router-dom";
 import advertise from "../assets/advertise.png";
 
+//
+// 마이페이지
+//
+
 const Users = () => {
   return (
     <div className="user-page">
