@@ -4,7 +4,7 @@ import Bakery from "./pages/Bakery";
 import Recipes from "./pages/Recipes";
 import Diary from "./pages/Diary";
 import Users from "./pages/Users";
-import Order from "./pages/userpage/Order";
+import OrderList from "./pages/userpage/OrderList";
 import Review from "./pages/userpage/Review";
 import SavedRecipes from "./pages/userpage/SavedRecipes";
 import TestBread from "./pages/userpage/TestBread";
@@ -19,7 +19,7 @@ function App() {
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/diary" element={<Diary />} />
         <Route path="/users" element={<Users />} />
-        <Route path="/users/orders" element={<Order />} />
+        <Route path="/users/orders" element={<OrderList />} />
         <Route path="/users/reviews" element={<Review />} />
         <Route path="/users/saved-recipes" element={<SavedRecipes />} />
         <Route path="/test/result/{int:pk}" element={<TestBread />} />

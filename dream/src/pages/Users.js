@@ -1,7 +1,6 @@
 import React from "react";
 import "../styles/Users.css";
 import { Link } from "react-router-dom";
-
 import advertise from "../assets/advertise.png";
 import profile from "../assets/myprofile.png";
 
@@ -28,7 +27,7 @@ const Users = () => {
         <Link to="/users/orders" className="option-link">
           주문목록
         </Link>
-        <Link to="/users/reviews" className="option-link">
+        <Link to="/users/reviewㅌs" className="option-link">
           My 리뷰
         </Link>
         <Link to="/users/saved-recipes" className="option-link">
