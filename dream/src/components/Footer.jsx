@@ -14,21 +14,27 @@ const Footer = () => {
         <br />
         여러분의 맛있고 행복한 웰니스 빵을 소개하고 싶으시다면?
         <br />
-        <span className="">smilebbanggood@example.com</span>로 연락 주세요!
+        <Email>smilebbanggood@example.com</Email>로 연락 주세요!
       </FooterBox>
     </FooterWrap>
   );
 };
 
 const FooterWrap = styled.div`
-  text-align: center;
+  display: flex;
   justify-content: center;
   width: 100%;
+  align-items: center;
+  background-color: #f8f8f8;
 `;
 
 const FooterBox = styled.div`
-  background-color: #f8f8f8;
   padding: 13px 10%;
+`;
+
+const Email = styled.span`
+  color: var(--brown);
+  font-weight: bold;
 `;
 
 export default Footer;
