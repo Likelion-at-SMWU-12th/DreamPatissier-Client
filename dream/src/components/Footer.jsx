@@ -6,11 +6,11 @@ const Footer = () => {
   return (
     <FooterWrap>
       <FooterBox>
-        <span>
-          <img src={logoIcon} />
+        <FirstLine>
+          <BngImg src={logoIcon} />
           빵긋빵굿의 파트너스를 모집합니다
-          <img src={logoIcon} />
-        </span>
+          <BngImg src={logoIcon} />
+        </FirstLine>
         <br />
         여러분의 맛있고 행복한 웰니스 빵을 소개하고 싶으시다면?
         <br />
@@ -19,6 +19,15 @@ const Footer = () => {
     </FooterWrap>
   );
 };
+
+const BngImg = styled.img`
+  width: 10px;
+  height: 9px;
+`;
+
+const FirstLine = styled.span`
+  color: var(--brown);
+`;
 
 const FooterWrap = styled.div`
   display: flex;
@@ -30,6 +39,8 @@ const FooterWrap = styled.div`
 
 const FooterBox = styled.div`
   padding: 13px 10%;
+  font-size: 11px;
+  color: var(--grey);
 `;
 
 const Email = styled.span`
