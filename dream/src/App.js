@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import "./index.css";
 import Menubar from "./pages/Menubar";
 import Bakery from "./pages/Bakery";
 import Recipes from "./pages/Recipes";
