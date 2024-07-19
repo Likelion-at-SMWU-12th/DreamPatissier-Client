@@ -25,25 +25,25 @@ const Users = () => {
 
       <div className="user-options">
         <Link to="/users/orders" className="option-link">
-          주문목록
+          주문목록 &gt;
         </Link>
         <Link to="/users/reviewㅌs" className="option-link">
-          My 리뷰
+          My 리뷰 &gt;
         </Link>
         <Link to="/users/saved-recipes" className="option-link">
-          저장한 레시피
+          저장한 레시피 &gt;
         </Link>
         <Link to="/users/my-recipes" className="option-link">
-          My 레시피
+          My 레시피 &gt;
         </Link>
         <Link to="/test/result/{int:pk}" className="option-link">
-          빵 유형 테스트
+          빵 유형 테스트 &gt;
         </Link>
         <Link to="/of-use" className="option-link">
-          서비스 이용약관
+          서비스 이용약관 &gt;
         </Link>
         <Link to="/accounts/logout/" className="option-link">
-          로그아웃
+          로그아웃 &gt;
         </Link>
       </div>
     </div>
