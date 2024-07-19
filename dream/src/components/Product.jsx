@@ -1,18 +1,23 @@
 import React from "react";
 import styled from "styled-components";
 
-const Product = () => {
+const Product = ({ imgSrc, tags, title, price }) => {
   return (
-    <div>
-      <img />
+    <ProductBox>
+      <img src={imgSrc} />
       <div>
-        <span>#프로틴</span>
-        <span>#저당</span>
-        <p>[삼립] 프로젝트:H 큐브식당 흥국오트밀</p>
-        <p>9,900원</p>
+        <span>{tags}</span>
+        <span>{tags}</span>
+        <p>{title}</p>
+        <p>{price}</p>
       </div>
-    </div>
+    </ProductBox>
   );
 };
 
 export default Product;
+
+const ProductBox = styled.div`
+  width: 30%;
+  background-color: white;
+`;
