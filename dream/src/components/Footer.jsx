@@ -35,6 +35,7 @@ const FooterWrap = styled.div`
   width: 100%;
   align-items: center;
   background-color: #f8f8f8;
+  margin-bottom: 20px;
 `;
 
 const FooterBox = styled.div`
