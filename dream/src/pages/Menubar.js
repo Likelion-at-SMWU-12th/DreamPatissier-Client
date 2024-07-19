@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import "../styles/Menubar.css";
-import logo from "../assets/logo.png"; // 로고 이미지 경로
+import logo from "../assets/logo.png";
 
 const Menubar = () => {
   return (
