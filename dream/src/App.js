@@ -6,9 +6,12 @@ import Diary from "./pages/Diary";
 import Users from "./pages/Users";
 import OrderList from "./pages/userpage/OrderList";
 import Review from "./pages/userpage/Review";
+import WriteReview from "./pages/review/WriteReview";
 import SavedRecipes from "./pages/userpage/SavedRecipes";
 import TestBread from "./pages/userpage/TestBread";
 import OfUse from "./pages/userpage/OfUse";
+
+import profile from "./assets/logo.png";
 
 function App() {
   return (

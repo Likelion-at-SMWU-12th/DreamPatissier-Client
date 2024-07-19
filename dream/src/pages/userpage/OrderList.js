@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/Order.css";
 import profile from "./bread.png";
 
 const OrderList = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([
     {
       id: 1,
@@ -44,6 +46,7 @@ const OrderList = () => {
 
   const handleReviewClick = (id) => {
     console.log(`Review for product ${id}`);
+    navigate(`/users/reviews/${id}`);
   };
 
   const handleAddToCartClick = (id) => {
