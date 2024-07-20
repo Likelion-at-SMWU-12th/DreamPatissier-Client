@@ -80,6 +80,7 @@
   font-weight: 700;
   font-size: 20px;
   margin: 0px 20px;
+  margin-bottom: 10px;
   padding: 10px;
 }
 
@@ -97,8 +98,57 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.product-actions {
-  margin: 0 15px;
+.show-button.selected {
+  background-color: #ffde97;
+  color: #77300a;
+}
+
+.product-actions2 {
+  margin: 0 18px;
+  margin-bottom: 40px;
   display: flex;
   flex-direction: row;
+}
+
+.text_review {
+  display: block;
+  border: 2px solid #77300a;
+  border-radius: 8px;
+  margin: 0 auto 20px auto;
+  width: 80%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.text_review:focus {
+  border: 2px solid #77300a;
+  outline: none;
+}
+
+.write-review-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.submit-button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.submit-review {
+  width: 85%;
+  background-color: #ffc851;
+  border: 0;
+  padding: 8px 10px;
+  margin: 0 10px;
+  color: #773d1e;
+  font-size: 16px;
+  font-weight: 800;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
