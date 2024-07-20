@@ -15,7 +15,7 @@ const Login = () => {
           <input type="text"></input>
           <input type="password"></input>
         </InputWrap>
-        <LoginButton />
+        <LoginButton>로그인</LoginButton>
         <div>아직 회원이 아니신가요? 회원가입하기</div>
       </LoginBox>
     </LoginWrap>
@@ -24,12 +24,38 @@ const Login = () => {
 
 export default Login;
 
-const LoginWrap = styled.div``;
+const LoginWrap = styled.div`
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  height: 100vh;
+`;
 const LoginBox = styled.div`
   background-color: pink;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 `;
-const ImgBox = styled.div``;
-const TitleLogo = styled.img``;
-const IconLogo = styled.img``;
+const ImgBox = styled.div`
+  width: 200px;
+  height: 250px;
+  background-color: blue;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+`;
+const TitleLogo = styled.img`
+  background-color: yellow;
+  width: 185px;
+  margin-bottom: 25px;
+`;
+const IconLogo = styled.img`
+  background-color: green;
+  width: 100px;
+`;
 const InputWrap = styled.div``;
 const LoginButton = styled.button``;
