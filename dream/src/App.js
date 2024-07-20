@@ -34,6 +34,7 @@ function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/users/orders" element={<OrderList />} />
         <Route path="/users/reviews" element={<Review />} />
+        <Route path="/users/reviews/:id" element={<WriteReview />} />
         <Route path="/users/saved-recipes" element={<SavedRecipes />} />
         <Route path="/test/result/{int:pk}" element={<TestBread />} />
         <Route path="/of-use" element={<OfUse />} />
