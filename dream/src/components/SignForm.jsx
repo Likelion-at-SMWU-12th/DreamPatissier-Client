@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import YellowBtn from "../../src/components/YellowBtn";
+import Checkbox from "../components/CheckBox";
 
 const SignForm = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,12 @@ const SignForm = () => {
     phone: "",
   });
   const [message, setMessage] = useState("");
+  const [allChecked, setAllChecked] = useState({
+    termsAgree: false,
+    privacyAgree: false,
+    serviceAgree: false,
+    allChecked: false,
+  });
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -20,6 +27,16 @@ const SignForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // 필수 항목 체크 확인
+    if (
+      !allChecked.termsAgree ||
+      !allChecked.privacyAgree ||
+      !allChecked.serviceAgree
+    ) {
+      setMessage("필수 약관에 동의해 주세요.");
+      return;
+    }
+
     // 유효성 검사
     if (
       !formData.email ||
@@ -123,15 +140,21 @@ const SignForm = () => {
             <StyledInput
               type="text"
               id="phone"
-              placeholder="'-'를 제외한 숫자만 입력해주세요."
+              placeholder="-없이 숫자만 입력해 주세요."
               value={formData.phone}
               onChange={handleChange}
             />
           </InputBox>
         </InputWrapper>
+        <Checkbox allChecked={allChecked} setAllChecked={setAllChecked} />
         {message && <Message>{message}</Message>}
         <BtnBox>
-          <YellowBtn txt="동의하고 가입하기" type="submit" width="340px" />
+          <YellowBtn
+            txt="동의하고 가입하기"
+            type="submit"
+            width="340px"
+            disabled={!allChecked.allChecked}
+          />
         </BtnBox>
       </form>
     </FormWrapper>
