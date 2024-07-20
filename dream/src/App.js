@@ -11,6 +11,8 @@ import SavedRecipes from "./pages/userpage/SavedRecipes";
 import TestBread from "./pages/userpage/TestBread";
 import OfUse from "./pages/userpage/OfUse";
 import Detail from "./pages/Detail";
+import Signup from "./pages/accounts/Signup";
+import Login from "./pages/accounts/Login";
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
         <Route path="/users/saved-recipes" element={<SavedRecipes />} />
         <Route path="/test/result/{int:pk}" element={<TestBread />} />
         <Route path="/of-use" element={<OfUse />} />
+        <Route path="/accounts/signup/" element={<Signup />} />
+        <Route path="/accounts/login/" element={<Login />} />
         <Route path="/accounts/logout/" element={<TestBread />} />
       </Routes>
     </>
