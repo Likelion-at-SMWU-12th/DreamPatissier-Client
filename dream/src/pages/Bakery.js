@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 import Product from "../components/Product";
 import Search from "../components/Search";
+import Category from "../components/Category";
 
 // 이미지
 

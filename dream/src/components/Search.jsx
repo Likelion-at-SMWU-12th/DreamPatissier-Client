@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import SearchIcon from "../assets/search.svg";
 
-const Search = () => {
+const Search = ({ onSearch }) => {
   const [keywords, setKeywords] = useState("");
 
   const handleInputChange = (e) => {
     setKeywords(e.target.value);
   };
 
-  const handleSearch = () => {
-    // 검색 로직
-    console.log("Searching for:", keywords);
+  const SearchClick = () => {
+    onSearch(keywords);
   };
 
   return (
@@ -23,7 +22,7 @@ const Search = () => {
           value={keywords}
           onChange={handleInputChange}
         />
-        <SearchButton onClick={handleSearch}>
+        <SearchButton onClick={SearchClick}>
           <SearchImg src={SearchIcon} alt="Search Icon" />
         </SearchButton>
       </SearchBox>
@@ -33,8 +32,9 @@ const Search = () => {
 
 export default Search;
 
+/// 스타일
+
 const SearchWrap = styled.div`
-  border: 1px solid red;
   justify-content: center;
   width: 100%;
   display: flex;
