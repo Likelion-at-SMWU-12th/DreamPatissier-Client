@@ -54,30 +54,33 @@ const Review = () => {
 
   return (
     <div className="order-list">
-      <div className="orderlist-title">주문목록</div>
+      <div className="orderlist-title2">주문목록</div>
       {reviewedProducts.length > 0 ? (
         reviewedProducts.map((product) => (
-          <div className="product-card" key={product.id}>
-            <div className="product-date">{product.date}</div>
-            <div className="product-show">
+          <div className="product-card2" key={product.id}>
+            <div className="product-date2">{product.date}</div>
+            <div className="product-show2">
               <img
                 src={product.image}
                 alt={product.name}
-                className="product-image"
+                className="product-image2"
               />
-              <div className="product-info">
+              <div className="product-info2">
                 <h3 className="product-name">{product.name}</h3>
-                <div className="product-tags">{product.tags.join(" ")}</div>
+                <div className="product-tags2">{product.tags.join(" ")}</div>
                 <div className="product-price">
                   {product.price.toLocaleString()}원
                 </div>
               </div>
               <button
-                className="delete-button"
+                className="delete-button2"
                 onClick={() => handleDelete(product.id)}
               >
                 <FaTrash />
               </button>
+            </div>
+            <div>
+              <div className="show_review_text">리뷰가 나올 div 영역</div>
             </div>
           </div>
         ))
