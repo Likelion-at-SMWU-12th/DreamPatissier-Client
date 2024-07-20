@@ -10,6 +10,7 @@ import Review from "./pages/userpage/Review";
 import SavedRecipes from "./pages/userpage/SavedRecipes";
 import TestBread from "./pages/userpage/TestBread";
 import OfUse from "./pages/userpage/OfUse";
+import Detail from "./pages/Detail";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Menubar />
       <Routes>
         <Route path="/bakery" element={<Bakery />} />
+        <Route path="/product/:id" element={<Detail />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/diary" element={<Diary />} />
         <Route path="/users" element={<Users />} />
