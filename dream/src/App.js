@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import "./index.css";
 import Menubar from "./pages/Menubar";
 import Bakery from "./pages/Bakery";
@@ -15,9 +15,14 @@ import Signup from "./pages/accounts/Signup";
 import Login from "./pages/accounts/Login";
 
 function App() {
+  const location = useLocation();
+  const hideMenubar =
+    location.pathname === "/accounts/login/" ||
+    location.pathname === "/accounts/signup/";
+
   return (
     <>
-      <Menubar />
+      {!hideMenubar && <Menubar />}
       <Routes>
         <Route path="/bakery" element={<Bakery />} />
         <Route path="/product/:id" element={<Detail />} />
