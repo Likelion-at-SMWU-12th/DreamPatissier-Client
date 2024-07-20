@@ -1,21 +1,24 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
-const Product = ({ imgSrc, tags, title, price }) => {
+const Product = ({ id, imgSrc, tags, title, price }) => {
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US").format(price);
   };
 
   return (
     <ProductBox>
-      <ProductImgBox>
-        <ProductImg src={imgSrc} />
-      </ProductImgBox>
-      <ProductText>
-        <Keywords>{tags}</Keywords>
-        <Titles>{title}</Titles>
-        <Prices>{formatPrice(price)}원</Prices>
-      </ProductText>
+      <Link to={`/product/${id}`}>
+        <ProductImgBox>
+          <ProductImg src={imgSrc} />
+        </ProductImgBox>
+        <ProductText>
+          <Keywords>{tags}</Keywords>
+          <Titles>{title}</Titles>
+          <Prices>{formatPrice(price)}원</Prices>
+        </ProductText>
+      </Link>
     </ProductBox>
   );
 };
