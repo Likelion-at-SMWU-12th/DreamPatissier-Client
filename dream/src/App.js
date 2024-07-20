@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import "./index.css";
 import Menubar from "./pages/Menubar";
 import Bakery from "./pages/Bakery";
@@ -11,15 +11,24 @@ import WriteReview from "./pages/review/WriteReview";
 import SavedRecipes from "./pages/userpage/SavedRecipes";
 import TestBread from "./pages/userpage/TestBread";
 import OfUse from "./pages/userpage/OfUse";
+import Detail from "./pages/Detail";
+import Signup from "./pages/accounts/Signup";
+import Login from "./pages/accounts/Login";
 
 import profile from "./assets/logo.png";
 
 function App() {
+  const location = useLocation();
+  const hideMenubar =
+    location.pathname === "/accounts/login/" ||
+    location.pathname === "/accounts/signup/";
+
   return (
     <>
-      <Menubar />
+      {!hideMenubar && <Menubar />}
       <Routes>
         <Route path="/bakery" element={<Bakery />} />
+        <Route path="/product/:id" element={<Detail />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/diary" element={<Diary />} />
         <Route path="/users" element={<Users />} />
@@ -28,6 +37,8 @@ function App() {
         <Route path="/users/saved-recipes" element={<SavedRecipes />} />
         <Route path="/test/result/{int:pk}" element={<TestBread />} />
         <Route path="/of-use" element={<OfUse />} />
+        <Route path="/accounts/signup/" element={<Signup />} />
+        <Route path="/accounts/login/" element={<Login />} />
         <Route path="/accounts/logout/" element={<TestBread />} />
       </Routes>
     </>
