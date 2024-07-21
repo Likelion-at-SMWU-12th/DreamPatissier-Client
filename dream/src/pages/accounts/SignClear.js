@@ -1,6 +1,8 @@
 import React from "react";
+import styled from "styled-components";
 import Cancel from "../../assets/cancel.svg";
 import Logo from "../../assets/logoIcon.svg";
+import LogoLetter from "../../assets/logoLetter.png";
 
 const SignClear = () => {
   return (
@@ -11,6 +13,15 @@ const SignClear = () => {
       </Bar>
       <ContentsWrap>
         <LogoIcon src={Logo} />
+        <div>
+          <div>
+            <LogoLetterImg src={LogoLetter} />
+            <span>에</span>
+          </div>
+          <div>오신 걸 환영합니다</div>
+        </div>
+        <button>빵 유형 테스트 하러가기</button>
+        <button>메인 화면으로 이동하기</button>
       </ContentsWrap>
     </>
   );
@@ -44,3 +55,9 @@ const CancelIcon = styled.img`
 `;
 
 const ContentsWrap = styled.div``;
+
+const LogoIcon = styled.img``;
+
+const LogoLetterImg = styled.img`
+  width: 30%;
+`;

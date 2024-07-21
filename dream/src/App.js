@@ -14,6 +14,7 @@ import OfUse from "./pages/userpage/OfUse";
 import Detail from "./pages/Detail";
 import Signup from "./pages/accounts/Signup";
 import Login from "./pages/accounts/Login";
+import SignClear from "./pages/accounts/SignClear";
 
 import profile from "./assets/logo.png";
 
@@ -21,7 +22,8 @@ function App() {
   const location = useLocation();
   const hideMenubar =
     location.pathname === "/accounts/login/" ||
-    location.pathname === "/accounts/signup/";
+    location.pathname === "/accounts/signup/" ||
+    location.pathname === "/accounts/signup-clear";
 
   return (
     <>
@@ -39,6 +41,7 @@ function App() {
         <Route path="/test/result/{int:pk}" element={<TestBread />} />
         <Route path="/of-use" element={<OfUse />} />
         <Route path="/accounts/signup/" element={<Signup />} />
+        <Route path="/accounts/signup-clear" element={<SignClear />} />
         <Route path="/accounts/login/" element={<Login />} />
         <Route path="/accounts/logout/" element={<TestBread />} />
       </Routes>

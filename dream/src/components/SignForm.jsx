@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "../styles/SignForm.css";
 import YellowBtn from "../../src/components/YellowBtn";
 import Checkbox from "../components/CheckBox";
@@ -21,6 +22,8 @@ const SignForm = () => {
     serviceAgree: false,
     allChecked: false,
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -80,6 +83,7 @@ const SignForm = () => {
       .then((response) => {
         console.log("Signup successful", response.data);
         setMessage("회원가입이 완료되었습니다.");
+        navigate("/signup-clear");
       })
       .catch((error) => {
         console.error("Signup failed", error);
