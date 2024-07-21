@@ -102,7 +102,6 @@ const BannerBox = styled.div`
 `;
 const BannerImg = styled.img`
   width: 100%;
-  max-width: 100%;
   height: 200px;
 `;
 
@@ -116,10 +115,9 @@ const ProductBox = styled.div`
 const CategoryWrap = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 5px 0px;
+  gap: 10px 0px;
   margin-bottom: 20px;
   margin: 10px;
-  background-color: lemonchiffon;
 `;
 
 export default Bakery;

@@ -13,7 +13,7 @@ const Category = ({ imgSrc, name, uiName }) => {
     <CategoryWrap>
       <CategoryBox onClick={handleCategoryClick}>
         <CategoryImg src={imgSrc} alt={uiName} />
-        <CategoryName>{uiName}</CategoryName>
+        <CategoryName uiName={uiName}>{uiName}</CategoryName>
       </CategoryBox>
     </CategoryWrap>
   );
@@ -25,15 +25,12 @@ const CategoryWrap = styled.div``;
 
 const CategoryBox = styled.button`
   border: none;
-  background-color: pink;
+  background-color: white;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  &:hover {
-    background-color: #e0e0e0;
-  }
 `;
 
 const CategoryImg = styled.img`
@@ -42,8 +39,9 @@ const CategoryImg = styled.img`
 `;
 
 const CategoryName = styled.div`
-  font-size: 11px;
+  color: var(--brown);
+  font-size: 12px;
   font-weight: 1000;
   letter-spacing: -0.5px;
-  margin-top: 5px;
+  margin-top: ${({ uiName }) => (uiName === "바게트/치아바타" ? "8px" : "5px")};
 `;
