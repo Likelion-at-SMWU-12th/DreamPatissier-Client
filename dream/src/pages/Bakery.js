@@ -18,7 +18,7 @@ import Oreo from "../assets/pro-Oreo.png";
 import Ciabatta from "../assets/pro-Ciabatta.png";
 import Morning from "../assets/CT-morning.png";
 import Bagle from "../assets/CT-bagle.png";
-import Baguette from "../assets/CT-baguette.png";
+import Baguette from "../assets/CT-baugette.png";
 import Cake from "../assets/CT-cake.png";
 import Donut from "../assets/CT-donut.png";
 import Cream from "../assets/CT-cream.png";
@@ -34,7 +34,7 @@ function Bakery() {
     <div>
       <div>
         <BannerBox>
-          <BannerImg img src={bbangSlide} />
+          <BannerImg src={bbangSlide} />
         </BannerBox>
       </div>
       <Search></Search>
@@ -116,7 +116,7 @@ const ProductBox = styled.div`
 const CategoryWrap = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0px;
+  gap: 5px 0px;
   margin-bottom: 20px;
   margin: 10px;
   background-color: lemonchiffon;

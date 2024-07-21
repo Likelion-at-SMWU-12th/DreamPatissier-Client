@@ -42,6 +42,8 @@ const CategoryImg = styled.img`
 `;
 
 const CategoryName = styled.div`
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 1000;
+  letter-spacing: -0.5px;
+  margin-top: 5px;
 `;
