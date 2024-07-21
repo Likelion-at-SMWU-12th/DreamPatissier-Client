@@ -50,15 +50,19 @@
 }
 
 .message {
+  text-align: center;
+  font-weight: 800;
   color: red;
-  margin-top: 10px;
+  margin-top: 15px;
+  margin-bottom: -15px;
   font-size: 12px;
 }
 
 .btn-box {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 10px;
+  padding-top: 10px;
 }
 
 .terms-button {

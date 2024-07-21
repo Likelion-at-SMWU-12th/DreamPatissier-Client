@@ -50,14 +50,14 @@ const SignForm = () => {
       !formData.name ||
       !formData.phone
     ) {
-      setMessage("* 모든 필드를 입력해주세요.");
+      setMessage("* 회원가입에 실패했습니다. 모든 정보를 채워주세요.");
       return;
     }
 
     // 이메일 형식 검사
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setMessage("* 유효한 이메일을 입력해주세요. ex) 0123abc@aaa.com");
+      setMessage("* 유효한 이메일을 입력해주세요. ex) likelion@example.com");
       return;
     }
 
