@@ -4,6 +4,7 @@ import Menubar from "./pages/Menubar";
 import Bakery from "./pages/Bakery";
 import Recipes from "./pages/Recipes";
 import Diary from "./pages/Diary";
+import RecordDetail from "./pages/diary/RecordDetail";
 import Users from "./pages/Users";
 import OrderList from "./pages/userpage/OrderList";
 import Review from "./pages/userpage/Review";
@@ -15,7 +16,7 @@ import Detail from "./pages/Detail";
 import Signup from "./pages/accounts/Signup";
 import Login from "./pages/accounts/Login";
 
-import profile from "./assets/logo.png";
+// import profile from "./assets/logo.png";
 
 function App() {
   const location = useLocation();
@@ -34,6 +35,7 @@ function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/users/orders" element={<OrderList />} />
         <Route path="/users/reviews" element={<Review />} />
+        <Route path="/record/:date" element={<RecordDetail />} />
         <Route path="/users/reviews/:id" element={<WriteReview />} />
         <Route path="/users/saved-recipes" element={<SavedRecipes />} />
         <Route path="/test/result/{int:pk}" element={<TestBread />} />
