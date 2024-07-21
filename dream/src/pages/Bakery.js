@@ -30,30 +30,38 @@ function Bakery() {
         </BannerBox>
       </div>
       <Search></Search>
-      <div>카테고리</div>
+      <CategoryWrap>
+        {categories.map((category) => (
+          <Category
+            key={category.name}
+            category_name={category.name}
+            imgSrc={category.imgSrc}
+          />
+        ))}
+      </CategoryWrap>
       <ProductBox>
         <Product
           imgSrc={Oatmeal}
           tags={["#프로틴", " #저당"]}
-          title="[삼립] 프로젝트:H 큐브식당 비건빵"
+          title="[삼림] 프로젝트:H 큐브식당 비건빵"
           price={9900}
         />
         <Product
           imgSrc={Rice}
           tags={["#가루쌀", "#식물성", "#밀가루X", "설탕X"]}
-          title="[궁디저트] 쌀베이글"
+          title="[공디저트] 쌀베이글"
           price={15000}
         />
         <Product
           imgSrc={Oreo}
           tags={["#글루텐프리", "#저당", "#건강한지방", "밀가루X"]}
-          title="[키토라] 오레오 크림 치즈케이크"
+          title="[카토라] 오레오 크림 치즈케이크"
           price={8145}
         />
         <Product
           imgSrc={Ciabatta}
           tags={["#곤약", "#고단백", "#식물성"]}
-          title="[라이틀리] 곤약빵 통밀 치아바타"
+          title="[라이트리] 곤약빵 통밀 치아바타"
           price={9900}
         />
       </ProductBox>
@@ -61,6 +69,21 @@ function Bakery() {
     </div>
   );
 }
+
+// 카테고리 데이터
+
+const categories = [
+  { name: "식빵/모닝빵", imgSrc: "path/to/category1.jpg" },
+  { name: "바게트/치아바타", imgSrc: "path/to/category2.jpg" },
+  { name: "베이글", imgSrc: "path/to/category3.jpg" },
+  { name: "케이크", imgSrc: "path/to/category4.jpg" },
+  { name: "도넛/스콘", imgSrc: "path/to/category5.jpg" },
+  { name: "크림빵", imgSrc: "path/to/category6.jpg" },
+  { name: "구황작물빵", imgSrc: "path/to/category7.jpg" },
+  { name: "기획전", imgSrc: "path/to/category8.jpg" },
+];
+
+// CSS
 
 const BannerBox = styled.div`
   display: flex;
@@ -79,6 +102,13 @@ const ProductBox = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   margin: 5%;
+`;
+
+const CategoryWrap = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
 `;
 
 export default Bakery;

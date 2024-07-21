@@ -1,39 +1,45 @@
 import React from "react";
 import styled from "styled-components";
-import baguette from "../assets/baguette.png";
+import { useNavigate } from "react-router-dom";
 
-const Category = ({ categories, onCategoryClick }) => {
+const Category = ({ imgSrc, category_name }) => {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = () => {
+    navigate(`/bakery/${category_name}`);
+  };
+
   return (
-    <CategoryWrapper>
-      {categories.map((category) => (
-        <CategoryButton
-          key={category}
-          onClick={() => onCategoryClick(category)}
-        >
-          <CategoryImage src={category.imgSrc} alt={category.name} />
-        </CategoryButton>
-      ))}
-    </CategoryWrapper>
+    <CategoryBox onClick={handleCategoryClick}>
+      <CategoryImg src={imgSrc} alt={category_name} />
+      <CategoryName>{category_name}</CategoryName>
+    </CategoryBox>
   );
 };
 
 export default Category;
 
-const CategoryWrapper = styled.div`
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
-`;
-
-const CategoryButton = styled.button`
+const CategoryBox = styled.button`
   border: none;
-  background-color: #f8f8f8;
+  background-color: pink;
   border-radius: 10px;
-  padding: 10px 20px;
+  padding: 10px 10px;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   &:hover {
     background-color: #e0e0e0;
   }
 `;
 
-const CategoryImage = styled.img``;
+const CategoryImg = styled.img`
+  width: 90%;
+  height: auto;
+`;
+
+const CategoryName = styled.span`
+  margin-top: 10px;
+  display: block;
+`;
