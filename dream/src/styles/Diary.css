@@ -1,3 +1,4 @@
+/* Diary.css */
 .diary-container {
   display: flex;
   flex-direction: column;
@@ -7,13 +8,125 @@
 .add-record-button {
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: #4caf50;
+  background-color: #d08855;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.add-record-button:hover {
-  background-color: #45a049;
+.react-calendar {
+  width: 90%;
+  background: white;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 20px;
+}
+
+/* 날짜 셀의 기본 스타일링 */
+.react-calendar__tile {
+  padding: 13px; /* 위아래 패딩을 같게 설정 */
+  position: relative;
+  display: flex; /* Flexbox로 중앙 정렬 */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* 선택된 날짜 스타일 */
+.react-calendar__tile--active {
+  background: #471d06 !important;
+  color: white !important;
+  border-radius: 100%;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 오늘 날짜 스타일 */
+.react-calendar__tile--now {
+  background: #fff5ef;
+  border-radius: 50%;
+}
+
+/* 요일 밑줄 제거 */
+.react-calendar__month-view__weekdays abbr {
+  text-decoration: none;
+  font-weight: 800;
+}
+
+/* 현재 선택된 날짜 스타일 적용 */
+.react-calendar__tile--hasActive abbr {
+  color: black;
+  border-radius: 10px;
+}
+
+/* 날짜 숫자만 표시 */
+.react-calendar__tile abbr {
+  display: none;
+}
+
+/* 기본 내비게이션 숨기기 */
+.react-calendar__navigation {
+  display: none;
+}
+
+/* 사용자 정의 연도 및 월 선택 스타일 */
+.year-month-picker {
+  padding: 4px 10px;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  margin-left: 20px;
+}
+
+.year-month-picker select {
+  margin: 4px 0;
+  margin-right: 10px;
+}
+
+.select-date {
+  border: 0px;
+  font-size: 20px;
+  color: #471d06;
+  font-weight: 800;
+}
+
+.not-current-month {
+  color: #aaa !important;
+  opacity: 0.5 !important;
+}
+
+/* 현재 달의 토요일에 적용할 스타일 */
+.saturday-tile {
+  color: #3535c1;
+}
+
+/* 현재 달의 일요일에 적용할 스타일 */
+.sunday-tile {
+  color: #d53535;
+}
+
+/* 현재 달이 아닌 날짜에 적용할 스타일 */
+.not-current-month-tile {
+  color: #e3e3e3;
+}
+
+.selection-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 35px;
+}
+
+.today-button {
+  background-color: #ffde97;
+  border: 0px;
+  border-radius: 5px;
+  padding: 7px 13px;
+  margin-top: 8px;
+  font-size: 14px;
 }
