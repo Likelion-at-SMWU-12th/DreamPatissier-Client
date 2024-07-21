@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import styled, { css } from "styled-components";
+import "../styles/SignForm.css";
 import YellowBtn from "../../src/components/YellowBtn";
 import Checkbox from "../components/CheckBox";
 import TermS from "../pages/accounts/TermS";
@@ -92,178 +92,106 @@ const SignForm = () => {
   const [showPrivacy, setShowPrivacy] = useState(false);
 
   return (
-    <FormWrapper>
+    <div className="form-wrapper">
       <form onSubmit={handleSubmit}>
-        <InputWrapper>
-          <InputBox>
-            <StyledLabel htmlFor="email">이메일</StyledLabel>
-            <StyledSpan>* 필수 입력 항목입니다.</StyledSpan>
-            <StyledInput
+        <div className="input-wrapper">
+          <div className="input-box">
+            <label className="styled-label" htmlFor="email">
+              이메일
+            </label>
+            <span className="styled-span">* 필수 입력 항목입니다.</span>
+            <input
+              className="styled-input"
               type="email"
               id="email"
               placeholder="likelion@example.com"
               value={formData.email}
               onChange={handleChange}
             />
-          </InputBox>
-          <InputBox>
-            <StyledLabel htmlFor="password">비밀번호</StyledLabel>
-            <StyledSpan>* 필수 입력 항목입니다.</StyledSpan>
-            <StyledInput
+          </div>
+          <div className="input-box">
+            <label className="styled-label" htmlFor="password">
+              비밀번호
+            </label>
+            <span className="styled-span">* 필수 입력 항목입니다.</span>
+            <input
+              className="styled-input"
               type="password"
               id="password"
               placeholder="영문/숫자/특수문자 혼합,10~16자"
               value={formData.password}
               onChange={handleChange}
             />
-          </InputBox>
-          <InputBox $noMarginTop>
-            <StyledInput
+          </div>
+          <div className="input-box no-margin-top">
+            <input
+              className="styled-input"
               type="password"
               id="confirmPassword"
               placeholder="비밀번호를 한 번 더 입력해 주세요."
               value={confirmPassword}
               onChange={handleChange}
             />
-          </InputBox>
-          <InputBox>
-            <StyledLabel htmlFor="name">이름</StyledLabel>
-            <StyledSpan>*필수 입력</StyledSpan>
-            <StyledInput
+          </div>
+          <div className="input-box">
+            <label className="styled-label" htmlFor="name">
+              이름
+            </label>
+            <span className="styled-span">*필수 입력</span>
+            <input
+              className="styled-input"
               type="text"
               id="name"
               placeholder="이름"
               value={formData.name}
               onChange={handleChange}
             />
-          </InputBox>
-          <InputBox>
-            <StyledLabel htmlFor="phone">연락처</StyledLabel>
-            <StyledInput
+          </div>
+          <div className="input-box">
+            <label className="styled-label" htmlFor="phone">
+              연락처
+            </label>
+            <input
+              className="styled-input"
               type="text"
               id="phone"
               placeholder="-없이 숫자만 입력해 주세요."
               value={formData.phone}
               onChange={handleChange}
             />
-          </InputBox>
-        </InputWrapper>
+          </div>
+        </div>
         <Checkbox allChecked={allChecked} setAllChecked={setAllChecked} />
-        <TermsButton onClick={() => setShowTerms(true)}>
+        <button className="terms-button" onClick={() => setShowTerms(true)}>
           보기(이용약관)
-        </TermsButton>
-        <TermsButton onClick={() => setShowPrivacy(true)}>
+        </button>
+        <button className="terms-button" onClick={() => setShowPrivacy(true)}>
           보기(개인정보)
-        </TermsButton>
-        {message && <Message>{message}</Message>}
-        <BtnBox>
+        </button>
+        {message && <div className="message">{message}</div>}
+        <div className="btn-box">
           <YellowBtn
             txt="동의하고 가입하기"
             type="submit"
             width="340px"
             disabled={!allChecked.allChecked}
           />
-        </BtnBox>
+        </div>
       </form>
       {showTerms && (
-        <Popup>
+        <div className="popup">
           <button onClick={() => setShowTerms(false)}>닫기</button>
           <pre>{TermS}</pre>
-        </Popup>
+        </div>
       )}
       {showPrivacy && (
-        <Popup>
+        <div className="popup">
           <button onClick={() => setShowPrivacy(false)}>닫기</button>
           <pre>{TermP}</pre>
-        </Popup>
+        </div>
       )}
-    </FormWrapper>
+    </div>
   );
 };
 
 export default SignForm;
-
-const InputWrapper = styled.div`
-  width: 350px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const FormWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  width: 100%;
-`;
-
-const InputBox = styled.div`
-  margin-bottom: 15px;
-  width: 310px;
-  ${(props) =>
-    props.$noMarginTop &&
-    css`
-      margin-top: -16px;
-    `}
-`;
-
-const StyledInput = styled.input`
-  border-radius: 5px;
-  border: 2px solid #d9d9d9;
-  width: 300px;
-  height: 45px;
-  font-size: 14px;
-  margin-top: 0px;
-`;
-
-const StyledLabel = styled.label`
-  font-size: 18px;
-`;
-
-const StyledSpan = styled.span`
-  color: var(--grey);
-  font-size: 10px;
-  padding-left: 7px;
-`;
-
-const Message = styled.div`
-  color: red;
-  margin-top: 10px;
-  font-size: 12px;
-`;
-
-const BtnBox = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-`;
-
-const TermsButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-decoration: underline;
-  margin-top: 10px;
-`;
-
-const Popup = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2;
-
-  pre {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-  }
-`;
