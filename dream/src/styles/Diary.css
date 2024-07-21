@@ -24,9 +24,16 @@
   font-size: 20px;
 }
 
+/* 전체 달력 컨테이너를 그리드로 설정 */
+.react-calendar__month-view__days {
+  display: grid;
+  grid-row-gap: 13px; /* 행 사이의 간격 제거 */
+}
+
 /* 날짜 셀의 기본 스타일링 */
 .react-calendar__tile {
-  padding: 12px;
+  padding: 20px;
+  height: 52px;
   position: relative;
   display: flex;
   justify-content: center;
@@ -34,18 +41,27 @@
   text-align: center;
 }
 
+/* 빵 아이콘 설정 */
+.bread-icon {
+  padding: 0;
+  margin: 0;
+  width: 38px;
+  height: 40px;
+  vertical-align: middle;
+}
+
 /* 선택된 날짜 스타일 */
 .react-calendar__tile--active {
   background: #6f3d21 !important;
   color: white !important;
-  border-radius: 50%; /* 원형으로 만들기 위해 50%로 수정 */
+  border-radius: 50px;
   font-weight: bold;
 }
 
 /* 오늘 날짜 스타일 */
 .react-calendar__tile--now {
   background: #fff5ef;
-  border-radius: 50%;
+  border-radius: 50px;
 }
 
 /* 요일 밑줄 제거 */
@@ -155,13 +171,4 @@
   border-radius: 4px;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* 빵 아이콘 설정 */
-.bread-icon {
-  padding: 0;
-  margin: 0;
-  width: 30px;
-  height: 30px;
-  vertical-align: middle;
 }
