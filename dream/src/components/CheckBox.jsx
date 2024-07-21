@@ -108,6 +108,7 @@ const AgreeContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1px;
+  background-color: yellow;
 `;
 
 const CheckboxItem = styled.div`
