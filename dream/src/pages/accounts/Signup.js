@@ -11,9 +11,7 @@ const Signup = () => {
         <CancelIcon src={Cancel} />
       </Bar>
       <br />
-      <ContentWrap>
-        <SignForm />
-      </ContentWrap>
+      <SignForm />
     </div>
   );
 };
@@ -43,8 +41,4 @@ const CancelIcon = styled.img`
   position: absolute;
   right: 27px;
   height: 30px;
-`;
-
-const ContentWrap = styled.div`
-  margin-top: 80px;
 `;

@@ -39,7 +39,7 @@ const SignForm = () => {
       !allChecked.privacyAgree ||
       !allChecked.serviceAgree
     ) {
-      setMessage("필수 약관에 동의해 주세요.");
+      setMessage("* 필수 약관에 동의해 주세요.");
       return;
     }
 
@@ -50,27 +50,27 @@ const SignForm = () => {
       !formData.name ||
       !formData.phone
     ) {
-      setMessage("모든 필드를 입력해주세요.");
+      setMessage("* 모든 필드를 입력해주세요.");
       return;
     }
 
     // 이메일 형식 검사
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setMessage("유효한 이메일을 입력해주세요. ex) 0123abc@aaa.com");
+      setMessage("* 유효한 이메일을 입력해주세요. ex) 0123abc@aaa.com");
       return;
     }
 
     // 비밀번호 일치 검사
     if (formData.password !== confirmPassword) {
-      setMessage("비밀번호가 일치하지 않습니다.");
+      setMessage("* 비밀번호가 일치하지 않습니다.");
       return;
     }
 
     // 연락처 형식 검사
     const phoneRegex = /^\d{10,11}$/;
     if (!phoneRegex.test(formData.phone)) {
-      setMessage("유효한 연락처를 입력해주세요. 예) 01012345678");
+      setMessage("* 유효한 연락처를 입력해주세요. 예) 01012345678");
       return;
     }
 
@@ -98,7 +98,6 @@ const SignForm = () => {
           <InputBox>
             <StyledLabel htmlFor="email">이메일</StyledLabel>
             <StyledSpan>* 필수 입력 항목입니다.</StyledSpan>
-            <br />
             <StyledInput
               type="email"
               id="email"
@@ -110,7 +109,6 @@ const SignForm = () => {
           <InputBox>
             <StyledLabel htmlFor="password">비밀번호</StyledLabel>
             <StyledSpan>* 필수 입력 항목입니다.</StyledSpan>
-            <br />
             <StyledInput
               type="password"
               id="password"
@@ -131,7 +129,6 @@ const SignForm = () => {
           <InputBox>
             <StyledLabel htmlFor="name">이름</StyledLabel>
             <StyledSpan>*필수 입력</StyledSpan>
-            <br />
             <StyledInput
               type="text"
               id="name"
@@ -142,7 +139,6 @@ const SignForm = () => {
           </InputBox>
           <InputBox>
             <StyledLabel htmlFor="phone">연락처</StyledLabel>
-            <br />
             <StyledInput
               type="text"
               id="phone"
@@ -193,7 +189,6 @@ const InputWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: blue;
 `;
 
 const FormWrapper = styled.div`
@@ -203,18 +198,15 @@ const FormWrapper = styled.div`
   justify-content: center;
   height: 100vh;
   width: 100%;
-  background-color: green;
 `;
 
 const InputBox = styled.div`
   margin-bottom: 15px;
-  background-color: pink;
-  border: 1px solid red;
   width: 310px;
   ${(props) =>
     props.$noMarginTop &&
     css`
-      margin-top: -20px;
+      margin-top: -16px;
     `}
 `;
 
@@ -224,6 +216,7 @@ const StyledInput = styled.input`
   width: 300px;
   height: 45px;
   font-size: 14px;
+  margin-top: 0px;
 `;
 
 const StyledLabel = styled.label`
@@ -251,7 +244,6 @@ const BtnBox = styled.div`
 const TermsButton = styled.button`
   background: none;
   border: none;
-  color: blue;
   cursor: pointer;
   text-decoration: underline;
   margin-top: 10px;
