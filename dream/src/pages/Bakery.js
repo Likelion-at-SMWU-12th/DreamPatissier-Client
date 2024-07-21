@@ -95,14 +95,17 @@ const categories = [
 // CSS
 
 const BannerBox = styled.div`
-  display: flex;
-  justify-content: center;
-  overflow: hidden;
+  position: relative;
+  padding-top: 56.25%;
   width: 100%;
 `;
 const BannerImg = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 200px;
+  height: 100%;
+  object-fit: cover;
 `;
 
 const ProductBox = styled.div`
