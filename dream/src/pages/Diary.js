@@ -5,15 +5,19 @@ import "../styles/Diary.css";
 
 const Diary = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [activeStartDate, setActiveStartDate] = useState(new Date());
 
   // 날짜를 변경하는 핸들러
   const handleDateChange = (date) => {
     setSelectedDate(date);
+    setActiveStartDate(new Date(date.getFullYear(), date.getMonth(), 1));
   };
 
   // 오늘 날짜로 설정
   const handleTodayClick = () => {
-    setSelectedDate(new Date());
+    const today = new Date();
+    setSelectedDate(today);
+    setActiveStartDate(new Date(today.getFullYear(), today.getMonth(), 1));
   };
 
   // 선택된 날짜를 초기화하는 핸들러
@@ -53,7 +57,9 @@ const Diary = () => {
 
   // 연도와 월을 변경하는 핸들러
   const updateDate = (year, month) => {
-    setSelectedDate(new Date(year, month, 1));
+    const newDate = new Date(year, month, 1);
+    setActiveStartDate(newDate);
+    setSelectedDate(newDate);
   };
 
   // YearMonthPicker 컴포넌트
@@ -117,6 +123,7 @@ const Diary = () => {
           value={selectedDate}
           tileClassName={tileClassName}
           tileContent={tileContent}
+          activeStartDate={activeStartDate}
         />
         {selectedDate && (
           <button onClick={handleAddRecord} className="add-record-button">
