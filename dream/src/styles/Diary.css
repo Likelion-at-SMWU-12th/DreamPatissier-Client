@@ -160,6 +160,11 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.add-record-button:hover {
-  background-color: #0056b3;
+/* 빵 아이콘 설정 */
+.bread-icon {
+  padding: 0;
+  margin: 0;
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
 }

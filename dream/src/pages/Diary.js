@@ -2,10 +2,16 @@ import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../styles/Diary.css";
+import Bread from "../assets/bread_stamp.png";
 
 const Diary = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeStartDate, setActiveStartDate] = useState(new Date());
+
+  // 레시피가 추가된 날짜를 저장하는 상태
+  const [recipes, setRecipes] = useState({
+    // 예시: '2024-07-21': 'some recipe'
+  });
 
   // 요일을 한글로 변환하는 함수
   const getWeekday = (day) => {
@@ -39,6 +45,11 @@ const Diary = () => {
   // 선택된 날짜를 초기화하는 핸들러
   const handleAddRecord = () => {
     if (selectedDate) {
+      const dateKey = selectedDate.toISOString().split("T")[0]; // 'YYYY-MM-DD' 형식
+      setRecipes({
+        ...recipes,
+        [dateKey]: "new recipe", // 새로운 레시피 추가 (내용은 필요에 따라 수정)
+      });
       alert(`Adding record for ${selectedDate.toLocaleDateString()}`);
     } else {
       alert("Please select a date first.");
@@ -66,6 +77,14 @@ const Diary = () => {
   // 월의 타일 내용 설정
   const tileContent = ({ date, view }) => {
     if (view === "month") {
+      const dateKey = date.toISOString().split("T")[0]; // 'YYYY-MM-DD' 형식
+      if (recipes[dateKey]) {
+        return (
+          <div className="calendar-date">
+            <img src={Bread} alt="Bread" className="bread-icon" />
+          </div>
+        );
+      }
       return <div className="calendar-date">{date.getDate()}</div>;
     }
     return null;
