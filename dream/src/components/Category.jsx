@@ -2,28 +2,30 @@ import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-const Category = ({ imgSrc, category_name }) => {
+const Category = ({ imgSrc, name, uiName }) => {
   const navigate = useNavigate();
 
   const handleCategoryClick = () => {
-    navigate(`/bakery/${category_name}`);
+    navigate(`/bakery/${name}`);
   };
 
   return (
-    <CategoryBox onClick={handleCategoryClick}>
-      <CategoryImg src={imgSrc} alt={category_name} />
-      <CategoryName>{category_name}</CategoryName>
-    </CategoryBox>
+    <CategoryWrap>
+      <CategoryBox onClick={handleCategoryClick}>
+        <CategoryImg src={imgSrc} alt={uiName} />
+        <CategoryName>{uiName}</CategoryName>
+      </CategoryBox>
+    </CategoryWrap>
   );
 };
 
 export default Category;
 
+const CategoryWrap = styled.div``;
+
 const CategoryBox = styled.button`
   border: none;
   background-color: pink;
-  border-radius: 10px;
-  padding: 10px 10px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -35,11 +37,11 @@ const CategoryBox = styled.button`
 `;
 
 const CategoryImg = styled.img`
-  width: 90%;
+  width: 100%;
   height: auto;
 `;
 
-const CategoryName = styled.span`
-  margin-top: 10px;
-  display: block;
+const CategoryName = styled.div`
+  font-size: 10px;
+  font-weight: 1000;
 `;

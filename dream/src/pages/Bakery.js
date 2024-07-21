@@ -16,6 +16,14 @@ import Oatmeal from "../assets/pro-Oatmeal.png";
 import Rice from "../assets/pro-Rice.png";
 import Oreo from "../assets/pro-Oreo.png";
 import Ciabatta from "../assets/pro-Ciabatta.png";
+import Morning from "../assets/CT-morning.png";
+import Bagle from "../assets/CT-bagle.png";
+import Baguette from "../assets/CT-baguette.png";
+import Cake from "../assets/CT-cake.png";
+import Donut from "../assets/CT-donut.png";
+import Cream from "../assets/CT-cream.png";
+import Harverst from "../assets/CT-harvest.png";
+import Event from "../assets/CT-event.png";
 
 //
 // 웰니스빵 탭
@@ -34,7 +42,8 @@ function Bakery() {
         {categories.map((category) => (
           <Category
             key={category.name}
-            category_name={category.name}
+            name={category.name}
+            uiName={category.uiName}
             imgSrc={category.imgSrc}
           />
         ))}
@@ -73,14 +82,14 @@ function Bakery() {
 // 카테고리 데이터
 
 const categories = [
-  { name: "식빵/모닝빵", imgSrc: "path/to/category1.jpg" },
-  { name: "바게트/치아바타", imgSrc: "path/to/category2.jpg" },
-  { name: "베이글", imgSrc: "path/to/category3.jpg" },
-  { name: "케이크", imgSrc: "path/to/category4.jpg" },
-  { name: "도넛/스콘", imgSrc: "path/to/category5.jpg" },
-  { name: "크림빵", imgSrc: "path/to/category6.jpg" },
-  { name: "구황작물빵", imgSrc: "path/to/category7.jpg" },
-  { name: "기획전", imgSrc: "path/to/category8.jpg" },
+  { name: "plainbread", uiName: "식빵/모닝빵", imgSrc: Morning },
+  { name: "baguette", uiName: "바게트/치아바타", imgSrc: Baguette },
+  { name: "bagle", uiName: "베이글", imgSrc: Bagle },
+  { name: "cake", uiName: "케이크", imgSrc: Cake },
+  { name: "donut", uiName: "도넛/스콘", imgSrc: Donut },
+  { name: "cream", uiName: "크림빵", imgSrc: Cream },
+  { name: "harverst", uiName: "구황작물빵", imgSrc: Harverst },
+  { name: "event", uiName: "기획전", imgSrc: Event },
 ];
 
 // CSS
@@ -107,8 +116,10 @@ const ProductBox = styled.div`
 const CategoryWrap = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 0px;
   margin-bottom: 20px;
+  margin: 10px;
+  background-color: lemonchiffon;
 `;
 
 export default Bakery;
