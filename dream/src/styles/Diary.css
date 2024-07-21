@@ -1,3 +1,4 @@
+/* Diary.css */
 .diary-container {
   display: flex;
   flex-direction: column;
@@ -7,13 +8,160 @@
 .add-record-button {
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: #4caf50;
+  background-color: #d08855;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.add-record-button:hover {
-  background-color: #45a049;
+.react-calendar {
+  width: 100%;
+  background: white;
+  padding: 15px;
+  border: 0px solid #ddd;
+  border-radius: 20px;
+  font-size: 20px;
+}
+
+/* 날짜 셀의 기본 스타일링 */
+.react-calendar__tile {
+  padding: 12px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* 선택된 날짜 스타일 */
+.react-calendar__tile--active {
+  background: #6f3d21 !important;
+  color: white !important;
+  border-radius: 50%; /* 원형으로 만들기 위해 50%로 수정 */
+  font-weight: bold;
+}
+
+/* 오늘 날짜 스타일 */
+.react-calendar__tile--now {
+  background: #fff5ef;
+  border-radius: 50%;
+}
+
+/* 요일 밑줄 제거 */
+.react-calendar__month-view__weekdays abbr {
+  text-decoration: none;
+  font-weight: 800;
+}
+
+/* 현재 선택된 날짜 스타일 적용 */
+.react-calendar__tile--hasActive abbr {
+  color: black;
+  border-radius: 10px;
+}
+
+/* 날짜 숫자만 표시 */
+.react-calendar__tile abbr {
+  display: none;
+}
+
+/* 기본 내비게이션 숨기기 */
+.react-calendar__navigation {
+  display: none;
+}
+
+/* 사용자 정의 연도 및 월 선택 스타일 */
+.year-month-picker {
+  padding: 4px 10px;
+  border-radius: 10px;
+  margin-top: 25px;
+  margin-bottom: 0px;
+  margin-left: 20px;
+}
+
+.year-month-picker select {
+  margin: 0px 0;
+  margin-right: 10px;
+}
+
+.select-date {
+  border: 0px;
+  font-size: 20px;
+  color: #471d06;
+  font-weight: 800;
+}
+
+.not-current-month {
+  color: #aaa !important;
+  opacity: 0.5 !important;
+}
+
+/* 현재 달의 토요일에 적용할 스타일 */
+.saturday-tile {
+  color: #3535c1;
+}
+
+/* 현재 달의 일요일에 적용할 스타일 */
+.sunday-tile {
+  color: #d53535;
+}
+
+/* 현재 달이 아닌 날짜에 적용할 스타일 */
+.not-current-month-tile {
+  color: #e3e3e3;
+}
+
+.selection-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 30px;
+}
+
+.today-button {
+  color: #9e7b31;
+  background-color: #ffeec9;
+  border: 0px;
+  border-radius: 5px;
+  padding: 7px 13px;
+  margin-top: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 달력 하단 */
+
+.date-container {
+  width: 85%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+}
+
+.selected-date {
+  color: #471d06;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.add-record-button {
+  text-align: left;
+  padding: 10px 20px;
+  color: #471d06;
+  background-color: white;
+  font-size: 15px;
+  font-weight: 600;
+  border: 2px solid #471d06;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 빵 아이콘 설정 */
+.bread-icon {
+  padding: 0;
+  margin: 0;
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
 }
