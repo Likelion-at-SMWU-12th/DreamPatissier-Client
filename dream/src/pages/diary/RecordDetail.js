@@ -11,7 +11,6 @@ const ImageUploadComponent = ({ images, onAddImage, onRemoveImage }) => (
       type="file"
       accept="image/*"
       id="file-input"
-      className="input_picture"
       onChange={(e) => {
         if (e.target.files.length) {
           onAddImage(URL.createObjectURL(e.target.files[0]));
@@ -23,21 +22,20 @@ const ImageUploadComponent = ({ images, onAddImage, onRemoveImage }) => (
       <label htmlFor="file-input">
         <img src={Picture} alt="Upload" className="upload-button" />
       </label>
-      {images.map((image, index) => (
-        <div key={index} className="image-preview">
-          <img src={image} alt={`preview-${index}`} />
-          <button
-            onClick={() => onRemoveImage(index)}
-            aria-label="Remove image"
-            className="remove-button"
-          >
-            ×
-          </button>
-        </div>
-      ))}
-    </div>
-    <div className="image-info">
-      {images.length > 0 ? `${images.length}장 추가됨` : "사진을 추가해주세요"}
+      <div className="image-preview-scroll">
+        {images.map((image, index) => (
+          <div key={index} className="image-preview">
+            <img src={image} alt={`preview-${index}`} />
+            <button
+              onClick={() => onRemoveImage(index)}
+              aria-label="Remove image"
+              className="remove-button"
+            >
+              ×
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 );
@@ -156,52 +154,43 @@ const RecordDetail = () => {
         </div>
       </label>
       <hr />
-
       <ImageUploadComponent
         images={images}
         onAddImage={handleAddImage}
         onRemoveImage={handleRemoveImage}
       />
+      <input
+        className="input_data"
+        type="text"
+        value={storeName}
+        placeholder="기록할 빵집/브랜드의 이름을 작성해 주세요."
+        onChange={(e) => setStoreName(e.target.value)}
+      />
+      <input
+        className="input_data"
+        type="text"
+        value={breadName}
+        placeholder="기록할 빵의 이름을 작성해 주세요. (예시: 식물성, 저당)"
+        onChange={(e) => setBreadName(e.target.value)}
+      />
 
-      <label>
-        가게 이름:
-        <input
-          type="text"
-          value={storeName}
-          onChange={(e) => setStoreName(e.target.value)}
-        />
-      </label>
+      <input
+        className="input_data"
+        type="text"
+        value={breadType}
+        placeholder="어떤 웰니스 빵인가요?"
+        onChange={(e) => setBreadType(e.target.value)}
+      />
 
-      <label>
-        빵 이름:
-        <input
-          type="text"
-          value={breadName}
-          onChange={(e) => setBreadName(e.target.value)}
-        />
-      </label>
-
-      <label>
-        웰니스 빵 종류:
-        <input
-          type="text"
-          value={breadType}
-          onChange={(e) => setBreadType(e.target.value)}
-        />
-      </label>
-
-      <label>
-        기록 내용:
-        <textarea
-          value={recordContent}
-          onChange={(e) => setRecordContent(e.target.value)}
-          rows="4"
-          cols="50"
-        />
-      </label>
-
+      <textarea
+        className="input_data"
+        value={recordContent}
+        placeholder="맛평가 등 기록하고 싶은 내용을 작성해 주세요."
+        onChange={(e) => setRecordContent(e.target.value)}
+        rows="4"
+      />
       <button className="save-button" onClick={handleSave}>
-        저장하기
+        ✔️ 저장하기
       </button>
     </div>
   );
