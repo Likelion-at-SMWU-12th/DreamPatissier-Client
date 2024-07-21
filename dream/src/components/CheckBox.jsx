@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
+// 왜 활성화 되지 않지?!
 const Checkbox = ({ allChecked, setAllChecked }) => {
   const [checkList, setCheckList] = useState({
     allAgree: false,
@@ -21,18 +22,29 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
       adsAgree: checked,
       marketingAgree: checked,
     });
+    console.log("handleAllAgree called, checked:", checked);
   };
 
   const handleCheck = (e) => {
     const { id, checked } = e.target;
-    setCheckList({ ...checkList, [id]: checked });
+    setCheckList((prevState) => ({ ...prevState, [id]: checked }));
+    console.log("handleCheck called, id:", id, "checked:", checked);
   };
 
   useEffect(() => {
     const { termsAgree, privacyAgree, serviceAgree, adsAgree, marketingAgree } =
       checkList;
-    const allChecked = termsAgree && privacyAgree && serviceAgree;
-    setAllChecked({ termsAgree, privacyAgree, serviceAgree, allChecked });
+    const allCk =
+      termsAgree && privacyAgree && serviceAgree && adsAgree && marketingAgree;
+    setAllChecked({
+      termsAgree,
+      privacyAgree,
+      serviceAgree,
+      adsAgree,
+      marketingAgree,
+      allChecked: allCk,
+    });
+    console.log("useEffect called, checkList:", checkList, "allCk:", allCk);
   }, [checkList, setAllChecked]);
 
   return (
@@ -46,6 +58,7 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
         />
         <Allcheck htmlFor="allAgree">약관 전체 동의</Allcheck>
       </CheckboxItem>
+      <StyledLine />
       <CheckboxItem>
         <StyledCheck
           type="checkbox"
@@ -144,4 +157,9 @@ const Allcheck = styled.label`
 
 const SmallCheck = styled.label`
   font-size: 12px;
+`;
+
+const StyledLine = styled.div`
+  margin: 5px 0px;
+  border-bottom: var(--yellow) 1px solid;
 `;

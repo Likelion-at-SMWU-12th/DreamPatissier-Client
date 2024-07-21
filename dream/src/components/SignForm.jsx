@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import axios from "axios";
-import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import "../styles/SignForm.css";
 import YellowBtn from "../../src/components/YellowBtn";
 import Checkbox from "../components/CheckBox";
+import TermS from "../pages/accounts/TermS";
+import TermP from "../pages/accounts/TermP";
 
 const SignForm = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    confirmPassword: "",
     name: "",
     phone: "",
   });
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [allChecked, setAllChecked] = useState({
     termsAgree: false,
@@ -20,9 +23,15 @@ const SignForm = () => {
     allChecked: false,
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { id, value } = e.target;
-    setFormData({ ...formData, [id]: value });
+    if (id === "confirmPassword") {
+      setConfirmPassword(value);
+    } else {
+      setFormData({ ...formData, [id]: value });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -33,7 +42,7 @@ const SignForm = () => {
       !allChecked.privacyAgree ||
       !allChecked.serviceAgree
     ) {
-      setMessage("필수 약관에 동의해 주세요.");
+      setMessage("* 필수 약관에 동의해 주세요.");
       return;
     }
 
@@ -41,31 +50,30 @@ const SignForm = () => {
     if (
       !formData.email ||
       !formData.password ||
-      !formData.confirmPassword ||
       !formData.name ||
       !formData.phone
     ) {
-      setMessage("모든 필드를 입력해주세요.");
+      setMessage("* 회원가입에 실패했습니다. 모든 정보를 채워주세요.");
       return;
     }
 
     // 이메일 형식 검사
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setMessage("유효한 이메일을 입력해주세요. ex) 0123abc@aaa.com");
+      setMessage("* 유효한 이메일을 입력해주세요. ex) likelion@example.com");
       return;
     }
 
     // 비밀번호 일치 검사
-    if (formData.password !== formData.confirmPassword) {
-      setMessage("비밀번호가 일치하지 않습니다.");
+    if (formData.password !== confirmPassword) {
+      setMessage("* 비밀번호가 일치하지 않습니다.");
       return;
     }
 
     // 연락처 형식 검사
     const phoneRegex = /^\d{10,11}$/;
     if (!phoneRegex.test(formData.phone)) {
-      setMessage("유효한 연락처를 입력해주세요. 예) 01012345678");
+      setMessage("* 유효한 연락처를 입력해주세요. 예) 01012345678");
       return;
     }
 
@@ -75,6 +83,7 @@ const SignForm = () => {
       .then((response) => {
         console.log("Signup successful", response.data);
         setMessage("회원가입이 완료되었습니다.");
+        navigate("/signup-clear");
       })
       .catch((error) => {
         console.error("Signup failed", error);
@@ -82,136 +91,119 @@ const SignForm = () => {
       });
   };
 
+  // 약관 팝업
+  const [showTerms, setShowTerms] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
+
   return (
-    <FormWrapper>
+    <div className="form-wrapper">
       <form onSubmit={handleSubmit}>
-        <InputWrapper>
-          <InputBox>
-            <StyledLabel htmlFor="email">이메일</StyledLabel>
-            <StyledSpan>*필수 입력</StyledSpan>
-            <br />
-            <StyledInput
+        <div className="input-wrapper">
+          <div className="input-box">
+            <div className="label-box">
+              <label className="label" htmlFor="email">
+                이메일
+              </label>
+              <span className="mustfill">* 필수 입력 항목입니다.</span>
+            </div>
+            <input
+              className="input-field"
               type="email"
               id="email"
-              placeholder="이메일"
+              placeholder="likelion@example.com"
               value={formData.email}
               onChange={handleChange}
             />
-          </InputBox>
-          <InputBox>
-            <StyledLabel htmlFor="password">비밀번호</StyledLabel>
-            <StyledSpan>*필수 입력</StyledSpan>
-            <br />
-            <StyledInput
+          </div>
+          <div className="input-box">
+            <div className="label-box">
+              <label className="label" htmlFor="password">
+                비밀번호
+              </label>
+              <span className="mustfill">* 필수 입력 항목입니다.</span>
+            </div>
+            <input
+              className="input-field"
               type="password"
               id="password"
-              placeholder="비밀번호"
+              placeholder="영문/숫자/특수문자 혼합,10~16자"
               value={formData.password}
               onChange={handleChange}
             />
-          </InputBox>
-          <InputBox>
-            <StyledLabel htmlFor="confirmPassword">비밀번호 확인</StyledLabel>
-            <StyledSpan>*필수 입력</StyledSpan>
-            <br />
-            <StyledInput
+          </div>
+          <div className="input-box no-margin-top">
+            <input
+              className="input-field"
               type="password"
               id="confirmPassword"
-              placeholder="비밀번호 확인"
-              value={formData.confirmPassword}
+              placeholder="비밀번호를 한 번 더 입력해 주세요."
+              value={confirmPassword}
               onChange={handleChange}
             />
-          </InputBox>
-          <InputBox>
-            <StyledLabel htmlFor="name">이름</StyledLabel>
-            <StyledSpan>*필수 입력</StyledSpan>
-            <br />
-            <StyledInput
+          </div>
+          <div className="input-box">
+            <div className="label-box">
+              <label className="label" htmlFor="name">
+                이름
+              </label>
+              <span className="mustfill">* 필수 입력 항목입니다.</span>
+            </div>
+            <input
+              className="input-field"
               type="text"
               id="name"
               placeholder="이름"
               value={formData.name}
               onChange={handleChange}
             />
-          </InputBox>
-          <InputBox>
-            <StyledLabel htmlFor="phone">연락처</StyledLabel>
-            <br />
-            <StyledInput
+          </div>
+          <div className="input-box">
+            <div className="label-box">
+              <label className="label" htmlFor="phone">
+                연락처
+              </label>
+            </div>
+            <input
+              className="input-field"
               type="text"
               id="phone"
               placeholder="-없이 숫자만 입력해 주세요."
               value={formData.phone}
               onChange={handleChange}
             />
-          </InputBox>
-        </InputWrapper>
+          </div>
+        </div>
         <Checkbox allChecked={allChecked} setAllChecked={setAllChecked} />
-        {message && <Message>{message}</Message>}
-        <BtnBox>
+        <button className="terms-button" onClick={() => setShowTerms(true)}>
+          보기(이용약관)
+        </button>
+        <button className="terms-button" onClick={() => setShowPrivacy(true)}>
+          보기(개인정보)
+        </button>
+        {message && <div className="message">{message}</div>}
+        <div className="btn-box">
           <YellowBtn
             txt="동의하고 가입하기"
             type="submit"
             width="340px"
             disabled={!allChecked.allChecked}
           />
-        </BtnBox>
+        </div>
       </form>
-    </FormWrapper>
+      {showTerms && (
+        <div className="popup">
+          <button onClick={() => setShowTerms(false)}>닫기</button>
+          <pre>{TermS}</pre>
+        </div>
+      )}
+      {showPrivacy && (
+        <div className="popup">
+          <button onClick={() => setShowPrivacy(false)}>닫기</button>
+          <pre>{TermP}</pre>
+        </div>
+      )}
+    </div>
   );
 };
 
 export default SignForm;
-
-const InputWrapper = styled.div`
-  width: 350px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const FormWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  /* width: 600px; */
-  /* margin: auto; */
-  width: 100%;
-`;
-
-const InputBox = styled.div`
-  margin-bottom: 15px;
-  width: 310px;
-`;
-
-const StyledInput = styled.input`
-  border-radius: 5px;
-  border: 2px solid #d9d9d9;
-  width: 300px;
-  height: 45px;
-  font-size: 14px;
-`;
-
-const StyledLabel = styled.label`
-  font-size: 18px;
-`;
-
-const StyledSpan = styled.span`
-  color: var(--grey);
-  font-size: 9px;
-`;
-
-const Message = styled.div`
-  color: red;
-  margin-top: 10px;
-  font-size: 12px;
-`;
-
-const BtnBox = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-`;
