@@ -26,7 +26,7 @@
   margin-top: -16px;
 }
 
-.styled-input {
+.input-field {
   border-radius: 5px;
   border: 2px solid #d9d9d9;
   width: 300px;
@@ -34,12 +34,16 @@
   font-size: 14px;
 }
 
-.styled-label {
+.label {
   font-size: 18px;
-  margin-bottom: 5px; /* 간격을 조정합니다 */
+  margin-bottom: 5px;
 }
 
-.styled-span {
+.label-box {
+  padding-bottom: 10px;
+}
+
+.mustfill {
   color: var(--grey);
   font-size: 10px;
   padding-left: 7px;

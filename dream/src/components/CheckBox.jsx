@@ -160,5 +160,6 @@ const SmallCheck = styled.label`
 `;
 
 const StyledLine = styled.div`
+  margin: 5px 0px;
   border-bottom: var(--yellow) 1px solid;
 `;

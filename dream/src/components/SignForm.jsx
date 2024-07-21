@@ -96,12 +96,14 @@ const SignForm = () => {
       <form onSubmit={handleSubmit}>
         <div className="input-wrapper">
           <div className="input-box">
-            <label className="styled-label" htmlFor="email">
-              이메일
-            </label>
-            <span className="styled-span">* 필수 입력 항목입니다.</span>
+            <div className="label-box">
+              <label className="label" htmlFor="email">
+                이메일
+              </label>
+              <span className="mustfill">* 필수 입력 항목입니다.</span>
+            </div>
             <input
-              className="styled-input"
+              className="input-field"
               type="email"
               id="email"
               placeholder="likelion@example.com"
@@ -110,12 +112,14 @@ const SignForm = () => {
             />
           </div>
           <div className="input-box">
-            <label className="styled-label" htmlFor="password">
-              비밀번호
-            </label>
-            <span className="styled-span">* 필수 입력 항목입니다.</span>
+            <div className="label-box">
+              <label className="label" htmlFor="password">
+                비밀번호
+              </label>
+              <span className="mustfill">* 필수 입력 항목입니다.</span>
+            </div>
             <input
-              className="styled-input"
+              className="input-field"
               type="password"
               id="password"
               placeholder="영문/숫자/특수문자 혼합,10~16자"
@@ -125,7 +129,7 @@ const SignForm = () => {
           </div>
           <div className="input-box no-margin-top">
             <input
-              className="styled-input"
+              className="input-field"
               type="password"
               id="confirmPassword"
               placeholder="비밀번호를 한 번 더 입력해 주세요."
@@ -134,12 +138,14 @@ const SignForm = () => {
             />
           </div>
           <div className="input-box">
-            <label className="styled-label" htmlFor="name">
-              이름
-            </label>
-            <span className="styled-span">*필수 입력</span>
+            <div className="label-box">
+              <label className="label" htmlFor="name">
+                이름
+              </label>
+              <span className="mustfill">* 필수 입력 항목입니다.</span>
+            </div>
             <input
-              className="styled-input"
+              className="input-field"
               type="text"
               id="name"
               placeholder="이름"
@@ -148,11 +154,13 @@ const SignForm = () => {
             />
           </div>
           <div className="input-box">
-            <label className="styled-label" htmlFor="phone">
-              연락처
-            </label>
+            <div className="label-box">
+              <label className="label" htmlFor="phone">
+                연락처
+              </label>
+            </div>
             <input
-              className="styled-input"
+              className="input-field"
               type="text"
               id="phone"
               placeholder="-없이 숫자만 입력해 주세요."

@@ -10,8 +10,9 @@ const Signup = () => {
         <Title>회원가입</Title>
         <CancelIcon src={Cancel} />
       </Bar>
-      <br />
-      <SignForm />
+      <ContentWrap>
+        <SignForm />
+      </ContentWrap>
     </div>
   );
 };
@@ -41,4 +42,8 @@ const CancelIcon = styled.img`
   position: absolute;
   right: 27px;
   height: 30px;
+`;
+
+const ContentWrap = styled.div`
+  margin-top: 10%;
 `;
