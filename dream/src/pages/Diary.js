@@ -7,6 +7,22 @@ const Diary = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeStartDate, setActiveStartDate] = useState(new Date());
 
+  // 요일을 한글로 변환하는 함수
+  const getWeekday = (day) => {
+    const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
+    return `(${weekdays[day]})`;
+  };
+
+  // 날짜 포맷팅 함수
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const weekday = getWeekday(date.getDay());
+
+    return `${year}년 ${month}월 ${day}일 ${weekday}`;
+  };
+
   // 날짜를 변경하는 핸들러
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -126,9 +142,14 @@ const Diary = () => {
           activeStartDate={activeStartDate}
         />
         {selectedDate && (
-          <button onClick={handleAddRecord} className="add-record-button">
-            Add Record for {selectedDate.toLocaleDateString()}
-          </button>
+          <div className="date-container">
+            <div className="selected-date">
+              {formatDate(selectedDate)} {/* 포맷팅된 날짜를 표시 */}
+            </div>
+            <button onClick={handleAddRecord} className="add-record-button">
+              ➕ &nbsp;먹은 빵 추가하기
+            </button>
+          </div>
         )}
       </div>
     </>

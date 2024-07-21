@@ -16,20 +16,19 @@
 }
 
 .react-calendar {
-  width: 90%;
+  width: 100%;
   background: white;
   padding: 15px;
-  border: 1px solid #ddd;
+  border: 0px solid #ddd;
   border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   font-size: 20px;
 }
 
 /* 날짜 셀의 기본 스타일링 */
 .react-calendar__tile {
-  padding: 13px; /* 위아래 패딩을 같게 설정 */
+  padding: 15px;
   position: relative;
-  display: flex; /* Flexbox로 중앙 정렬 */
+  display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -37,7 +36,7 @@
 
 /* 선택된 날짜 스타일 */
 .react-calendar__tile--active {
-  background: #471d06 !important;
+  background: #6f3d21 !important;
   color: white !important;
   border-radius: 100%;
   font-weight: bold;
@@ -78,13 +77,13 @@
 .year-month-picker {
   padding: 4px 10px;
   border-radius: 10px;
-  margin-top: 20px;
-  margin-bottom: 15px;
+  margin-top: 25px;
+  margin-bottom: 0px;
   margin-left: 20px;
 }
 
 .year-month-picker select {
-  margin: 4px 0;
+  margin: 0px 0;
   margin-right: 10px;
 }
 
@@ -119,14 +118,48 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-right: 35px;
+  padding-right: 30px;
 }
 
 .today-button {
-  background-color: #ffde97;
+  color: #9e7b31;
+  background-color: #ffeec9;
   border: 0px;
   border-radius: 5px;
   padding: 7px 13px;
-  margin-top: 8px;
-  font-size: 14px;
+  margin-top: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 달력 하단 */
+
+.date-container {
+  width: 85%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+}
+
+.selected-date {
+  color: #471d06;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.add-record-button {
+  text-align: left;
+  padding: 10px 20px;
+  color: #471d06;
+  background-color: white;
+  font-size: 15px;
+  font-weight: 600;
+  border: 2px solid #471d06;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.add-record-button:hover {
+  background-color: #0056b3;
 }
