@@ -1,39 +1,47 @@
 import React from "react";
 import styled from "styled-components";
-import baguette from "../assets/baguette.png";
+import { useNavigate } from "react-router-dom";
 
-const Category = ({ categories, onCategoryClick }) => {
+const Category = ({ imgSrc, name, uiName }) => {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = () => {
+    navigate(`/bakery/${name}`);
+  };
+
   return (
-    <CategoryWrapper>
-      {categories.map((category) => (
-        <CategoryButton
-          key={category}
-          onClick={() => onCategoryClick(category)}
-        >
-          <CategoryImage src={category.imgSrc} alt={category.name} />
-        </CategoryButton>
-      ))}
-    </CategoryWrapper>
+    <CategoryWrap>
+      <CategoryBox onClick={handleCategoryClick}>
+        <CategoryImg src={imgSrc} alt={uiName} />
+        <CategoryName uiName={uiName}>{uiName}</CategoryName>
+      </CategoryBox>
+    </CategoryWrap>
   );
 };
 
 export default Category;
 
-const CategoryWrapper = styled.div`
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
-`;
+const CategoryWrap = styled.div``;
 
-const CategoryButton = styled.button`
+const CategoryBox = styled.button`
   border: none;
-  background-color: #f8f8f8;
-  border-radius: 10px;
-  padding: 10px 20px;
+  background-color: white;
   cursor: pointer;
-  &:hover {
-    background-color: #e0e0e0;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
-const CategoryImage = styled.img``;
+const CategoryImg = styled.img`
+  width: 100%;
+  height: auto;
+`;
+
+const CategoryName = styled.div`
+  color: var(--brown);
+  font-size: 12px;
+  font-weight: 1000;
+  letter-spacing: -0.5px;
+  margin-top: ${({ uiName }) => (uiName === "바게트/치아바타" ? "8px" : "5px")};
+`;

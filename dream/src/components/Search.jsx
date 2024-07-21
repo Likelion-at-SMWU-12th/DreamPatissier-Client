@@ -50,7 +50,7 @@ const SearchImg = styled.img`
 const SearchBox = styled.div`
   background-color: #f8f8f8;
   border-radius: 10px;
-  margin: 5px;
+  margin: 0px;
   display: flex;
   align-items: center;
   box-shadow: 0px 1px 2px 0px #00000040;

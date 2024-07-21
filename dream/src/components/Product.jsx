@@ -1,26 +1,35 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
-const Product = ({ imgSrc, tags, title, price }) => {
+const Product = ({ id, imgSrc, tags, title, price }) => {
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US").format(price);
   };
 
   return (
     <ProductBox>
-      <ProductImgBox>
-        <ProductImg src={imgSrc} />
-      </ProductImgBox>
-      <ProductText>
-        <Keywords>{tags}</Keywords>
-        <Titles>{title}</Titles>
-        <Prices>{formatPrice(price)}원</Prices>
-      </ProductText>
+      <StyledLink to={`/product/${id}`}>
+        <ProductImgBox>
+          <ProductImg src={imgSrc} />
+        </ProductImgBox>
+        <ProductText>
+          <Keywords>{tags}</Keywords>
+          <Titles>{title}</Titles>
+          <Prices>{formatPrice(price)}원</Prices>
+        </ProductText>
+      </StyledLink>
     </ProductBox>
   );
 };
 
 export default Product;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  display: block;
+`;
 
 const ProductBox = styled.div`
   width: calc(50% - 10px);
@@ -49,19 +58,19 @@ const ProductText = styled.div`
 const Keywords = styled.span`
   color: var(--yellow);
   font-weight: bold;
-  font-size: 9px;
+  font-size: 10px;
 `;
 
 const Titles = styled.p`
   color: var(--brown);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: bold;
   margin: 0;
   margin-top: 4px;
 `;
 
 const Prices = styled.p`
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
   color: var(--brown);
   margin: 0;

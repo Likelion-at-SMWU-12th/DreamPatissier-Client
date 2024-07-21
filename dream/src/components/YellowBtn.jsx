@@ -1,9 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 
-const YellowBtn = ({ txt, onBtnClick, fontSize, type }) => {
+const YellowBtn = ({ txt, onBtnClick, fontSize, type, width }) => {
   return (
-    <ButtonBox onClick={onBtnClick} fontSize={fontSize} type={type}>
+    <ButtonBox
+      onClick={onBtnClick}
+      fontSize={fontSize}
+      type={type}
+      width={width}
+    >
       {txt || "버튼"}
     </ButtonBox>
   );
@@ -13,7 +18,7 @@ export default YellowBtn;
 
 const ButtonBox = styled.button`
   background-color: #ffbd30;
-  width: 270px;
+  width: ${(props) => props.width || "300px"};
   height: 40px;
   border-radius: 5px;
   border: none;
