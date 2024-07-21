@@ -5,25 +5,107 @@ import "react-calendar/dist/Calendar.css";
 import "../styles/Diary.css";
 import Bread from "../assets/bread_stamp.png";
 
+const exampleReviews = {
+  "2024-07-20": [
+    {
+      breadName: "통밀빵",
+      bakeryName: "빵집 A",
+      tags: ["맛있다", "건강한"],
+      review: "부드럽고 건강한 통밀빵이었습니다!",
+    },
+    {
+      breadName: "바게트",
+      bakeryName: "빵집 B",
+      tags: ["바삭하다", "고소한"],
+      review: "겉은 바삭하고 속은 촉촉한 바게트!",
+    },
+  ],
+};
+
+const getWeekday = (day) => {
+  const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
+  return `(${weekdays[day]})`;
+};
+
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const weekday = getWeekday(date.getDay());
+  return `${year}년 ${month}월 ${day}일 ${weekday}`;
+};
+
+const formatDateForSave = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const tileClassName = ({ date, view }) => {
+  if (view === "month") {
+    const isCurrentMonth = date.getMonth() === new Date().getMonth();
+    const isWeekend = date.getDay() === 6 || date.getDay() === 0;
+    if (!isCurrentMonth) return "not-current-month-tile";
+    if (isWeekend) return date.getDay() === 6 ? "saturday-tile" : "sunday-tile";
+  }
+  return null;
+};
+
+const tileContent = ({ date, view, recipes }) => {
+  if (view === "month") {
+    const dateKey = formatDateForSave(date);
+    return (
+      <div className="calendar-date">
+        {recipes[dateKey] && (
+          <img src={Bread} alt="Bread" className="bread-icon" />
+        )}
+        {!recipes[dateKey] && date.getDate()}
+      </div>
+    );
+  }
+  return null;
+};
+
+const YearMonthPicker = ({ selectedDate, updateDate }) => {
+  const currentYear = selectedDate.getFullYear();
+  const currentMonth = selectedDate.getMonth();
+
+  return (
+    <div className="year-month-picker">
+      <select
+        className="select-date"
+        value={currentYear}
+        onChange={(e) => updateDate(parseInt(e.target.value), currentMonth)}
+      >
+        {[...Array(10)].map((_, i) => (
+          <option key={2022 + i} value={2022 + i}>
+            {2022 + i}
+          </option>
+        ))}
+      </select>
+      <select
+        className="select-date"
+        value={currentMonth}
+        onChange={(e) => updateDate(currentYear, parseInt(e.target.value))}
+      >
+        {[...Array(12)].map((_, i) => (
+          <option key={i} value={i}>
+            {i + 1}월
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
 const Diary = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeStartDate, setActiveStartDate] = useState(new Date());
   const [recipes, setRecipes] = useState({});
+  const [reviews, setReviews] = useState(exampleReviews);
 
   const navigate = useNavigate();
-
-  const getWeekday = (day) => {
-    const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
-    return `(${weekdays[day]})`;
-  };
-
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    const weekday = getWeekday(date.getDay());
-    return `${year}년 ${month}월 ${day}일 ${weekday}`;
-  };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -37,51 +119,8 @@ const Diary = () => {
   };
 
   const handleAddRecord = () => {
-    if (selectedDate) {
-      const date = formatDateForSave(selectedDate);
-      navigate(`/record/${date}`);
-    } else {
-      alert("날짜를 선택하세요.");
-    }
-  };
-
-  const formatDateForSave = (date) => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
-  const tileClassName = ({ date, view }) => {
-    if (view === "month") {
-      const isCurrentMonth = date.getMonth() === selectedDate.getMonth();
-      const isSaturday = date.getDay() === 6;
-      const isSunday = date.getDay() === 0;
-
-      if (!isCurrentMonth) {
-        return "not-current-month-tile";
-      } else if (isSaturday) {
-        return "saturday-tile";
-      } else if (isSunday) {
-        return "sunday-tile";
-      }
-    }
-    return null;
-  };
-
-  const tileContent = ({ date, view }) => {
-    if (view === "month") {
-      const dateKey = formatDateForSave(date);
-      if (recipes[dateKey]) {
-        return (
-          <div className="calendar-date">
-            <img src={Bread} alt="Bread" className="bread-icon" />
-          </div>
-        );
-      }
-      return <div className="calendar-date">{date.getDate()}</div>;
-    }
-    return null;
+    const date = formatDateForSave(selectedDate);
+    navigate(`/record/${date}`);
   };
 
   const updateDate = (year, month) => {
@@ -90,53 +129,13 @@ const Diary = () => {
     setSelectedDate(newDate);
   };
 
-  const YearMonthPicker = ({ selectedDate }) => {
-    const currentYear = selectedDate.getFullYear();
-    const currentMonth = selectedDate.getMonth();
-
-    const handleYearChange = (e) => {
-      const newYear = parseInt(e.target.value);
-      updateDate(newYear, currentMonth);
-    };
-
-    const handleMonthChange = (e) => {
-      const newMonth = parseInt(e.target.value);
-      updateDate(currentYear, newMonth);
-    };
-
-    return (
-      <div className="year-month-picker">
-        <select
-          className="select-date"
-          value={currentYear}
-          onChange={handleYearChange}
-        >
-          {[...Array(10)].map((_, i) => {
-            const year = 2022 + i;
-            return (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            );
-          })}
-        </select>
-        <select
-          className="select-date"
-          value={currentMonth}
-          onChange={handleMonthChange}
-        >
-          {[...Array(12)].map((_, i) => (
-            <option key={i} value={i}>{`${i + 1}월`}</option>
-          ))}
-        </select>
-      </div>
-    );
-  };
+  const selectedDateKey = formatDateForSave(selectedDate);
+  const reviewList = reviews[selectedDateKey] || [];
 
   return (
     <>
       <div className="selection-container">
-        <YearMonthPicker selectedDate={selectedDate} />
+        <YearMonthPicker selectedDate={selectedDate} updateDate={updateDate} />
         <button onClick={handleTodayClick} className="today-button">
           오늘
         </button>
@@ -147,7 +146,7 @@ const Diary = () => {
           onChange={handleDateChange}
           value={selectedDate}
           tileClassName={tileClassName}
-          tileContent={tileContent}
+          tileContent={(props) => tileContent({ ...props, recipes })}
           activeStartDate={activeStartDate}
         />
         {selectedDate && (
@@ -156,6 +155,28 @@ const Diary = () => {
             <button onClick={handleAddRecord} className="add-record-button">
               ➕ &nbsp;먹은 빵 추가하기
             </button>
+            {reviewList.length > 0 && (
+              <div className="review-container">
+                <h3>후기</h3>
+                {reviewList.map((review, index) => (
+                  <div key={index} className="review-item">
+                    <p>
+                      <strong>빵 이름:</strong> {review.breadName}
+                    </p>
+                    <p>
+                      <strong>빵 가게 이름:</strong> {review.bakeryName}
+                    </p>
+                    <p>
+                      <strong>태그:</strong> {review.tags.join(", ")}
+                    </p>
+                    <p>
+                      <strong>후기:</strong> {review.review}
+                    </p>
+                    <hr />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
