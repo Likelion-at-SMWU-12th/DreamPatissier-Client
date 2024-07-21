@@ -52,15 +52,15 @@ const tileClassName = ({ date, view }) => {
   return null;
 };
 
-const tileContent = ({ date, view, recipes }) => {
+const tileContent = ({ date, view, reviews }) => {
   if (view === "month") {
     const dateKey = formatDateForSave(date);
     return (
       <div className="calendar-date">
-        {recipes[dateKey] && (
+        {reviews[dateKey] && (
           <img src={Bread} alt="Bread" className="bread-icon" />
         )}
-        {!recipes[dateKey] && date.getDate()}
+        {!reviews[dateKey] && date.getDate()}
       </div>
     );
   }
@@ -102,7 +102,6 @@ const YearMonthPicker = ({ selectedDate, updateDate }) => {
 const Diary = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeStartDate, setActiveStartDate] = useState(new Date());
-  const [recipes, setRecipes] = useState({});
   const [reviews, setReviews] = useState(exampleReviews);
 
   const navigate = useNavigate();
@@ -146,7 +145,7 @@ const Diary = () => {
           onChange={handleDateChange}
           value={selectedDate}
           tileClassName={tileClassName}
-          tileContent={(props) => tileContent({ ...props, recipes })}
+          tileContent={(props) => tileContent({ ...props, reviews })}
           activeStartDate={activeStartDate}
         />
         {selectedDate && (
