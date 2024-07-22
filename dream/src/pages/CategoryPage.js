@@ -58,10 +58,8 @@ const CategoryPage = () => {
       </MsgBox>
     );
   }
-
-  // 제품 목록이 있는 경우
   return (
-    <ProductBox>
+    <ProductWrap>
       {products.map((product) => (
         <StyledLink to={`/product/${product.id}`} key={product.id}>
           <Product
@@ -72,7 +70,7 @@ const CategoryPage = () => {
           />
         </StyledLink>
       ))}
-    </ProductBox>
+    </ProductWrap>
   );
 };
 
@@ -93,11 +91,10 @@ const MsgBox = styled.div`
   margin: 100px 0px;
 `;
 
-const ProductBox = styled.div`
-  display: flex;
+const ProductWrap = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
-  margin: 5%;
+  margin: 0px 15px;
 `;
 
 export default CategoryPage;
