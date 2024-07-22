@@ -1,26 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "react-calendar/dist/Calendar.css";
 import "../styles/Diary.css";
 import Bread from "../assets/bread_stamp.png";
-
-const exampleReviews = {
-  "2024-07-20": [
-    {
-      breadName: "통밀빵",
-      bakeryName: "빵집 A",
-      tags: ["맛있다", "건강한"],
-      review: "부드럽고 건강한 통밀빵이었습니다!",
-    },
-    {
-      breadName: "바게트",
-      bakeryName: "빵집 B",
-      tags: ["바삭하다", "고소한"],
-      review: "겉은 바삭하고 속은 촉촉한 바게트!",
-    },
-  ],
-};
 
 const getWeekday = (day) => {
   const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
@@ -102,9 +86,25 @@ const YearMonthPicker = ({ selectedDate, updateDate }) => {
 const Diary = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeStartDate, setActiveStartDate] = useState(new Date());
-  const [reviews, setReviews] = useState(exampleReviews);
-
+  const [reviews, setReviews] = useState({});
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/reviews")
+      .then((response) => {
+        const data = response.data;
+        if (typeof data === "object" && data !== null) {
+          setReviews(data);
+        } else {
+          console.error(
+            "Fetched data is not in the expected object format:",
+            data
+          );
+        }
+      })
+      .catch((error) => console.error("Error fetching reviews:", error));
+  }, []);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -130,6 +130,28 @@ const Diary = () => {
 
   const selectedDateKey = formatDateForSave(selectedDate);
   const reviewList = reviews[selectedDateKey] || [];
+
+  const handleDeleteReview = async (id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3001/reviews/${id}`
+      );
+
+      if (response.status === 200) {
+        setReviews((prevReviews) => {
+          const newReviews = { ...prevReviews };
+          newReviews[selectedDateKey] = newReviews[selectedDateKey].filter(
+            (review) => review.id !== id
+          );
+          return newReviews;
+        });
+      } else {
+        console.error("Failed to delete review. Status code:", response.status);
+      }
+    } catch (error) {
+      console.error("Error deleting review:", error);
+    }
+  };
 
   return (
     <>
@@ -157,8 +179,8 @@ const Diary = () => {
             {reviewList.length > 0 && (
               <div className="review-container">
                 <h3>후기</h3>
-                {reviewList.map((review, index) => (
-                  <div key={index} className="review-item">
+                {reviewList.map((review) => (
+                  <div key={review.id} className="review-item">
                     <p>
                       <strong>빵 이름:</strong> {review.breadName}
                     </p>
@@ -171,6 +193,12 @@ const Diary = () => {
                     <p>
                       <strong>후기:</strong> {review.review}
                     </p>
+                    <button
+                      onClick={() => handleDeleteReview(review.id)}
+                      className="delete-button"
+                    >
+                      삭제
+                    </button>
                     <hr />
                   </div>
                 ))}
