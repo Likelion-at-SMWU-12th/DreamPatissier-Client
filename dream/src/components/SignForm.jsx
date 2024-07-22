@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 import "../styles/SignForm.css";
 import YellowBtn from "../../src/components/YellowBtn";
 import Checkbox from "../components/CheckBox";
-import TermS from "../pages/accounts/TermS";
-import TermP from "../pages/accounts/TermP";
 
 const SignForm = () => {
   const [formData, setFormData] = useState({
@@ -114,10 +112,6 @@ const SignForm = () => {
       });
   };
 
-  // 약관 팝업
-  const [showTerms, setShowTerms] = useState(false);
-  const [showPrivacy, setShowPrivacy] = useState(false);
-
   return (
     <div className="form-wrapper">
       <form onSubmit={handleSubmit}>
@@ -182,20 +176,6 @@ const SignForm = () => {
           )}
         </div>
         <Checkbox allChecked={allChecked} setAllChecked={setAllChecked} />
-        <button
-          type="button"
-          className="terms-button"
-          onClick={() => setShowTerms(true)}
-        >
-          보기(이용약관)
-        </button>
-        <button
-          type="button"
-          className="terms-button"
-          onClick={() => setShowPrivacy(true)}
-        >
-          보기(개인정보)
-        </button>
         {message && <div className="message">{message}</div>}
         <div className="btn-box">
           <YellowBtn
@@ -206,18 +186,6 @@ const SignForm = () => {
           />
         </div>
       </form>
-      {showTerms && (
-        <div className="popup">
-          <button onClick={() => setShowTerms(false)}>닫기</button>
-          <pre>{TermS}</pre>
-        </div>
-      )}
-      {showPrivacy && (
-        <div className="popup">
-          <button onClick={() => setShowPrivacy(false)}>닫기</button>
-          <pre>{TermP}</pre>
-        </div>
-      )}
     </div>
   );
 };
