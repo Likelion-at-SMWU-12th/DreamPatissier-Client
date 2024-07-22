@@ -12,10 +12,6 @@ const fetchRecipeById = async (id) => {
   };
 };
 
-const updateRecipe = async (id, updatedRecipe) => {
-  console.log(`레시피 ${id} 업데이트됨:`, updatedRecipe);
-};
-
 const EditRecipe = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -29,16 +25,13 @@ const EditRecipe = () => {
     getRecipe();
   }, [id]);
 
-  const handleSave = async () => {
-    if (recipe) {
-      await updateRecipe(id, recipe);
-      navigate("/recipes");
-    }
-  };
-
   if (!recipe) {
     return <p>Loading...</p>;
   }
+
+  const handleSave = () => {
+    navigate("/recipes");
+  };
 
   return (
     <div>
