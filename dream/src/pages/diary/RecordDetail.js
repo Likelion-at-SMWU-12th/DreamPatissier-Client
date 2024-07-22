@@ -40,7 +40,6 @@ const ImageUploadComponent = ({ images, onAddImage, onRemoveImage }) => (
   </div>
 );
 
-// 날짜 포맷팅 함수
 const formatDate = (date) => {
   if (!date) return "";
 
@@ -55,7 +54,6 @@ const formatDate = (date) => {
     .padStart(2, "0")}일 (${dayName})`;
 };
 
-// 메인 컴포넌트
 const RecordDetail = () => {
   const { date } = useParams();
   const navigate = useNavigate();
@@ -70,23 +68,19 @@ const RecordDetail = () => {
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const datePickerRef = useRef(null);
 
-  // 날짜 파라미터가 있을 때 상태 업데이트
   useEffect(() => {
     if (date) {
       setRecordDate(new Date(date));
     }
   }, [date]);
 
-  // 날짜 선택 핸들러
   const handleDateChange = (date) => {
     if (date) {
-      console.log("타임피커에서 선택된 날짜:", date);
       setRecordDate(date);
     }
     setIsDatePickerOpen(false);
   };
 
-  // 날짜 선택기 외부 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -100,7 +94,6 @@ const RecordDetail = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // 이미지 추가 핸들러
   const handleAddImage = (newImage) => {
     if (images.length < 3) {
       setImages([...images, newImage]);
@@ -109,26 +102,44 @@ const RecordDetail = () => {
     }
   };
 
-  // 이미지 제거 핸들러
   const handleRemoveImage = (index) => {
     setImages(images.filter((_, i) => i !== index));
   };
 
-  // 저장 핸들러
   const handleSave = async () => {
+    const recordDateString = recordDate.toISOString().split("T")[0];
     const record = {
-      date: recordDate,
-      images,
-      storeName,
       breadName,
-      breadType,
-      recordContent,
+      bakeryName: storeName,
+      tags: breadType.split(",").map((tag) => tag.trim()),
+      review: recordContent,
     };
 
-    // 로그 찍기: 저장할 데이터
-    console.log("저장할 데이터:", record);
+    try {
+      const response = await fetch(
+        `http://localhost:3001/reviews/${recordDateString}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            [recordDateString]: [record],
+          }),
+        }
+      );
 
-    navigate("/diary");
+      if (response.ok) {
+        console.log("저장할 데이터:", record);
+        navigate("/diary");
+      } else {
+        console.error("Failed to save record. Status code:", response.status);
+        const errorData = await response.json();
+        console.error("Error details:", errorData);
+      }
+    } catch (error) {
+      console.error("Error saving record:", error);
+    }
   };
 
   return (
@@ -173,7 +184,6 @@ const RecordDetail = () => {
         placeholder="기록할 빵의 이름을 작성해 주세요. (예시: 식물성, 저당)"
         onChange={(e) => setBreadName(e.target.value)}
       />
-
       <input
         className="input_data"
         type="text"
@@ -181,7 +191,6 @@ const RecordDetail = () => {
         placeholder="어떤 웰니스 빵인가요?"
         onChange={(e) => setBreadType(e.target.value)}
       />
-
       <textarea
         className="input_data"
         value={recordContent}
