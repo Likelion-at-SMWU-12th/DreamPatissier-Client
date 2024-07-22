@@ -92,9 +92,12 @@ const MsgBox = styled.div`
 `;
 
 const ProductWrap = styled.div`
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 0px 15px;
+  margin: 0px 25px;
+  display: grid;
+  grid-template-columns: repeat(2, 47vw);
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
 `;
 
 export default CategoryPage;
