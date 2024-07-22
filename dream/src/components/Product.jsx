@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 
 const Product = ({ id, imgSrc, tags, title, price }) => {
   const formatPrice = (price) => {
@@ -9,27 +8,19 @@ const Product = ({ id, imgSrc, tags, title, price }) => {
 
   return (
     <ProductBox>
-      <StyledLink to={`/product/${id}`}>
-        <ProductImgBox>
-          <ProductImg src={imgSrc} />
-        </ProductImgBox>
-        <ProductText>
-          <Keywords>{tags}</Keywords>
-          <Titles>{title}</Titles>
-          <Prices>{formatPrice(price)}원</Prices>
-        </ProductText>
-      </StyledLink>
+      <ProductImgBox>
+        <ProductImg src={imgSrc} />
+      </ProductImgBox>
+      <ProductText>
+        <Keywords>{tags}</Keywords>
+        <Titles>{title}</Titles>
+        <Prices>{formatPrice(price)}원</Prices>
+      </ProductText>
     </ProductBox>
   );
 };
 
 export default Product;
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: inherit;
-  display: block;
-`;
 
 const ProductBox = styled.div`
   width: calc(50% - 10px);
