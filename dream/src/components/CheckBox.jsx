@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import "../styles/SignForm.css";
+import TermS from "../pages/accounts/TermS";
+import TermP from "../pages/accounts/TermP";
 
-// 왜 활성화 되지 않지?!
 const Checkbox = ({ allChecked, setAllChecked }) => {
   const [checkList, setCheckList] = useState({
     allAgree: false,
@@ -22,13 +24,11 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
       adsAgree: checked,
       marketingAgree: checked,
     });
-    console.log("handleAllAgree called, checked:", checked);
   };
 
   const handleCheck = (e) => {
     const { id, checked } = e.target;
     setCheckList((prevState) => ({ ...prevState, [id]: checked }));
-    console.log("handleCheck called, id:", id, "checked:", checked);
   };
 
   useEffect(() => {
@@ -44,8 +44,11 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
       marketingAgree,
       allChecked: allCk,
     });
-    console.log("useEffect called, checkList:", checkList, "allCk:", allCk);
   }, [checkList, setAllChecked]);
+
+  // 약관 팝업
+  const [showTerms, setShowTerms] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
 
   return (
     <AgreeContainer>
@@ -69,6 +72,13 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
         <SmallCheck htmlFor="termsAgree">
           [필수] 만 14세 이상 서비스 이용 동의
         </SmallCheck>
+        <button
+          type="button"
+          className="terms-button"
+          onClick={() => setShowTerms(true)}
+        >
+          보기
+        </button>
       </CheckboxItem>
       <CheckboxItem>
         <StyledCheck
@@ -80,6 +90,13 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
         <SmallCheck htmlFor="privacyAgree">
           [필수] 개인정보 수집/이용 동의
         </SmallCheck>
+        <button
+          type="button"
+          className="terms-button"
+          onClick={() => setShowPrivacy(true)}
+        >
+          보기
+        </button>
       </CheckboxItem>
       <CheckboxItem>
         <StyledCheck
@@ -110,6 +127,18 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
           [선택] 마케팅 정보/이용 동의
         </SmallCheck>
       </CheckboxItem>
+      {showTerms && (
+        <div className="popup">
+          <button onClick={() => setShowTerms(false)}>닫기</button>
+          <pre>{TermS}</pre>
+        </div>
+      )}
+      {showPrivacy && (
+        <div className="popup">
+          <button onClick={() => setShowPrivacy(false)}>닫기</button>
+          <pre>{TermP}</pre>
+        </div>
+      )}
     </AgreeContainer>
   );
 };
@@ -132,8 +161,8 @@ const StyledCheck = styled.input`
   appearance: none;
   border: 1px solid #ccc;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   cursor: pointer;
   position: relative;
   margin-right: 10px;
@@ -143,8 +172,8 @@ const StyledCheck = styled.input`
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     background-color: var(--yellow);
     border-radius: 50%;
     transform: translate(-50%, -50%);
@@ -156,11 +185,12 @@ const Allcheck = styled.label`
 `;
 
 const SmallCheck = styled.label`
-  font-size: 12px;
+  font-size: 13px;
+  color: var(--grey);
+  letter-spacing: -0.5px;
 `;
 
 const StyledLine = styled.div`
   margin: 5px 0px;
   border-bottom: var(--yellow) 1px solid;
-  
 `;

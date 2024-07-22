@@ -58,10 +58,8 @@ const CategoryPage = () => {
       </MsgBox>
     );
   }
-
-  // 제품 목록이 있는 경우
   return (
-    <ProductList>
+    <ProductWrap>
       {products.map((product) => (
         <StyledLink to={`/product/${product.id}`} key={product.id}>
           <Product
@@ -72,7 +70,7 @@ const CategoryPage = () => {
           />
         </StyledLink>
       ))}
-    </ProductList>
+    </ProductWrap>
   );
 };
 
@@ -81,8 +79,6 @@ const StyledLink = styled(Link)`
   color: inherit;
   display: block;
 `;
-
-const ProductList = styled.div``;
 
 const Message = styled.div`
   text-align: center;
@@ -93,6 +89,15 @@ const Message = styled.div`
 const MsgBox = styled.div`
   width: 100%;
   margin: 100px 0px;
+`;
+
+const ProductWrap = styled.div`
+  margin: 0px 25px;
+  display: grid;
+  grid-template-columns: repeat(2, 47vw);
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
 `;
 
 export default CategoryPage;

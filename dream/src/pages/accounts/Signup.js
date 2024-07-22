@@ -45,5 +45,10 @@ const CancelIcon = styled.img`
 `;
 
 const ContentWrap = styled.div`
-  margin-top: 10%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  height: 100vh; /* 화면 전체 높이를 차지 */
+  background-color: white;
+  padding-top: 70px;
 `;
