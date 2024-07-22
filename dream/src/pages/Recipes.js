@@ -1,39 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Recipes.css";
-import Bread_represent from "../assets/bread_re.png";
 import editIcon from "../assets/edit-icon.png";
 import deleteIcon from "../assets/delete-icon.png";
 import savedIcon from "../assets/saved-icon.png";
 import unsavedIcon from "../assets/unsaved-icon.png";
 
-const mockRecipes = [
-  {
-    id: 1,
-    title: "단팥빵",
-    tags: ["디저트", "빵"],
-    equipment: ["오븐"],
-    author: "user1",
-    represent_img: Bread_represent,
-  },
-  {
-    id: 2,
-    title: "바게트",
-    tags: ["빵"],
-    equipment: ["오븐"],
-    author: "user2",
-    represent_img: Bread_represent,
-  },
-  {
-    id: 3,
-    title: "크로와상",
-    tags: ["디저트", "빵"],
-    equipment: ["오븐"],
-    author: "user1",
-    represent_img: Bread_represent,
-  },
-];
-
+// SearchBar 컴포넌트
 const SearchBar = ({ searchTerm, setSearchTerm }) => {
   return (
     <input
@@ -46,6 +19,7 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
   );
 };
 
+// RecipeItem 컴포넌트
 const RecipeItem = ({
   recipe,
   currentUser,
@@ -61,6 +35,10 @@ const RecipeItem = ({
     navigate(`/recipes/${recipe.id}`);
   };
 
+  // 배열이 아닌 경우 빈 배열로 설정
+  const equipmentList = Array.isArray(recipe.equipment) ? recipe.equipment : [];
+  const tagsList = Array.isArray(recipe.tags) ? recipe.tags : [];
+
   return (
     <div className="recipe-item">
       <img
@@ -71,11 +49,11 @@ const RecipeItem = ({
       <div className="recipe-header">
         <h3 className="recipe-title">{recipe.title}</h3>
         <p className="recipe-equipment">
-          사용 조리기구: {recipe.equipment.join(", ")}
+          사용 조리기구: {equipmentList.join(", ")}
         </p>
       </div>
       <div className="recipe-footer">
-        <p className="recipe-tags">태그: {recipe.tags.join(", ")}</p>
+        <p className="recipe-tags">태그: {tagsList.join(", ")}</p>
         <div className="recipe-buttons">
           {isAuthor ? (
             <>
@@ -103,12 +81,29 @@ const RecipeItem = ({
   );
 };
 
+// Recipes 컴포넌트
 const Recipes = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [savedRecipes, setSavedRecipes] = useState([]);
-  const [recipes, setRecipes] = useState(mockRecipes);
+  const [recipes, setRecipes] = useState([]);
   const currentUser = "user1";
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // API를 통해 레시피 데이터를 가져옴
+    fetch("http://localhost:3001/recipes")
+      .then((response) => response.json())
+      .then((data) => {
+        // 데이터 검증 및 변환
+        const validatedData = data.map((recipe) => ({
+          ...recipe,
+          equipment: Array.isArray(recipe.equipment) ? recipe.equipment : [],
+          tags: Array.isArray(recipe.tags) ? recipe.tags : [],
+        }));
+        setRecipes(validatedData);
+      })
+      .catch((error) => console.error("Error fetching recipes:", error));
+  }, []);
 
   const filteredRecipes = recipes.filter(
     (recipe) =>
@@ -134,14 +129,20 @@ const Recipes = () => {
   };
 
   const handleDeleteRecipe = (recipeId) => {
-    setRecipes((prevRecipes) =>
-      prevRecipes.filter((recipe) => recipe.id !== recipeId)
-    );
-    console.log(`레시피 ${recipeId}이(가) 삭제되었습니다.`);
+    fetch(`http://localhost:3001/recipes/${recipeId}`, {
+      method: "DELETE",
+    })
+      .then(() => {
+        setRecipes((prevRecipes) =>
+          prevRecipes.filter((recipe) => recipe.id !== recipeId)
+        );
+        console.log(`레시피 ${recipeId}이(가) 삭제되었습니다.`);
+      })
+      .catch((error) => console.error("Error deleting recipe:", error));
   };
 
   const handleAddRecipe = () => {
-    navigate("/recipes");
+    navigate("/recipes/write");
   };
 
   return (
