@@ -1,10 +1,10 @@
 // 기본 기능 & 컴포넌트
 import React, { useEffect, useState } from "react";
+import Product from "../components/Product";
 import Footer from "../components/Footer";
 import styled from "styled-components";
 import Search from "../components/Search";
 import Category from "../components/Category";
-import Product from "../components/Product";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
 // 이미지
@@ -70,52 +70,47 @@ const dummyProducts = [
   },
 ];
 //
-// 웰니스 빵 탭
-//
-
 function Bakery() {
   const navigate = useNavigate();
   const location = useLocation();
   const [randomProducts, setRandomProducts] = useState([]);
 
   useEffect(() => {
-    const shuffleProducts = dummyProducts.sort(() => 0.5 - Math.random());
-    setRandomProducts(shuffleProducts.slice(0, 4)); // 4개의 랜덤 제품
+    const shuffledProducts = dummyProducts.sort(() => 0.5 - Math.random());
+    setRandomProducts(shuffledProducts.slice(0, 4)); // 4개의 랜덤 제품
   }, []);
 
   return (
     <div>
+      <div>
+        <BannerBox>
+          <BannerImg src={bbangSlide} />
+        </BannerBox>
+      </div>
+      <Search />
+      <CategoryWrap>
+        {categories.map((category) => (
+          <Category
+            key={category.name}
+            name={category.name}
+            uiName={category.uiName}
+            imgSrc={category.imgSrc}
+            onClick={() => navigate(`/category/${category.name}`)}
+          />
+        ))}
+      </CategoryWrap>
       {location.pathname === "/bakery" && (
-        <>
-          <div>
-            <BannerBox>
-              <BannerImg src={bbangSlide} />
-            </BannerBox>
-          </div>
-          <Search />
-          <CategoryWrap>
-            {categories.map((category) => (
-              <Category
-                key={category.name}
-                name={category.name}
-                uiName={category.uiName}
-                imgSrc={category.imgSrc}
-                onClick={() => navigate(`/category/${category.name}`)}
-              />
-            ))}
-          </CategoryWrap>
-          <ProductBox>
-            {randomProducts.map((product) => (
-              <Product
-                key={product.id}
-                imgSrc={product.imgSrc}
-                tags={product.tags}
-                title={product.title}
-                price={product.price}
-              />
-            ))}
-          </ProductBox>
-        </>
+        <ProductBox>
+          {randomProducts.map((product) => (
+            <Product
+              key={product.id}
+              imgSrc={product.imgSrc}
+              tags={product.tags}
+              title={product.title}
+              price={product.price}
+            />
+          ))}
+        </ProductBox>
       )}
       <Outlet />
       <Footer />
@@ -162,7 +157,7 @@ const CategoryWrap = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px 0px;
-  margin-bottom: 20px;
+  padding-bottom: 20px;
   margin: 10px;
 `;
 
