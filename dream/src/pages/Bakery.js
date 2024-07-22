@@ -24,12 +24,15 @@ import Donut from "../assets/CT-donut.png";
 import Cream from "../assets/CT-cream.png";
 import Harverst from "../assets/CT-harvest.png";
 import Event from "../assets/CT-event.png";
+import { Outlet, useNavigate } from "react-router-dom";
 
 //
 // 웰니스빵 탭
 //
 
 function Bakery() {
+  const navigate = useNavigate();
+
   return (
     <div>
       <div>
@@ -45,10 +48,12 @@ function Bakery() {
             name={category.name}
             uiName={category.uiName}
             imgSrc={category.imgSrc}
+            onClick={() => navigate(`/category/${category.name}`)}
           />
         ))}
       </CategoryWrap>
-      <ProductBox>
+      <Outlet />
+      {/* <ProductBox>
         <Product
           imgSrc={Oatmeal}
           tags={["#프로틴", " #저당"]}
@@ -73,7 +78,7 @@ function Bakery() {
           title="[라이트리] 곤약빵 통밀 치아바타"
           price={9900}
         />
-      </ProductBox>
+      </ProductBox> */}
       <Footer />
     </div>
   );
@@ -108,12 +113,12 @@ const BannerImg = styled.img`
   object-fit: cover;
 `;
 
-const ProductBox = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 5%;
-`;
+// const ProductBox = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+//   justify-content: space-between;
+//   margin: 5%;
+// `;
 
 const CategoryWrap = styled.div`
   display: grid;
