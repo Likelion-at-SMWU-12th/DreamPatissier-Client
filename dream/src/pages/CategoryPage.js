@@ -82,12 +82,7 @@ const StyledLink = styled(Link)`
   display: block;
 `;
 
-const ProductList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 5%;
-`;
+const ProductList = styled.div``;
 
 const Message = styled.div`
   text-align: center;
