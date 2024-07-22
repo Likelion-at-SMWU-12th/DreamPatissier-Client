@@ -3,8 +3,10 @@ import "../styles/Recipes.css";
 import Bread_represent from "../assets/bread_re.png";
 import editIcon from "../assets/edit-icon.png";
 import deleteIcon from "../assets/delete-icon.png";
-import saveIcon from "../assets/save-icon.png";
+import savedIcon from "../assets/saved-icon.png";
+import unsavedIcon from "../assets/unsaved-icon.png";
 
+// 더미 레시피 데이터
 const mockRecipes = [
   {
     id: 1,
@@ -32,6 +34,7 @@ const mockRecipes = [
   },
 ];
 
+// 검색 바 컴포넌트
 const SearchBar = ({ searchTerm, setSearchTerm }) => {
   return (
     <input
@@ -44,8 +47,10 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
   );
 };
 
-const RecipeItem = ({ recipe, currentUser }) => {
-  const isAuthor = recipe.author === currentUser;
+// 개별 레시피 아이템 컴포넌트
+const RecipeItem = ({ recipe, currentUser, onToggleSave, savedRecipes }) => {
+  const isAuthor = recipe.author === currentUser; // 현재 사용자와 레시피 작성자 비교
+  const isSaved = savedRecipes.includes(recipe.id); // 레시피가 스크랩 되어있는지 여부
 
   return (
     <div className="recipe-item">
@@ -64,6 +69,7 @@ const RecipeItem = ({ recipe, currentUser }) => {
         <p className="recipe-tags">태그: {recipe.tags.join(", ")}</p>
         <div className="recipe-buttons">
           {isAuthor ? (
+            // 현재 사용자가 레시피 작성자일 때만 수정 및 삭제 버튼 표시
             <>
               <button className="edit-btn">
                 <img src={editIcon} alt="수정하기" />
@@ -73,8 +79,12 @@ const RecipeItem = ({ recipe, currentUser }) => {
               </button>
             </>
           ) : (
-            <button className="save-btn">
-              <img src={saveIcon} alt="저장하기" />
+            // 현재 사용자가 레시피 작성자가 아닐 때 스크랩 버튼 표시
+            <button
+              className="save-btn"
+              onClick={() => onToggleSave(recipe.id)}
+            >
+              <img src={isSaved ? savedIcon : unsavedIcon} alt="저장하기" />
             </button>
           )}
         </div>
@@ -83,10 +93,13 @@ const RecipeItem = ({ recipe, currentUser }) => {
   );
 };
 
+// 레시피 목록 컴포넌트
 const Recipes = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
+  const [savedRecipes, setSavedRecipes] = useState([]); // 스크랩된 레시피 상태
   const currentUser = "user1"; // 현재 로그인한 사용자 예시
 
+  // 검색어에 따라 필터링된 레시피 목록
   const filteredRecipes = mockRecipes.filter(
     (recipe) =>
       recipe.title.includes(searchTerm) ||
@@ -94,13 +107,37 @@ const Recipes = () => {
       recipe.equipment.some((equip) => equip.includes(searchTerm))
   );
 
+  // 스크랩 상태를 토글하는 함수
+  const handleToggleSave = (recipeId) => {
+    setSavedRecipes((prevSaved) => {
+      const updatedSaved = prevSaved.includes(recipeId)
+        ? prevSaved.filter((id) => id !== recipeId) // 이미 스크랩된 레시피는 제거
+        : [...prevSaved, recipeId]; // 스크랩되지 않은 레시피는 추가
+
+      // 로그 출력
+      if (prevSaved.includes(recipeId)) {
+        console.log(`레시피 ${recipeId}의 스크랩이 취소되었습니다.`);
+      } else {
+        console.log(`레시피 ${recipeId}이(가) 스크랩되었습니다.`);
+      }
+
+      return updatedSaved;
+    });
+  };
+
   return (
     <div className="container">
       <div className="search-container">
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
       {filteredRecipes.map((recipe) => (
-        <RecipeItem key={recipe.id} recipe={recipe} currentUser={currentUser} />
+        <RecipeItem
+          key={recipe.id}
+          recipe={recipe}
+          currentUser={currentUser}
+          onToggleSave={handleToggleSave}
+          savedRecipes={savedRecipes}
+        />
       ))}
     </div>
   );
