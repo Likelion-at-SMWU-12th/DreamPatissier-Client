@@ -5,17 +5,12 @@ import styled from "styled-components";
 
 // 컴포넌트
 
-import Product from "../components/Product";
 import Search from "../components/Search";
 import Category from "../components/Category";
 
 // 이미지
 
 import bbangSlide from "../assets/bbangSlide.png";
-import Oatmeal from "../assets/pro-Oatmeal.png";
-import Rice from "../assets/pro-Rice.png";
-import Oreo from "../assets/pro-Oreo.png";
-import Ciabatta from "../assets/pro-Ciabatta.png";
 import Morning from "../assets/CT-morning.png";
 import Bagle from "../assets/CT-bagle.png";
 import Baguette from "../assets/CT-baugette.png";
