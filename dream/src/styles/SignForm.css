@@ -91,3 +91,10 @@
   padding: 20px;
   border-radius: 10px;
 }
+
+.error-message {
+  font-weight: 800;
+  color: red;
+  font-size: 11px;
+  padding-top: 10px;
+}

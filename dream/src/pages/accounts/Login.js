@@ -14,7 +14,7 @@ const Login = () => {
           <IconLogo src={logoIcon} />
         </ImgBox>
         <InputWrap>
-          <InputBox type="text" placeholder="이메일" value="" onChange="" />
+          <InputBox type="text" placeholder="아이디" value="" onChange="" />
           <InputBox
             type="password"
             placeholder="비밀번호"
@@ -38,8 +38,8 @@ const LoginWrap = styled.div`
   justify-content: center;
   align-items: center;
   display: flex;
-  height: 100vh;
-  padding-bottom: 200px;
+  height: 100vh; /* 화면 전체 높이를 차지 */
+  background-color: white;
 `;
 const LoginBox = styled.div`
   display: flex;
@@ -48,7 +48,7 @@ const LoginBox = styled.div`
   justify-content: center;
   width: 250px;
   padding: 20px;
-  margin-top: 45%;
+  /* margin-top: 45%; */
 `;
 const ImgBox = styled.div`
   width: 200px;
@@ -67,6 +67,7 @@ const IconLogo = styled.img`
   width: 100px;
 `;
 const InputWrap = styled.div`
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;

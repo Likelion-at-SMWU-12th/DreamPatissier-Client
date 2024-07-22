@@ -132,8 +132,8 @@ const StyledCheck = styled.input`
   appearance: none;
   border: 1px solid #ccc;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   cursor: pointer;
   position: relative;
   margin-right: 10px;
@@ -143,8 +143,8 @@ const StyledCheck = styled.input`
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     background-color: var(--yellow);
     border-radius: 50%;
     transform: translate(-50%, -50%);
@@ -156,11 +156,12 @@ const Allcheck = styled.label`
 `;
 
 const SmallCheck = styled.label`
-  font-size: 12px;
+  font-size: 13px;
+  color: var(--grey);
+  letter-spacing: -0.5px;
 `;
 
 const StyledLine = styled.div`
   margin: 5px 0px;
   border-bottom: var(--yellow) 1px solid;
-  
 `;
