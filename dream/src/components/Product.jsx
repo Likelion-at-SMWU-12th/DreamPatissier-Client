@@ -23,7 +23,6 @@ const Product = ({ id, imgSrc, tags, title, price }) => {
 export default Product;
 
 const ProductBox = styled.div`
-  width: calc(50% - 10px);
   margin-bottom: 20px;
   overflow: hidden;
 `;
@@ -43,7 +42,7 @@ const ProductImg = styled.img`
 const ProductText = styled.div`
   align-items: center;
   margin: 0;
-  padding: 0;
+  padding-left: 10px;
 `;
 
 const Keywords = styled.span`

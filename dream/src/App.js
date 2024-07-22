@@ -6,7 +6,6 @@ import Recipes from "./pages/Recipes";
 import EditRecipe from "./pages/recipes/EditRecipe";
 import WriteRecipe from "./pages/recipes/WriteRecipe";
 import Diary from "./pages/Diary";
-import RecordDetail from "./pages/diary/RecordDetail";
 import Users from "./pages/Users";
 import OrderList from "./pages/userpage/OrderList";
 import Review from "./pages/userpage/Review";
@@ -20,14 +19,15 @@ import Login from "./pages/accounts/Login";
 import SignClear from "./pages/accounts/SignClear";
 import CategoryPage from "./pages/CategoryPage";
 
-// import profile from "./assets/logo.png";
+import profile from "./assets/logo.png";
 
 function App() {
   const location = useLocation();
   const hideMenubar =
     location.pathname === "/accounts/login/" ||
     location.pathname === "/accounts/signup/" ||
-    location.pathname === "/accounts/signup-clear";
+    location.pathname === "/accounts/signup-clear" ||
+    location.pathname === "/test/questions/1";
 
   return (
     <>
@@ -35,7 +35,6 @@ function App() {
       <Routes>
         <Route path="/bakery" element={<Bakery />}>
           <Route path="/bakery/:categoryName/" element={<CategoryPage />} />
-
           <Route path="/bakery/product/:id" element={<Detail />} />
         </Route>
         <Route path="/recipes" element={<Recipes />} />
@@ -45,7 +44,6 @@ function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/users/orders" element={<OrderList />} />
         <Route path="/users/reviews" element={<Review />} />
-        <Route path="/record/:date" element={<RecordDetail />} />
         <Route path="/users/reviews/:id" element={<WriteReview />} />
         <Route path="/users/saved-recipes" element={<SavedRecipes />} />
         <Route path="/test/result/{int:pk}" element={<TestBread />} />
@@ -54,6 +52,7 @@ function App() {
         <Route path="/accounts/signup-clear" element={<SignClear />} />
         <Route path="/accounts/login/" element={<Login />} />
         <Route path="/accounts/logout/" element={<TestBread />} />
+        <Route path="/test/questions/1" element={<TestBread />} />
       </Routes>
     </>
   );
