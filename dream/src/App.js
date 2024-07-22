@@ -16,6 +16,7 @@ import Detail from "./pages/Detail";
 import Signup from "./pages/accounts/Signup";
 import Login from "./pages/accounts/Login";
 import SignClear from "./pages/accounts/SignClear";
+import CategoryPage from "./pages/CategoryPage";
 
 // import profile from "./assets/logo.png";
 
@@ -30,8 +31,11 @@ function App() {
     <>
       {!hideMenubar && <Menubar />}
       <Routes>
-        <Route path="/bakery" element={<Bakery />} />
-        <Route path="/product/:id" element={<Detail />} />
+        <Route path="/bakery" element={<Bakery />}>
+          <Route path="/bakery/:categoryName/" element={<CategoryPage />} />
+
+          <Route path="/bakery/product/:id" element={<Detail />} />
+        </Route>
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/diary" element={<Diary />} />
         <Route path="/users" element={<Users />} />
