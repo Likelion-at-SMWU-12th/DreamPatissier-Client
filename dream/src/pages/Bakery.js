@@ -31,7 +31,7 @@ function Bakery() {
       .get("/product.json")
       .then((response) => {
         const shuffledProducts = response.data.sort(() => 0.5 - Math.random());
-        setRandomProducts(shuffledProducts.slice(0, 4)); // 4개의 랜덤 제품
+        setRandomProducts(shuffledProducts);
         setStatus("success");
       })
       .catch((error) => {
@@ -125,10 +125,12 @@ const BannerImg = styled.img`
 `;
 
 const ProductBox = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 5%;
+  margin: 0px 25px;
+  display: grid;
+  grid-template-columns: repeat(2, 47vw);
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
 `;
 
 const CategoryWrap = styled.div`
