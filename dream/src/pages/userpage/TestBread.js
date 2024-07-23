@@ -6,9 +6,9 @@ import {
   useNavigate,
   Navigate,
 } from "react-router-dom";
-import Question from "../../components/Question";
-import Result from "../../components/Result";
-import ProgressBar from "../../components/ProgressBar";
+import Question from "../../components/Question.jsx";
+import Result from "../../components/Result.jsx";
+import ProgressBar from "../../components/ProgressBar.jsx";
 
 const TestBread = () => {
   const [scores, setScores] = useState({ F: 0, T: 0, P: 0, J: 0 });
