@@ -1,4 +1,3 @@
-// 기본 기능 & 컴포넌트
 import React, { useEffect, useState } from "react";
 import Product from "../components/Product";
 import Footer from "../components/Footer";
@@ -40,6 +39,10 @@ function Bakery() {
       });
   }, []);
 
+  const handleSearch = (tagsArray) => {
+    navigate(`/bakery/search/${tagsArray.join(",")}`);
+  };
+
   // 로딩 중인 경우
   if (status === "loading") {
     return (
@@ -65,7 +68,7 @@ function Bakery() {
           <BannerImg src={bbangSlide} />
         </BannerBox>
       </div>
-      <Search />
+      <Search onSearch={handleSearch} />
       <CategoryWrap>
         {categories.map((category) => (
           <Category

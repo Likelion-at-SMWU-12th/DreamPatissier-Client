@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useParams } from "react-router-dom";
 
 const Result = () => {
-  const { resultId } = useParams(); // 결과 ID를 URL 파라미터에서 가져옴
+  const { resultId } = useParams();
   const [resultData, setResultData] = useState(null);
 
   // 결과 데이터 불러오기

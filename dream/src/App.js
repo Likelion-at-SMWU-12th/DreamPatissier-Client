@@ -19,6 +19,7 @@ import Login from "./pages/accounts/Login";
 import SignClear from "./pages/accounts/SignClear";
 import CategoryPage from "./pages/CategoryPage";
 import Logout from "./pages/userpage/Logout";
+import SearchPage from "./pages/SearchPage";
 
 import profile from "./assets/logo.png";
 
@@ -36,6 +37,7 @@ function App() {
         <Route path="/bakery" element={<Bakery />}>
           <Route path="/bakery/:categoryName/" element={<CategoryPage />} />
           <Route path="/bakery/product/:id" element={<Detail />} />
+          <Route path="/bakery/search/:tags" element={<SearchPage />} />
         </Route>
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/recipes/:id" element={<EditRecipe />} />
