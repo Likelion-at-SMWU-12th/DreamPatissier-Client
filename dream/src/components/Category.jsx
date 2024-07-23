@@ -21,7 +21,10 @@ const Category = ({ imgSrc, name, uiName }) => {
 
 export default Category;
 
-const CategoryWrap = styled.div``;
+const CategoryWrap = styled.div`
+  justify-content: center;
+  display: flex;
+`;
 
 const CategoryBox = styled.button`
   border: none;
