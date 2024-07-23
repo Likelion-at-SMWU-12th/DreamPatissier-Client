@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import logoIcon from "../../assets/logoIcon.svg";
 import logoTitle from "../../assets/logoTitle.svg";
@@ -6,6 +6,17 @@ import YellowBtn from "../../components/YellowBtn";
 import { Link } from "react-router-dom";
 
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
   return (
     <LoginWrap>
       <LoginBox>
@@ -14,12 +25,17 @@ const Login = () => {
           <IconLogo src={logoIcon} />
         </ImgBox>
         <InputWrap>
-          <InputBox type="text" placeholder="아이디" value="" onChange="" />
+          <InputBox
+            type="text"
+            placeholder="아이디"
+            value={username}
+            onChange={handleUsernameChange}
+          />
           <InputBox
             type="password"
             placeholder="비밀번호"
-            value=""
-            onChange=""
+            value={password}
+            onChange={handlePasswordChange}
           />
         </InputWrap>
         <YellowBtn txt="로그인" type="submit" />
