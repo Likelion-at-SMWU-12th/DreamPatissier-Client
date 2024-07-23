@@ -18,6 +18,8 @@ import Signup from "./pages/accounts/Signup";
 import Login from "./pages/accounts/Login";
 import SignClear from "./pages/accounts/SignClear";
 import CategoryPage from "./pages/CategoryPage";
+import Logout from "./pages/userpage/Logout";
+import SearchPage from "./pages/SearchPage";
 
 import profile from "./assets/logo.png";
 
@@ -26,8 +28,7 @@ function App() {
   const hideMenubar =
     location.pathname === "/accounts/login/" ||
     location.pathname === "/accounts/signup/" ||
-    location.pathname === "/accounts/signup-clear" ||
-    location.pathname === "/test/questions/1";
+    location.pathname === "/accounts/signup-clear";
 
   return (
     <>
@@ -36,6 +37,7 @@ function App() {
         <Route path="/bakery" element={<Bakery />}>
           <Route path="/bakery/:categoryName/" element={<CategoryPage />} />
           <Route path="/bakery/product/:id" element={<Detail />} />
+          <Route path="/bakery/search/:tags" element={<SearchPage />} />
         </Route>
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/recipes/:id" element={<EditRecipe />} />
@@ -51,8 +53,8 @@ function App() {
         <Route path="/accounts/signup/" element={<Signup />} />
         <Route path="/accounts/signup-clear" element={<SignClear />} />
         <Route path="/accounts/login/" element={<Login />} />
-        <Route path="/accounts/logout/" element={<TestBread />} />
-        <Route path="/test/questions/1" element={<TestBread />} />
+        <Route path="/accounts/logout/" element={<Logout />} />
+        <Route path="/test/*" element={<TestBread />} />
       </Routes>
     </>
   );

@@ -12,7 +12,11 @@ const Product = ({ id, imgSrc, tags, title, price }) => {
         <ProductImg src={imgSrc} />
       </ProductImgBox>
       <ProductText>
-        <Keywords>{tags}</Keywords>
+        <Keywords>
+          {tags.map((tag, index) => (
+            <Tag key={index}>{tag}</Tag>
+          ))}
+        </Keywords>
         <Titles>{title}</Titles>
         <Prices>{formatPrice(price)}원</Prices>
       </ProductText>
@@ -42,13 +46,20 @@ const ProductImg = styled.img`
 const ProductText = styled.div`
   align-items: center;
   margin: 0;
-  padding-left: 10px;
+  padding-left: 5px;
 `;
 
-const Keywords = styled.span`
+const Keywords = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2%;
+  margin: 5px 0px;
+`;
+
+const Tag = styled.span`
   color: var(--yellow);
-  font-weight: bold;
-  font-size: 10px;
+  font-weight: 800;
+  font-size: 9px;
 `;
 
 const Titles = styled.p`

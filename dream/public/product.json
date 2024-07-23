@@ -11,7 +11,7 @@
     "id": 2,
     "categoryName": "bagle",
     "imgSrc": "/images/rice.png",
-    "tags": ["#가루쌀", "#식물성", "#밀가루X", "설탕X"],
+    "tags": ["#가루쌀", "#식물성", "#밀가루X", "#설탕X"],
     "title": "[공디저트] 쌀베이글",
     "price": 15000
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "categoryName": "cake",
     "imgSrc": "/images/oreo.png",
-    "tags": ["#글루텐프리", "#저당", "#건강한지방", "밀가루X"],
+    "tags": ["#글루텐프리", "#저당", "#건강한지방", "#밀가루X"],
     "title": "[카토라] 오레오 크림 치즈케이크",
     "price": 8145
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "categoryName": "donut",
     "imgSrc": "/images/chodonut.png",
-    "tags": ["#프로틴", "#저당", "설탕X"],
+    "tags": ["#프로틴", "#저당", "#설탕X"],
     "title": "[삼림] 프로젝트:H 도넛 더블초코",
     "price": 16900
   },

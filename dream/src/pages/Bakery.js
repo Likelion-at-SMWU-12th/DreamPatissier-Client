@@ -1,4 +1,3 @@
-// 기본 기능 & 컴포넌트
 import React, { useEffect, useState } from "react";
 import Product from "../components/Product";
 import Footer from "../components/Footer";
@@ -31,7 +30,7 @@ function Bakery() {
       .get("/product.json")
       .then((response) => {
         const shuffledProducts = response.data.sort(() => 0.5 - Math.random());
-        setRandomProducts(shuffledProducts.slice(0, 4)); // 4개의 랜덤 제품
+        setRandomProducts(shuffledProducts);
         setStatus("success");
       })
       .catch((error) => {
@@ -39,6 +38,10 @@ function Bakery() {
         setStatus("error");
       });
   }, []);
+
+  const handleSearch = (tagsArray) => {
+    navigate(`/bakery/search/${tagsArray.join(",")}`);
+  };
 
   // 로딩 중인 경우
   if (status === "loading") {
@@ -65,7 +68,7 @@ function Bakery() {
           <BannerImg src={bbangSlide} />
         </BannerBox>
       </div>
-      <Search />
+      <Search onSearch={handleSearch} />
       <CategoryWrap>
         {categories.map((category) => (
           <Category
@@ -125,10 +128,12 @@ const BannerImg = styled.img`
 `;
 
 const ProductBox = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 5%;
+  margin: 0px 25px;
+  display: grid;
+  grid-template-columns: repeat(2, 47vw);
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
 `;
 
 const CategoryWrap = styled.div`

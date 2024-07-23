@@ -9,8 +9,12 @@ const Search = ({ onSearch }) => {
     setKeywords(e.target.value);
   };
 
-  const SearchClick = () => {
-    onSearch(keywords);
+  const handleSearchClick = () => {
+    const tagsArray = keywords
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
+    onSearch(tagsArray);
   };
 
   return (
@@ -22,7 +26,7 @@ const Search = ({ onSearch }) => {
           value={keywords}
           onChange={handleInputChange}
         />
-        <SearchButton onClick={SearchClick}>
+        <SearchButton onClick={handleSearchClick}>
           <SearchImg src={SearchIcon} alt="Search Icon" />
         </SearchButton>
       </SearchBox>
@@ -59,6 +63,7 @@ const SearchBox = styled.div`
 `;
 
 const InputBox = styled.input`
+  outline: none;
   border: none;
   width: 80%;
   background-color: #f8f8f8;

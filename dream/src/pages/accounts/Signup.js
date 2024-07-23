@@ -1,14 +1,21 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
 import Cancel from "../../assets/cancel.svg";
 import SignForm from "../../components/SignForm.jsx";
 
 const Signup = () => {
+  const navigate = useNavigate();
+
+  const handleCancelClick = () => {
+    navigate("/accounts/login/");
+  };
+
   return (
     <div>
       <Bar>
         <Title>회원가입</Title>
-        <CancelIcon src={Cancel} />
+        <CancelIcon src={Cancel} onClick={handleCancelClick} />
       </Bar>
       <ContentWrap>
         <SignForm />
@@ -42,13 +49,14 @@ const CancelIcon = styled.img`
   position: absolute;
   right: 27px;
   height: 30px;
+  cursor: pointer;
 `;
 
 const ContentWrap = styled.div`
   justify-content: center;
   align-items: center;
   display: flex;
-  height: 100vh; /* 화면 전체 높이를 차지 */
+  height: 100vh;
   background-color: white;
   padding-top: 70px;
 `;
