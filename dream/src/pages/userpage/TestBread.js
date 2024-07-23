@@ -9,9 +9,11 @@ import {
 import Question from "../../components/Question.jsx";
 import Result from "../../components/Result.jsx";
 import ProgressBar from "../../components/ProgressBar.jsx";
+import axios from "axios";
 
 const TestBread = () => {
   const [scores, setScores] = useState({ F: 0, T: 0, P: 0, J: 0 });
+  const [resultId, setResultId] = useState(null); // 결과 ID 상태 추가
 
   const questions = [
     {
@@ -63,20 +65,24 @@ const TestBread = () => {
     },
   ];
 
+  // 선택지 클릭 핸들러
   const handleOptionClick = (type, navigate, page) => {
     setScores({ ...scores, [type]: scores[type] + 1 });
     const nextPage = page + 1;
     if (nextPage < questions.length) {
       navigate(`/test/questions/${nextPage + 1}`);
     } else {
-      navigate(`/test/result`);
+      // 최종 질문 후 점수 제출
+      axios
+        .post("/test/submit", scores)
+        .then((response) => {
+          setResultId(response.data.resultId); // 서버로부터 결과 ID를 받아옴
+          navigate(`/test/result/${response.data.resultId}`);
+        })
+        .catch((error) => {
+          console.error("Error submitting test results", error);
+        });
     }
-  };
-
-  const getResultType = () => {
-    const type1 = scores.F > scores.T ? "F" : "T";
-    const type2 = scores.P > scores.J ? "P" : "J";
-    return `${type1}${type2}`;
   };
 
   return (
@@ -90,13 +96,13 @@ const TestBread = () => {
           />
         }
       />
-      <Route path="result" element={<Result resultType={getResultType()} />} />
-      <Route path="/" element={<Navigate to="/test/questions/1" />} />{" "}
-      {/* 첫 질문을 1로 설정 */}
+      <Route path="result/:resultId" element={<Result />} />
+      <Route path="/" element={<Navigate to="/test/questions/1" />} />
     </Routes>
   );
 };
 
+// 질문 페이지 컴포넌트
 const QuestionPage = ({ questions, handleOptionClick }) => {
   const { page } = useParams();
   const navigate = useNavigate();
@@ -105,7 +111,7 @@ const QuestionPage = ({ questions, handleOptionClick }) => {
   useEffect(() => {
     // 페이지 인덱스가 유효한지 확인하고 유효하지 않으면 첫 번째 질문으로 리다이렉트
     if (isNaN(pageIndex) || pageIndex < 0 || pageIndex >= questions.length) {
-      navigate(`/test/questions/1`); // 유효하지 않은 경우 첫 질문으로 리다이렉트
+      navigate(`/test/questions/1`);
     }
   }, [pageIndex, navigate, questions.length]);
 
