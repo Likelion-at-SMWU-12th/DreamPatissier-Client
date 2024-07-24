@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import "../styles/SignForm.css";
 import TermS from "../pages/accounts/TermS";
 import TermP from "../pages/accounts/TermP";
+import Popup from "../components/Popup";
 
 const Checkbox = ({ allChecked, setAllChecked }) => {
   const [checkList, setCheckList] = useState({
@@ -47,8 +47,19 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
   }, [checkList, setAllChecked]);
 
   // 약관 팝업
-  const [showTerms, setShowTerms] = useState(false);
-  const [showPrivacy, setShowPrivacy] = useState(false);
+  const [showPopup, setShowPopup] = useState({
+    show: false,
+    title: "",
+    content: null,
+  });
+
+  const openPopup = (title, content) => {
+    setShowPopup({ show: true, title, content });
+  };
+
+  const closePopup = () => {
+    setShowPopup({ show: false, title: "", content: null });
+  };
 
   return (
     <AgreeContainer>
@@ -72,13 +83,6 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
         <SmallCheck htmlFor="termsAgree">
           [필수] 만 14세 이상 서비스 이용 동의
         </SmallCheck>
-        <button
-          type="button"
-          className="terms-button"
-          onClick={() => setShowTerms(true)}
-        >
-          보기
-        </button>
       </CheckboxItem>
       <CheckboxItem>
         <StyledCheck
@@ -90,13 +94,13 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
         <SmallCheck htmlFor="privacyAgree">
           [필수] 개인정보 수집/이용 동의
         </SmallCheck>
-        <button
+        <SeeButton
           type="button"
           className="terms-button"
-          onClick={() => setShowPrivacy(true)}
+          onClick={() => openPopup("개인정보 수집/이용 동의", <TermP />)}
         >
           보기
-        </button>
+        </SeeButton>
       </CheckboxItem>
       <CheckboxItem>
         <StyledCheck
@@ -106,6 +110,13 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
           onChange={handleCheck}
         />
         <SmallCheck htmlFor="serviceAgree">[필수] 서비스 이용 약관</SmallCheck>
+        <SeeButton
+          type="button"
+          className="terms-button"
+          onClick={() => openPopup("서비스 이용 약관", <TermS />)}
+        >
+          보기
+        </SeeButton>
       </CheckboxItem>
       <CheckboxItem>
         <StyledCheck
@@ -127,17 +138,10 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
           [선택] 마케팅 정보/이용 동의
         </SmallCheck>
       </CheckboxItem>
-      {showTerms && (
-        <div className="popup">
-          <button onClick={() => setShowTerms(false)}>닫기</button>
-          <pre>{TermS}</pre>
-        </div>
-      )}
-      {showPrivacy && (
-        <div className="popup">
-          <button onClick={() => setShowPrivacy(false)}>닫기</button>
-          <pre>{TermP}</pre>
-        </div>
+      {showPopup.show && (
+        <Popup title={showPopup.title} onClose={closePopup}>
+          {showPopup.content}
+        </Popup>
       )}
     </AgreeContainer>
   );
@@ -155,6 +159,7 @@ const AgreeContainer = styled.div`
 const CheckboxItem = styled.div`
   display: flex;
   align-items: center;
+  position: relative;
 `;
 
 const StyledCheck = styled.input`
@@ -193,4 +198,13 @@ const SmallCheck = styled.label`
 const StyledLine = styled.div`
   margin: 5px 0px;
   border-bottom: var(--yellow) 1px solid;
+`;
+
+const SeeButton = styled.button`
+  position: absolute;
+  right: 10px;
+  font-size: 10px;
+  text-decoration-line: none;
+  color: var(--grey);
+  font-weight: 500;
 `;

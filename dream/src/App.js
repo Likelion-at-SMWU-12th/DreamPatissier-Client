@@ -28,7 +28,8 @@ function App() {
   const hideMenubar =
     location.pathname === "/accounts/login/" ||
     location.pathname === "/accounts/signup/" ||
-    location.pathname === "/accounts/signup-clear";
+    location.pathname === "/accounts/signup-clear" ||
+    location.pathname === "/of-use";
 
   return (
     <>

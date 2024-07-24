@@ -1,10 +1,14 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import Cancel from "../../assets/cancel.svg";
 import Logo from "../../assets/logoIcon.svg";
 import LogoLetter from "../../assets/logoLetter.png";
+import YellowBtn from "../../components/YellowBtn";
 
 const SignClear = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <Bar>
@@ -13,15 +17,26 @@ const SignClear = () => {
       </Bar>
       <ContentsWrap>
         <LogoIcon src={Logo} />
-        <div>
-          <div>
-            <LogoLetterImg src={LogoLetter} />
-            <span>에</span>
-          </div>
-          <div>오신 걸 환영합니다</div>
-        </div>
-        <button>빵 유형 테스트 하러가기</button>
-        <button>메인 화면으로 이동하기</button>
+        <Welcome>
+          <LogoLetterImg src={LogoLetter} />
+          에
+          <br />
+          오신 것을 환영합니다!
+        </Welcome>
+        <ButtonWrap>
+          <YellowBtn
+            width={"338px"}
+            txt="빵 유형 테스트 하러 가기"
+            onBtnClick={() => navigate("/test/questions/1")}
+          />
+          <YellowBtn
+            width={"338px"}
+            txt="메인 화면으로 이동하기"
+            backgroundColor={"white"}
+            border={"1px solid #471D06"}
+            onBtnClick={() => navigate("/bakery")}
+          />
+        </ButtonWrap>
       </ContentsWrap>
     </>
   );
@@ -54,10 +69,35 @@ const CancelIcon = styled.img`
   height: 30px;
 `;
 
-const ContentsWrap = styled.div``;
+const ContentsWrap = styled.div`
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  margin-top: 184px;
+`;
 
-const LogoIcon = styled.img``;
+const LogoIcon = styled.img`
+  margin-bottom: 35px;
+  width: 66px;
+  height: auto;
+`;
 
 const LogoLetterImg = styled.img`
-  width: 30%;
+  width: 116px;
+  height: auto;
+  margin: 0px 3px;
+`;
+
+const Welcome = styled.div`
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 150%;
+  padding-bottom: 55px;
+`;
+
+const ButtonWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  align-items: center;
 `;

@@ -1,9 +1,13 @@
+// SignForm.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/SignForm.css";
 import YellowBtn from "../../src/components/YellowBtn";
 import Checkbox from "../components/CheckBox";
+import TermS from "../pages/accounts/TermS";
+import TermP from "../pages/accounts/TermP";
+import Popup from "../components/Popup";
 
 const SignForm = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +25,8 @@ const SignForm = () => {
     serviceAgree: false,
     allChecked: false,
   });
+  const [showTerms, setShowTerms] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
   const navigate = useNavigate();
 
   // 입력 필드 값 변경 시 호출되는 함수
@@ -80,6 +86,15 @@ const SignForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // 현재 입력된 데이터를 배열 형태로 콘솔에 출력
+    console.log("Form data before validation:", [
+      formData.username,
+      formData.password,
+      confirmPassword,
+      formData.nickname,
+      formData.phone,
+    ]);
+
     // 필수 항목 체크 확인
     if (
       !allChecked.termsAgree ||
@@ -99,6 +114,8 @@ const SignForm = () => {
     }
 
     // 서버에 데이터 전송
+    console.log("Sending data to server:", formData);
+
     axios
       .post("http://127.0.0.1:8000/accounts/signup/", formData)
       .then((response) => {
@@ -107,7 +124,10 @@ const SignForm = () => {
         navigate("/signup-clear");
       })
       .catch((error) => {
-        console.error("Signup failed", error);
+        console.error(
+          "Signup failed",
+          error.response ? error.response.data : error.message
+        );
         setMessage("서버 오류!");
       });
   };
@@ -175,7 +195,12 @@ const SignForm = () => {
             )
           )}
         </div>
-        <Checkbox allChecked={allChecked} setAllChecked={setAllChecked} />
+        <Checkbox
+          allChecked={allChecked}
+          setAllChecked={setAllChecked}
+          onShowTerms={() => setShowTerms(true)} // 팝업 열기
+          onShowPrivacy={() => setShowPrivacy(true)} // 팝업 열기
+        />
         {message && <div className="message">{message}</div>}
         <div className="btn-box">
           <YellowBtn
@@ -186,6 +211,16 @@ const SignForm = () => {
           />
         </div>
       </form>
+      {showTerms && (
+        <Popup onClose={() => setShowTerms(false)}>
+          <TermS />
+        </Popup>
+      )}
+      {showPrivacy && (
+        <Popup onClose={() => setShowPrivacy(false)}>
+          <TermP />
+        </Popup>
+      )}
     </div>
   );
 };
