@@ -54,7 +54,7 @@ const LoginWrap = styled.div`
   justify-content: center;
   align-items: center;
   display: flex;
-  height: 100vh; /* 화면 전체 높이를 차지 */
+  height: 100vh;
   background-color: white;
 `;
 const LoginBox = styled.div`
@@ -64,7 +64,6 @@ const LoginBox = styled.div`
   justify-content: center;
   width: 250px;
   padding: 20px;
-  /* margin-top: 45%; */
 `;
 const ImgBox = styled.div`
   width: 200px;
@@ -100,6 +99,7 @@ const InputBox = styled.input`
   height: 40px;
   padding: 5px 10px;
   font-size: 14px;
+  outline: none;
 `;
 
 const Guide = styled.div`
