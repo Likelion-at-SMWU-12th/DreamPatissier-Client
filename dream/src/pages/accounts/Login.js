@@ -38,7 +38,7 @@ const Login = () => {
             onChange={handlePasswordChange}
           />
         </InputWrap>
-        <YellowBtn txt="로그인" type="submit" />
+        <YellowBtn txt="로그인" type="submit" width={"275px"} />
         <Guide>
           아직 회원이 아니신가요?{" "}
           <Highlight to="/accounts/signup/">회원가입하기</Highlight>
@@ -74,6 +74,7 @@ const ImgBox = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
+  border-radius: 5px;
 `;
 const TitleLogo = styled.img`
   width: 185px;
@@ -88,6 +89,8 @@ const InputWrap = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1.5px solid #d9d9d9;
 `;
 
 const InputBox = styled.input`
@@ -95,7 +98,6 @@ const InputBox = styled.input`
   line-height: 0;
   width: 250px;
   height: 40px;
-  border-radius: 2px;
   padding: 5px 10px;
   font-size: 14px;
 `;

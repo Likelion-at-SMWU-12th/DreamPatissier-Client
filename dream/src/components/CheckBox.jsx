@@ -84,46 +84,40 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
           [필수] 만 14세 이상 서비스 이용 동의
         </SmallCheck>
       </CheckboxItem>
-      <PopBox>
-        <CheckboxItem>
-          <StyledCheck
-            type="checkbox"
-            id="privacyAgree"
-            checked={checkList.privacyAgree}
-            onChange={handleCheck}
-          />
-          <SmallCheck htmlFor="privacyAgree">
-            [필수] 개인정보 수집/이용 동의
-          </SmallCheck>
-          <SeeButton
-            type="button"
-            className="terms-button"
-            onClick={() => openPopup("개인정보 수집/이용 동의", <TermP />)}
-          >
-            <SeeSpan>보기</SeeSpan>
-          </SeeButton>
-        </CheckboxItem>
-      </PopBox>
-      <PopBox>
-        <CheckboxItem>
-          <StyledCheck
-            type="checkbox"
-            id="serviceAgree"
-            checked={checkList.serviceAgree}
-            onChange={handleCheck}
-          />
-          <SmallCheck htmlFor="serviceAgree">
-            [필수] 서비스 이용 약관
-          </SmallCheck>
-          <SeeButton
-            type="button"
-            className="terms-button"
-            onClick={() => openPopup("서비스 이용 약관", <TermS />)}
-          >
-            <SeeSpan>보기</SeeSpan>
-          </SeeButton>
-        </CheckboxItem>
-      </PopBox>
+      <CheckboxItem>
+        <StyledCheck
+          type="checkbox"
+          id="privacyAgree"
+          checked={checkList.privacyAgree}
+          onChange={handleCheck}
+        />
+        <SmallCheck htmlFor="privacyAgree">
+          [필수] 개인정보 수집/이용 동의
+        </SmallCheck>
+        <SeeButton
+          type="button"
+          className="terms-button"
+          onClick={() => openPopup("개인정보 수집/이용 동의", <TermP />)}
+        >
+          보기
+        </SeeButton>
+      </CheckboxItem>
+      <CheckboxItem>
+        <StyledCheck
+          type="checkbox"
+          id="serviceAgree"
+          checked={checkList.serviceAgree}
+          onChange={handleCheck}
+        />
+        <SmallCheck htmlFor="serviceAgree">[필수] 서비스 이용 약관</SmallCheck>
+        <SeeButton
+          type="button"
+          className="terms-button"
+          onClick={() => openPopup("서비스 이용 약관", <TermS />)}
+        >
+          보기
+        </SeeButton>
+      </CheckboxItem>
       <CheckboxItem>
         <StyledCheck
           type="checkbox"
@@ -165,6 +159,7 @@ const AgreeContainer = styled.div`
 const CheckboxItem = styled.div`
   display: flex;
   align-items: center;
+  position: relative;
 `;
 
 const StyledCheck = styled.input`
@@ -205,12 +200,9 @@ const StyledLine = styled.div`
   border-bottom: var(--yellow) 1px solid;
 `;
 
-const SeeSpan = styled.span``;
-
-const PopBox = styled.div``;
-
 const SeeButton = styled.button`
-  margin-top: 0px;
+  position: absolute;
+  right: 10px;
   font-size: 10px;
   text-decoration-line: none;
   color: var(--grey);
