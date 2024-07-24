@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import "../styles/SignForm.css";
+import TermS from "../pages/accounts/TermS";
+import TermP from "../pages/accounts/TermP";
+import Popup from "../components/Popup";
 
-const Checkbox = ({
-  allChecked,
-  setAllChecked,
-  onShowTerms,
-  onShowPrivacy,
-}) => {
+const Checkbox = ({ allChecked, setAllChecked }) => {
   const [checkList, setCheckList] = useState({
     allAgree: false,
     termsAgree: false,
@@ -49,6 +46,21 @@ const Checkbox = ({
     });
   }, [checkList, setAllChecked]);
 
+  // 약관 팝업
+  const [showPopup, setShowPopup] = useState({
+    show: false,
+    title: "",
+    content: null,
+  });
+
+  const openPopup = (title, content) => {
+    setShowPopup({ show: true, title, content });
+  };
+
+  const closePopup = () => {
+    setShowPopup({ show: false, title: "", content: null });
+  };
+
   return (
     <AgreeContainer>
       <CheckboxItem>
@@ -74,7 +86,7 @@ const Checkbox = ({
         <button
           type="button"
           className="terms-button"
-          onClick={onShowTerms} // 팝업 열기
+          onClick={() => openPopup("서비스 이용 약관", <TermS />)}
         >
           보기
         </button>
@@ -92,7 +104,7 @@ const Checkbox = ({
         <button
           type="button"
           className="terms-button"
-          onClick={onShowPrivacy} // 팝업 열기
+          onClick={() => openPopup("개인정보 수집/이용 동의", <TermP />)}
         >
           보기
         </button>
@@ -126,6 +138,11 @@ const Checkbox = ({
           [선택] 마케팅 정보/이용 동의
         </SmallCheck>
       </CheckboxItem>
+      {showPopup.show && (
+        <Popup title={showPopup.title} onClose={closePopup}>
+          {showPopup.content}
+        </Popup>
+      )}
     </AgreeContainer>
   );
 };
@@ -180,4 +197,8 @@ const SmallCheck = styled.label`
 const StyledLine = styled.div`
   margin: 5px 0px;
   border-bottom: var(--yellow) 1px solid;
+`;
+
+const PopupDiv = styled.div`
+  z-index: 2;
 `;

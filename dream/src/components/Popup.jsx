@@ -49,20 +49,25 @@ const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
   display: flex;
+  background-color: white;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 3;
 `;
 
 const PopupContainer = styled.div`
-  background: white;
-  padding: 20px;
-  width: 80%;
+  margin-top: 50px;
+  width: 95%;
   max-width: 500px;
-  max-height: 80%;
+  max-height: 90%;
+
   overflow-y: auto;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
 `;
 
 const CloseButton = styled.button`
