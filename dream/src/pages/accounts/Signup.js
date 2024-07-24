@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
+import { useNavigate } from "react-router-dom";
 import Cancel from "../../assets/cancel.svg";
 import SignForm from "../../components/SignForm.jsx";
 

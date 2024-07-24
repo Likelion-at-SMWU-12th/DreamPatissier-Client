@@ -131,6 +131,6 @@ const TermsWrap = styled.div`
 
 const TermsContent = styled.div`
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 150%;
 `;
