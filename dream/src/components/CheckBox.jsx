@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import "../styles/SignForm.css";
-import TermS from "../pages/accounts/TermS";
-import TermP from "../pages/accounts/TermP";
 
-const Checkbox = ({ allChecked, setAllChecked }) => {
+const Checkbox = ({
+  allChecked,
+  setAllChecked,
+  onShowTerms,
+  onShowPrivacy,
+}) => {
   const [checkList, setCheckList] = useState({
     allAgree: false,
     termsAgree: false,
@@ -46,10 +49,6 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
     });
   }, [checkList, setAllChecked]);
 
-  // 약관 팝업
-  const [showTerms, setShowTerms] = useState(false);
-  const [showPrivacy, setShowPrivacy] = useState(false);
-
   return (
     <AgreeContainer>
       <CheckboxItem>
@@ -75,7 +74,7 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
         <button
           type="button"
           className="terms-button"
-          onClick={() => setShowTerms(true)}
+          onClick={onShowTerms} // 팝업 열기
         >
           보기
         </button>
@@ -93,7 +92,7 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
         <button
           type="button"
           className="terms-button"
-          onClick={() => setShowPrivacy(true)}
+          onClick={onShowPrivacy} // 팝업 열기
         >
           보기
         </button>
@@ -127,18 +126,6 @@ const Checkbox = ({ allChecked, setAllChecked }) => {
           [선택] 마케팅 정보/이용 동의
         </SmallCheck>
       </CheckboxItem>
-      {showTerms && (
-        <div className="popup">
-          <button onClick={() => setShowTerms(false)}>닫기</button>
-          <pre>{TermS}</pre>
-        </div>
-      )}
-      {showPrivacy && (
-        <div className="popup">
-          <button onClick={() => setShowPrivacy(false)}>닫기</button>
-          <pre>{TermP}</pre>
-        </div>
-      )}
     </AgreeContainer>
   );
 };

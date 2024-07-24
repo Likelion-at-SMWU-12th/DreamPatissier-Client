@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import "../styles/SignForm.css";
 import YellowBtn from "../../src/components/YellowBtn";
 import Checkbox from "../components/CheckBox";
+import TermS from "../pages/accounts/TermS";
+import TermP from "../pages/accounts/TermP";
+import Popup from "../components/Popup";
 
 const SignForm = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +24,8 @@ const SignForm = () => {
     serviceAgree: false,
     allChecked: false,
   });
+  const [showTerms, setShowTerms] = useState(false); // 약관 팝업 상태 추가
+  const [showPrivacy, setShowPrivacy] = useState(false); // 개인정보 팝업 상태 추가
   const navigate = useNavigate();
 
   // 입력 필드 값 변경 시 호출되는 함수
@@ -175,7 +180,12 @@ const SignForm = () => {
             )
           )}
         </div>
-        <Checkbox allChecked={allChecked} setAllChecked={setAllChecked} />
+        <Checkbox
+          allChecked={allChecked}
+          setAllChecked={setAllChecked}
+          onShowTerms={() => setShowTerms(true)} // 팝업 열기
+          onShowPrivacy={() => setShowPrivacy(true)} // 팝업 열기
+        />
         {message && <div className="message">{message}</div>}
         <div className="btn-box">
           <YellowBtn
@@ -186,6 +196,16 @@ const SignForm = () => {
           />
         </div>
       </form>
+      {showTerms && (
+        <Popup onClose={() => setShowTerms(false)}>
+          <TermS />
+        </Popup>
+      )}
+      {showPrivacy && (
+        <Popup onClose={() => setShowPrivacy(false)}>
+          <TermP />
+        </Popup>
+      )}
     </div>
   );
 };
