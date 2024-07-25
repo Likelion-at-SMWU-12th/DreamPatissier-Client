@@ -27,11 +27,12 @@ const ProWrap = styled.div`
 const Numb = styled.span`
   position: absolute;
   right: 5px;
-  top: -15px;
-  font-size: 10px;
+  top: -20px;
+  font-size: 12px;
   color: var(--brown);
-  font-weight: 600;
-  letter-spacing: -0.2px;
+  font-family: "Noto Sans KR";
+  font-weight: medium;
+  letter-spacing: -0.5px;
 `;
 
 const BarBox = styled.div`
