@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import Product from "../components/Product";
+import Warning from "../assets/warning.png";
 
 const SearchPage = () => {
   const { tags } = useParams();
@@ -56,10 +57,10 @@ const SearchPage = () => {
   if (products.length === 0) {
     return (
       <MsgBox>
+        <WarningImg src={Warning} />
         <Message>
-          ˚₊*̥⸜ 🍞 굽는 중 ⋆*‧˚₊*̥
-          <br />
-          해당 상품을 준비중이에요.
+          검색하신 키워드의 빵이 없습니다. <br />
+          다른 웰니스 키워드를 검색해 주세요.
         </Message>
       </MsgBox>
     );
@@ -85,13 +86,23 @@ export default SearchPage;
 // 스타일 정의
 const MsgBox = styled.div`
   width: 100%;
-  margin: 100px 0px;
+  margin: 30px 0px;
+  text-align: center;
 `;
 
 const Message = styled.div`
   text-align: center;
-  font-size: 18px;
-  color: #999;
+  font-size: 14px;
+  color: #979797;
+  font-family: "Noto Sans KR";
+  font-weight: medium;
+  padding-bottom: 10px;
+`;
+
+const WarningImg = styled.img`
+  width: 54px;
+  height: auto;
+  margin-bottom: 15px;
 `;
 
 const ProductWrap = styled.div`
