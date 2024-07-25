@@ -13,7 +13,7 @@ import axios from "axios";
 
 const TestBread = () => {
   const [scores, setScores] = useState({ F: 0, T: 0, P: 0, J: 0 });
-  const [resultId, setResultId] = useState(null); // 결과 ID 상태 추가
+  const [resultId, setResultId] = useState(null);
 
   const questions = [
     {

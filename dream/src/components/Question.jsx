@@ -34,9 +34,10 @@ const Qbox = styled.div`
 `;
 
 const Q = styled.p`
-  font-family: "Noto Sans KR", sans-serif;
-  font-weight: 800;
+  font-family: "Noto Sans KR";
+  font-weight: bold;
   font-size: 20px;
+  letter-spacing: 1px;
   text-align: center;
 `;
 
