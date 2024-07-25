@@ -120,18 +120,19 @@ const TypeTextBox = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  width: 338px;
-  height: 260px;
+  width: 80%;
+  height: auto;
   border-radius: 10px;
   margin: 0;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.25);
+  padding: 20px 10px;
 `;
 const Text = styled.div`
   font-size: 17px;
   letter-spacing: -0.41px;
   font-family: "Noto Sans KR";
   font-weight: regular;
-  width: 295px;
+  width: 80%;
   height: auto;
   box-sizing: border-box;
   word-break: keep-all;
