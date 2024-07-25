@@ -34,10 +34,12 @@ const Qbox = styled.div`
 `;
 
 const Q = styled.p`
-  font-family: "Noto Sans KR", sans-serif;
-  font-weight: 800;
+  font-family: "Noto Sans KR";
+  font-weight: bold;
   font-size: 20px;
+  letter-spacing: 1px;
   text-align: center;
+  color: #311505;
 `;
 
 const Button = styled.button`
@@ -47,17 +49,19 @@ const Button = styled.button`
   border: 1px solid var(--brown);
   background-color: white;
   border-radius: 50px;
-  cursor: pointer;
-  font-size: 11px;
-  color: var(--brown);
-  font-weight: 600;
+  white-space: pre-wrap;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
-  text-align: center;
-  white-space: pre-wrap; /* Ensure line breaks are respected */
   padding: 20px;
+  color: var(--brown);
+  font-size: 11px;
+  font-family: "Noto Sans KR";
+  font-weight: medium;
+  letter-spacing: -0.5px;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
+
+  cursor: pointer;
 
   &:hover {
     background-color: var(--yellow);

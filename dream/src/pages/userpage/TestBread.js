@@ -13,7 +13,7 @@ import axios from "axios";
 
 const TestBread = () => {
   const [scores, setScores] = useState({ F: 0, T: 0, P: 0, J: 0 });
-  const [resultId, setResultId] = useState(null); // 결과 ID 상태 추가
+  const [resultId, setResultId] = useState(null);
 
   const questions = [
     {
@@ -65,24 +65,40 @@ const TestBread = () => {
     },
   ];
 
+  // 최종 점수를 "FP"와 같은 문자열 형태로 변환하는 함수
+  const getResultString = (scores) => {
+    const resultArray = [];
+    if (scores.F >= scores.T) resultArray.push("F");
+    else resultArray.push("T");
+    if (scores.P >= scores.J) resultArray.push("P");
+    else resultArray.push("J");
+    return resultArray.join("");
+  };
+
   // 선택지 클릭 핸들러
   const handleOptionClick = (type, navigate, page) => {
-    setScores({ ...scores, [type]: scores[type] + 1 });
-    const nextPage = page + 1;
-    if (nextPage < questions.length) {
-      navigate(`/test/questions/${nextPage + 1}`);
-    } else {
-      // 최종 질문 후 점수 제출
-      axios
-        .post("/test/submit", scores)
-        .then((response) => {
-          setResultId(response.data.resultId); // 서버로부터 결과 ID를 받아옴
-          navigate(`/test/result/${response.data.resultId}`);
-        })
-        .catch((error) => {
-          console.error("Error submitting test results", error);
-        });
-    }
+    setScores((prevScores) => {
+      const updatedScores = { ...prevScores, [type]: prevScores[type] + 1 };
+      const nextPage = page + 1;
+      if (nextPage < questions.length) {
+        navigate(`/test/questions/${nextPage + 1}`);
+      } else {
+        // 최종 질문 후 점수 제출
+        const resultString = getResultString(updatedScores);
+        console.log("Final Scores:", updatedScores); // 최종 점수 콘솔에 출력
+        console.log("Result String:", resultString); // 최종 결과 문자열 콘솔에 출력
+        axios
+          .post("/test/submit", { resultString })
+          .then((response) => {
+            setResultId(response.data.resultId); // 서버로부터 결과 ID를 받아옴
+            navigate(`/test/result/${response.data.resultId}`);
+          })
+          .catch((error) => {
+            console.error("Error submitting test results", error);
+          });
+      }
+      return updatedScores;
+    });
   };
 
   return (
@@ -102,7 +118,7 @@ const TestBread = () => {
   );
 };
 
-// 질문 페이지 컴포넌트
+// 페이지 넘김 관련 컴포넌트
 const QuestionPage = ({ questions, handleOptionClick }) => {
   const { page } = useParams();
   const navigate = useNavigate();
@@ -111,9 +127,13 @@ const QuestionPage = ({ questions, handleOptionClick }) => {
   useEffect(() => {
     // 페이지 인덱스가 유효한지 확인하고 유효하지 않으면 첫 번째 질문으로 리다이렉트
     if (isNaN(pageIndex) || pageIndex < 0 || pageIndex >= questions.length) {
-      navigate(`/test/questions/1`);
+      navigate("/test/questions/1");
     }
   }, [pageIndex, navigate, questions.length]);
+
+  if (pageIndex < 0 || pageIndex >= questions.length) {
+    return null;
+  }
 
   return (
     <div>
