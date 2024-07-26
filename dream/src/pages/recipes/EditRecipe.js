@@ -4,21 +4,22 @@ import "../../styles/WriteRecipe.css";
 import representPicture from "./represent_picture.png";
 import init_image from "./init_recipe_image.png";
 
-// const dummyRecipeData = {
-//   represent_img: "https://via.placeholder.com/150",
-//   title: "더미 레시피 제목",
-//   tags: ["건강", "간편"],
-//   cookingTime: "30분",
-//   equipment: ["전자레인지"],
-//   ingredients: [
-//     { item: "재료1", quantity: "1컵" },
-//     { item: "재료2", quantity: "2큰술" },
-//   ],
-//   steps: [
-//     { image: "https://via.placeholder.com/150", description: "1단계 설명" },
-//     { image: "https://via.placeholder.com/150", description: "2단계 설명" },
-//   ],
-// };
+const dummyRecipeData = {
+  id: 1,
+  represent_img: "https://via.placeholder.com/150",
+  title: "더미 레시피 제목",
+  tags: ["건강", "간편"],
+  cookingTime: "30분",
+  equipment: ["전자레인지"],
+  ingredients: [
+    { item: "재료1", quantity: "1컵" },
+    { item: "재료2", quantity: "2큰술" },
+  ],
+  steps: [
+    { image: "https://via.placeholder.com/150", description: "1단계 설명" },
+    { image: "https://via.placeholder.com/150", description: "2단계 설명" },
+  ],
+};
 
 const WriteRecipe = ({ recipeId }) => {
   const [image, setImage] = useState(representPicture);
@@ -52,13 +53,13 @@ const WriteRecipe = ({ recipeId }) => {
       } catch (error) {
         console.error("레시피 정보를 불러오는 데 실패했습니다:", error);
         // API 호출 실패 시 더미 데이터 사용
-        // setImage(dummyRecipeData.represent_img);
-        // setTitle(dummyRecipeData.title);
-        // setTags(dummyRecipeData.tags);
-        // setCookingTime(dummyRecipeData.cookingTime);
-        // setEquipment(dummyRecipeData.equipment);
-        // setIngredients(dummyRecipeData.ingredients);
-        // setSteps(dummyRecipeData.steps);
+        setImage(dummyRecipeData.represent_img);
+        setTitle(dummyRecipeData.title);
+        setTags(dummyRecipeData.tags);
+        setCookingTime(dummyRecipeData.cookingTime);
+        setEquipment(dummyRecipeData.equipment);
+        setIngredients(dummyRecipeData.ingredients);
+        setSteps(dummyRecipeData.steps);
       } finally {
         setLoading(false);
       }
