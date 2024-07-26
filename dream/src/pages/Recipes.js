@@ -6,17 +6,15 @@ import deleteIcon from "../assets/delete-icon.png";
 import savedIcon from "../assets/saved-icon.png";
 import unsavedIcon from "../assets/unsaved-icon.png";
 
-const SearchBar = ({ searchTerm, setSearchTerm }) => {
-  return (
-    <input
-      type="text"
-      className="search"
-      value={searchTerm}
-      placeholder="조리도구 및 웰니스 키워드를 검색해주세요."
-      onChange={(e) => setSearchTerm(e.target.value)}
-    />
-  );
-};
+const SearchBar = ({ searchTerm, setSearchTerm }) => (
+  <input
+    type="text"
+    className="search"
+    value={searchTerm}
+    placeholder="조리도구 및 웰니스 키워드를 검색해주세요."
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+);
 
 const RecipeItem = ({
   recipe,
@@ -29,11 +27,11 @@ const RecipeItem = ({
   const isSaved = savedRecipes.includes(recipe.id);
   const navigate = useNavigate();
 
-  const handleEdit = () => {
-    navigate(`/recipes/${recipe.id}/edit`);
+  const handleEditRecipe = () => {
+    navigate(`/recipes/edit/${recipe.id}`);
   };
 
-  const handleViewDetails = () => {
+  const handleDetailRecipe = () => {
     navigate(`/recipes/${recipe.id}`);
   };
 
@@ -41,7 +39,7 @@ const RecipeItem = ({
   const tagsList = Array.isArray(recipe.tags) ? recipe.tags : [];
 
   return (
-    <div className="recipe-item" onClick={handleViewDetails}>
+    <div className="recipe-item" onClick={handleDetailRecipe}>
       <img
         src={recipe.represent_img}
         alt={recipe.title}
@@ -58,12 +56,15 @@ const RecipeItem = ({
         <div className="recipe-buttons">
           {isAuthor ? (
             <>
-              <button className="edit-btn" onClick={handleEdit}>
+              <button className="edit-btn" onClick={handleEditRecipe}>
                 <img src={editIcon} alt="수정하기" />
               </button>
               <button
                 className="delete-btn"
-                onClick={() => onDelete(recipe.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(recipe.id);
+                }}
               >
                 <img src={deleteIcon} alt="삭제하기" />
               </button>
@@ -71,7 +72,10 @@ const RecipeItem = ({
           ) : (
             <button
               className="save-btn"
-              onClick={() => onToggleSave(recipe.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleSave(recipe.id);
+              }}
             >
               <img src={isSaved ? savedIcon : unsavedIcon} alt="저장하기" />
             </button>
@@ -90,17 +94,22 @@ const Recipes = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:3001/recipes")
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchRecipes = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/recipes");
+        const data = await response.json();
         const validatedData = data.map((recipe) => ({
           ...recipe,
           equipment: Array.isArray(recipe.equipment) ? recipe.equipment : [],
           tags: Array.isArray(recipe.tags) ? recipe.tags : [],
         }));
         setRecipes(validatedData);
-      })
-      .catch((error) => console.error("Error fetching recipes:", error));
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
+      }
+    };
+
+    fetchRecipes();
   }, []);
 
   const filteredRecipes = recipes.filter(
@@ -116,27 +125,32 @@ const Recipes = () => {
         ? prevSaved.filter((id) => id !== recipeId)
         : [...prevSaved, recipeId];
 
-      if (prevSaved.includes(recipeId)) {
-        console.log(`레시피 ${recipeId}의 스크랩이 취소되었습니다.`);
-      } else {
-        console.log(`레시피 ${recipeId}이(가) 스크랩되었습니다.`);
-      }
+      console.log(
+        `레시피 ${recipeId}의 스크랩이 ${
+          prevSaved.includes(recipeId) ? "취소되었습니다" : "되었습니다"
+        }.`
+      );
 
       return updatedSaved;
     });
   };
 
   const handleDeleteRecipe = (recipeId) => {
-    fetch(`http://localhost:3001/recipes/${recipeId}`, {
-      method: "DELETE",
-    })
-      .then(() => {
+    const deleteRecipe = async () => {
+      try {
+        await fetch(`http://localhost:3001/recipes/${recipeId}`, {
+          method: "DELETE",
+        });
         setRecipes((prevRecipes) =>
           prevRecipes.filter((recipe) => recipe.id !== recipeId)
         );
         console.log(`레시피 ${recipeId}이(가) 삭제되었습니다.`);
-      })
-      .catch((error) => console.error("Error deleting recipe:", error));
+      } catch (error) {
+        console.error("Error deleting recipe:", error);
+      }
+    };
+
+    deleteRecipe();
   };
 
   const handleAddRecipe = () => {
