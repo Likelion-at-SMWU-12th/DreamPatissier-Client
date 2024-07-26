@@ -3,11 +3,15 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import "../styles/Menubar.css";
 import logo from "../assets/logo.png";
 
-// 유형테스트 할때 메뉴바 일부분만 숨겨질 수 있도록 수정했어요~~
-
 const Menubar = () => {
   const location = useLocation();
   const isTestPath = location.pathname.startsWith("/test");
+
+  const getLinkClass = (path) => {
+    return location.pathname.startsWith(path)
+      ? "menu-link active"
+      : "menu-link";
+  };
 
   return (
     <>
@@ -34,17 +38,17 @@ const Menubar = () => {
           <div className="menu-row2">
             <ul className="menu-list">
               <li>
-                <Link to="/bakery" className="menu-link">
+                <Link to="/bakery" className={getLinkClass("/bakery")}>
                   웰니스빵
                 </Link>
               </li>
               <li>
-                <Link to="/recipes" className="menu-link">
+                <Link to="/recipes" className={getLinkClass("/recipes")}>
                   빵레시피
                 </Link>
               </li>
               <li>
-                <Link to="/diary" className="menu-link">
+                <Link to="/diary" className={getLinkClass("/diary")}>
                   빵기록
                 </Link>
               </li>

@@ -1,19 +1,18 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 
-const Category = ({ imgSrc, name, uiName }) => {
-  const navigate = useNavigate();
-
+const Category = ({ imgSrc, name, uiName, isSelected, onClick }) => {
   const handleCategoryClick = () => {
-    navigate(`/bakery/${name}`);
+    onClick(name);
   };
 
   return (
     <CategoryWrap>
       <CategoryBox onClick={handleCategoryClick}>
         <CategoryImg src={imgSrc} alt={uiName} />
-        <CategoryName uiName={uiName}>{uiName}</CategoryName>
+        <CategoryName isSelected={isSelected} uiName={uiName}>
+          {uiName}
+        </CategoryName>
       </CategoryBox>
     </CategoryWrap>
   );
@@ -42,7 +41,7 @@ const CategoryImg = styled.img`
 `;
 
 const CategoryName = styled.div`
-  color: var(--brown);
+  color: ${({ isSelected }) => (isSelected ? "#FFB415" : "var(--brown)")};
   font-size: 12px;
   font-weight: 1000;
   letter-spacing: -0.5px;

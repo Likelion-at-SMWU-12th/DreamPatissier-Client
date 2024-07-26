@@ -1,8 +1,4 @@
-/* write-review.menubar {
-  display: flex;
-  flex-direction: column;
-} */
-
+/* Menubar.css */
 .menu-row1 {
   display: flex;
   justify-content: space-between;
@@ -56,7 +52,6 @@
 .menu-link {
   color: #8a8888;
   text-decoration: none;
-  color: #333;
   display: block;
   text-align: center;
   border-radius: 20px;
@@ -67,4 +62,8 @@
 .menu-link:hover {
   background-color: #d4d4d4;
   color: #000;
+}
+
+.menu-link.active {
+  color: #ffb415;
 }

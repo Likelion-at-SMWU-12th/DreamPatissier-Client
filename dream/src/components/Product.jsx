@@ -60,20 +60,23 @@ const Tag = styled.span`
   color: var(--yellow);
   font-weight: 800;
   font-size: 9px;
+  letter-spacing: -0.5px;
 `;
 
 const Titles = styled.p`
   color: var(--brown);
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 800;
   margin: 0;
   margin-top: 4px;
+  letter-spacing: -0.5px;
 `;
 
 const Prices = styled.p`
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 800;
   color: var(--brown);
   margin: 0;
   margin-top: 5px;
+  letter-spacing: -0.5px;
 `;
