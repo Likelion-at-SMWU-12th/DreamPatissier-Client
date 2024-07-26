@@ -122,11 +122,6 @@
   color: #d53535;
 }
 
-/* 현재 달이 아닌 날짜에 적용할 스타일 */
-.not-current-month-tile {
-  color: #e3e3e3;
-}
-
 .selection-container {
   display: flex;
   justify-content: space-between;
