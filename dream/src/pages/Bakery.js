@@ -84,7 +84,7 @@ function Bakery() {
       {location.pathname === "/bakery" && (
         <ProductBox>
           {randomProducts.map((product) => (
-            <StyledLink to={`/product/${product.id}`} key={product.id}>
+            <StyledLink to={`/bakery/product/${product.id}`} key={product.id}>
               <Product
                 key={product.id}
                 imgSrc={product.imgSrc}

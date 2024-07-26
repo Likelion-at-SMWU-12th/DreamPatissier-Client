@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const Product = ({ id, imgSrc, tags, title, price }) => {
+const Product = ({ id, imgSrc, tags, title, price, description }) => {
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US").format(price);
   };
