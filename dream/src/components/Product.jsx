@@ -1,7 +1,11 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const Product = ({ id, imgSrc, tags, title, price, description }) => {
+  const location = useLocation();
+  const isCartPage = location.pathname.startsWith("/cart"); // 현재 경로가 /cart로 시작하는지 확인
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US").format(price);
   };
@@ -18,7 +22,8 @@ const Product = ({ id, imgSrc, tags, title, price, description }) => {
           ))}
         </Keywords>
         <Titles>{title}</Titles>
-        <Prices>{formatPrice(price)}원</Prices>
+        {!isCartPage && <Prices>{formatPrice(price)}원</Prices>}{" "}
+        {/* /cart 경로가 아닐 때만 가격 표시 */}
       </ProductText>
     </ProductBox>
   );

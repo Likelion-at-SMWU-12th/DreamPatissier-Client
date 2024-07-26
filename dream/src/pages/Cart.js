@@ -116,17 +116,22 @@ const CartHeader = styled.div`
 const SelectAll = styled.div`
   display: flex;
   align-items: center;
-
+  font-size: 14px;
+  letter-spacing: -0.5px;
+  color: var(--brown);
   input {
     margin-right: 5px;
   }
+  cursor: pointer;
 `;
 
 const DeleteSelected = styled.button`
   background: none;
   border: none;
-  color: #ff4141;
+  color: #8a8888;
   cursor: pointer;
+  font-size: 12px;
+  letter-spacing: -0.5px;
 `;
 
 const CartItems = styled.div`
