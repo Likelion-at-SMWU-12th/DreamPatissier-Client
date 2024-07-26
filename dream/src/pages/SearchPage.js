@@ -13,7 +13,7 @@ const SearchPage = () => {
   useEffect(() => {
     const tagArray = tags
       .split(",")
-      .map((tag) => tag.trim())
+      .map((tag) => tag.trim().toLowerCase())
       .filter((tag) => tag.length > 0);
 
     axios
@@ -21,12 +21,8 @@ const SearchPage = () => {
       .then((response) => {
         const filteredProducts = response.data.filter((product) => {
           const lowerCaseTags = product.tags.map((tag) => tag.toLowerCase());
-          const lowerCaseTitle = product.title.toLowerCase();
-          return tagArray.some(
-            (tag) =>
-              lowerCaseTags.some((productTag) =>
-                productTag.includes(tag.toLowerCase())
-              ) || lowerCaseTitle.includes(tag.toLowerCase())
+          return tagArray.some((tag) =>
+            lowerCaseTags.some((productTag) => productTag.includes(tag))
           );
         });
         setProducts(filteredProducts);

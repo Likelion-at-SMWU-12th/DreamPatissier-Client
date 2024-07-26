@@ -13,7 +13,7 @@ const CategoryPage = () => {
     // 카테고리별 제품 목록을 API에서 가져옴
     axios
       .get("/product.json")
-      // .get(`http://127.0.0.1:8000/bakery/${categoryName}/`)
+      // .get("http://127.0.0.1:8000/bakery/${categoryName}/)
       .then((response) => {
         // 카테고리별로 제품을 필터링함
         const filteredProducts = response.data.filter(
