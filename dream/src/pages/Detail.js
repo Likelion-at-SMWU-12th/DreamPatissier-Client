@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Footer from "../components/Footer";
 import styled from "styled-components";
+import ShopIcon from "../assets/shoppingcart.svg";
+import Review from "./userpage/Review";
 
 const Detail = () => {
   const { id } = useParams();
@@ -12,7 +14,7 @@ const Detail = () => {
   useEffect(() => {
     console.log("Fetching product details for id:", id);
     axios
-      .get(`/product.json`)
+      .get("/product.json")
       .then((response) => {
         const foundProduct = response.data.find(
           (product) => product.id === parseInt(id)
@@ -27,6 +29,10 @@ const Detail = () => {
       });
   }, [id]);
 
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("en-US").format(price);
+  };
+
   if (status === "loading") {
     return <div>Loading...</div>;
   }
@@ -37,13 +43,12 @@ const Detail = () => {
 
   return (
     <Container>
-      <CartButton>장바구니</CartButton>
       <ImgBox>
         <img src={product.imgSrc} alt={product.title} />
       </ImgBox>
       <TitleInfo>
-        <h1>{product.title}</h1>
-        <p>{product.price}원</p>
+        <Title>{product.title}</Title>
+        <Price> {formatPrice(product.price)}원</Price>
       </TitleInfo>
       <Section>
         <SectionTitle>웰니스정보</SectionTitle>
@@ -52,94 +57,215 @@ const Detail = () => {
             <Tag key={index}>{tag}</Tag>
           ))}
         </Tags>
-        <p>방부제와 밀가루 ZERO의 저탄건지 베이커리입니다.</p>
+        <WellnessInfo>
+          아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.
+        </WellnessInfo>
       </Section>
       <Section>
         <SectionTitle>상품정보</SectionTitle>
         <Info>
-          식단 관리에서 중요한 점은 칼로리가 아닌 영양성분입니다. 대부분 건강한
-          라이프 스타일을 생각하자마자 지방을 기피하기 시작하지만, 오히려 건강한
-          지방을 섭취하는 것은 지속 가능한 식단에 도움이 됩니다. 그래서 카토라의
-          오레오 크림 치즈케이크는 방부제와 합성료, 밀가루를 첨가하지 않고
-          저당과 건강한 지방의 완벽한 영양성분으로 건강한 베이커리를 제공합니다.
-          적은 설탕과 자연 감미료로 만든 당류 2g으로 걱정 없이 달콤한 오레오
-          크림 치즈케이크를 만나보세요.
+          아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이
+          안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면
+          아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직
+          못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직
+          연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이 안됐슴니다.
+          왜냐면 아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직
+          못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직
+          연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이 안됐슴니다.
+          왜냐면 아직 못했으니까요.
         </Info>
       </Section>
       <Section>
         <SectionTitle>상품구성</SectionTitle>
-        <p>판매하는 상품의 구성은 오레오 크림 치즈케이크 1개입니다.</p>
+        <Info>아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.</Info>
       </Section>
       <Section>
         <SectionTitle>리뷰</SectionTitle>
-        <p>리뷰 섹션</p>
+        <ReviewBox>
+          <GoodBad>만족해요</GoodBad>
+          <WriterInfo>
+            <Writer>빵**</Writer>|<Date>2024.07.19</Date>
+          </WriterInfo>
+          <ReviewText>
+            아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이
+            안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면
+            아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직
+            못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직
+            연동이 안됐슴니다. 왜냐면 아직 못했으니까요.
+          </ReviewText>
+        </ReviewBox>
+        <HrDiv />
+        <ReviewBox>
+          <GoodBad>만족해요</GoodBad>
+          <WriterInfo>
+            <Writer>빵**</Writer>|<Date>2024.07.19</Date>
+          </WriterInfo>
+          <ReviewText>
+            아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이
+            안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면
+            아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직
+            못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직
+            연동이 안됐슴니다. 왜냐면 아직 못했으니까요.
+          </ReviewText>
+        </ReviewBox>
       </Section>
+      <CartButton>
+        <Icon src={ShopIcon} alt="장바구니 아이콘" />
+        <ShopText>장바구니</ShopText>
+      </CartButton>
       <Footer />
     </Container>
   );
 };
 
-const Container = styled.div`
-  padding: 20px;
-`;
+const Container = styled.div``;
 
+// 장바구니 버튼
 const CartButton = styled.button`
   position: fixed;
-  right: 10%;
-  bottom: 10%;
-  z-index: 1000;
-  padding: 10px 20px;
-  background-color: #ff6347;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  right: 5%;
+  bottom: 5%;
+  z-index: 1;
+  padding: 10px 10px;
+  background-color: white;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+  border: var(--brown) 1px solid;
+  border-radius: 17px;
   cursor: pointer;
 `;
 
+const Icon = styled.img`
+  width: 17px;
+  margin-bottom: -3px;
+  margin-right: 2px;
+`;
+
+const ShopText = styled.div`
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--brown);
+  display: inline-block;
+`;
+
+// 이미지 섹션
 const ImgBox = styled.div`
   display: flex;
   justify-content: center;
+  margin-top: 25px;
+  margin-bottom: 20px;
   img {
     width: 90%;
   }
 `;
 
+// 가격&빵이름
 const TitleInfo = styled.div`
-  h1 {
-    font-size: 24px;
-    margin: 10px 0;
-  }
-  p {
-    font-size: 18px;
-    color: #555;
-  }
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding-left: 25px;
+  padding-bottom: 20px;
+  margin-bottom: 17px;
 `;
 
-const Section = styled.div`
-  margin: 20px 0;
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 20px;
-  margin-bottom: 10px;
-`;
-
-const Tags = styled.div`
-  margin-bottom: 10px;
-`;
-
-const Tag = styled.span`
-  display: inline-block;
-  background-color: #f0f0f0;
-  color: #555;
-  padding: 5px 10px;
-  margin-right: 5px;
-  border-radius: 3px;
-`;
-
-const Info = styled.p`
+const Title = styled.div`
   font-size: 16px;
-  color: #333;
+  color: var(--brown);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+`;
+const Price = styled.div`
+  font-size: 22px;
+  color: var(--brown);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+`;
+
+// 각 섹션 공통 스타일
+const Section = styled.div`
+  width: 90%;
+  margin-bottom: 25px;
+  margin-left: 27px;
+`;
+
+const SectionTitle = styled.div`
+  font-size: 17px;
+  letter-spacing: -0.5px;
+  line-height: 22px;
+  font-weight: 800;
+  margin-bottom: 3px;
+  border-bottom: 1.5px solid var(--yellow);
+  width: auto;
+  color: var(--brown);
+  display: inline-block;
+`;
+
+//태그 관련
+const Tags = styled.div`
+  margin-bottom: 4px;
+`;
+
+const Tag = styled.div`
+  display: inline-block;
+  margin-right: 5px;
+  color: var(--yellow);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  font-size: 12px;
+`;
+
+//설명칸
+const WellnessInfo = styled.div`
+  font-size: 14px;
+  letter-spacing: -0.5px;
+  word-break: keep-all;
+`;
+
+const Info = styled.div`
+  margin-top: 3px;
+  font-size: 14px;
+  letter-spacing: -0.5px;
+  word-break: keep-all;
+`;
+
+//리뷰 섹션
+const ReviewBox = styled.div`
+  margin-top: 15px;
+`;
+
+const GoodBad = styled.div`
+  font-size: 15px;
+  letter-spacing: 1%;
+  font-weight: 800;
+`;
+const WriterInfo = styled.div`
+  color: #979797;
+  font-size: 14px;
+  letter-spacing: 1%;
+  margin-top: 5px;
+`;
+
+const Writer = styled.div`
+  display: inline-block;
+  margin-right: 5px;
+`;
+
+const Date = styled.div`
+  display: inline-block;
+  margin-left: 5px;
+`;
+
+const ReviewText = styled.div`
+  font-size: 14px;
+  letter-spacing: -0.5px;
+  margin-top: 5px;
+  word-break: keep-all;
+`;
+
+const HrDiv = styled.div`
+  margin-top: 15px;
+  width: 100%;
+  border-bottom: 1px solid #d9d9d9;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 `;
 
 export default Detail;

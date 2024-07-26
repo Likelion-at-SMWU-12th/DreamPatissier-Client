@@ -29,7 +29,6 @@ function Bakery() {
     axios
       .get("/product.json")
       .then((response) => {
-        console.log("Fetched products:", response.data); // Debugging line
         const shuffledProducts = response.data.sort(() => 0.5 - Math.random());
         setRandomProducts(shuffledProducts);
         setStatus("success");
