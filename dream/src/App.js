@@ -38,9 +38,9 @@ function App() {
       <Routes>
         <Route path="/bakery" element={<Bakery />}>
           <Route path="/bakery/:categoryName/" element={<CategoryPage />} />
-          <Route path="/bakery/product/:id" element={<Detail />} />
           <Route path="/bakery/search/:tags" element={<SearchPage />} />
         </Route>
+        <Route path="/bakery/product/:id" element={<Detail />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/recipes/:id" element={<RecipeDetail />} />
         <Route path="/recipes/edit/:id" element={<EditRecipe />} />

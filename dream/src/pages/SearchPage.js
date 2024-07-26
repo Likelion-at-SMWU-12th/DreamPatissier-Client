@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import Product from "../components/Product";
@@ -13,7 +13,7 @@ const SearchPage = () => {
   useEffect(() => {
     const tagArray = tags
       .split(",")
-      .map((tag) => tag.trim())
+      .map((tag) => tag.trim().toLowerCase())
       .filter((tag) => tag.length > 0);
 
     axios
@@ -21,12 +21,8 @@ const SearchPage = () => {
       .then((response) => {
         const filteredProducts = response.data.filter((product) => {
           const lowerCaseTags = product.tags.map((tag) => tag.toLowerCase());
-          const lowerCaseTitle = product.title.toLowerCase();
-          return tagArray.some(
-            (tag) =>
-              lowerCaseTags.some((productTag) =>
-                productTag.includes(tag.toLowerCase())
-              ) || lowerCaseTitle.includes(tag.toLowerCase())
+          return tagArray.some((tag) =>
+            lowerCaseTags.some((productTag) => productTag.includes(tag))
           );
         });
         setProducts(filteredProducts);
@@ -69,13 +65,15 @@ const SearchPage = () => {
   return (
     <ProductWrap>
       {products.map((product) => (
-        <Product
-          key={product.id}
-          imgSrc={product.imgSrc}
-          tags={product.tags}
-          title={product.title}
-          price={product.price}
-        />
+        <StyledLink to={`/bakery/product/${product.id}`} key={product.id}>
+          <Product
+            key={product.id}
+            imgSrc={product.imgSrc}
+            tags={product.tags}
+            title={product.title}
+            price={product.price}
+          />
+        </StyledLink>
       ))}
     </ProductWrap>
   );
@@ -112,4 +110,10 @@ const ProductWrap = styled.div`
   align-items: center;
   gap: 10px;
   justify-content: center;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  display: block;
 `;
