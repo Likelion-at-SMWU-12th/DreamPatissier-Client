@@ -6,7 +6,6 @@ import deleteIcon from "../assets/delete-icon.png";
 import savedIcon from "../assets/saved-icon.png";
 import unsavedIcon from "../assets/unsaved-icon.png";
 
-// SearchBar 컴포넌트
 const SearchBar = ({ searchTerm, setSearchTerm }) => {
   return (
     <input
@@ -19,7 +18,6 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
   );
 };
 
-// RecipeItem 컴포넌트
 const RecipeItem = ({
   recipe,
   currentUser,
@@ -32,15 +30,18 @@ const RecipeItem = ({
   const navigate = useNavigate();
 
   const handleEdit = () => {
+    navigate(`/recipes/${recipe.id}/edit`);
+  };
+
+  const handleViewDetails = () => {
     navigate(`/recipes/${recipe.id}`);
   };
 
-  // 배열이 아닌 경우 빈 배열로 설정
   const equipmentList = Array.isArray(recipe.equipment) ? recipe.equipment : [];
   const tagsList = Array.isArray(recipe.tags) ? recipe.tags : [];
 
   return (
-    <div className="recipe-item">
+    <div className="recipe-item" onClick={handleViewDetails}>
       <img
         src={recipe.represent_img}
         alt={recipe.title}
@@ -81,7 +82,6 @@ const RecipeItem = ({
   );
 };
 
-// Recipes 컴포넌트
 const Recipes = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [savedRecipes, setSavedRecipes] = useState([]);
@@ -90,11 +90,9 @@ const Recipes = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // API를 통해 레시피 데이터를 가져옴
     fetch("http://localhost:3001/recipes")
       .then((response) => response.json())
       .then((data) => {
-        // 데이터 검증 및 변환
         const validatedData = data.map((recipe) => ({
           ...recipe,
           equipment: Array.isArray(recipe.equipment) ? recipe.equipment : [],
