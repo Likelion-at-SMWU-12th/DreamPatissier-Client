@@ -111,3 +111,23 @@
   cursor: pointer;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.no-recipes-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 65vh;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.no-recipes-message img {
+  max-width: 100px;
+  margin-bottom: 20px;
+}
+
+.no-recipes-message p {
+  margin: 0;
+}

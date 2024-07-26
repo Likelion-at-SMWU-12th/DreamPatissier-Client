@@ -89,7 +89,7 @@
 }
 
 .li_show {
-  max-height: 130px;
+  height: 130px;
   overflow-y: auto;
   font-size: 14px;
   width: 90%;
@@ -166,7 +166,8 @@ ul {
 .step {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .step-order {
@@ -175,37 +176,14 @@ ul {
   margin-right: 16px;
 }
 
-.step-image {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  margin-right: 16px;
-}
-
 .step-description {
   flex: 1;
-}
-.recipe-detail-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.recipe-image-container {
-  text-align: center;
 }
 
 .recipe-image {
   width: 100%;
   max-width: 600px;
   height: auto;
-}
-
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 20px 0;
 }
 
 .title-tags {
@@ -227,32 +205,6 @@ ul {
   gap: 10px;
 }
 
-.edit-button,
-.delete-button,
-.scrap-button {
-  padding: 10px 20px;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-}
-
-.edit-button {
-  background-color: #4caf50;
-}
-
-.delete-button {
-  background-color: #f44336;
-}
-
-.scrap-button {
-  background-color: #2196f3;
-}
-
-.divider {
-  border: 1px solid #ddd;
-  margin: 20px 0;
-}
-
 .details-container {
   display: flex;
   justify-content: space-between;
@@ -266,17 +218,6 @@ ul {
 .section-title {
   font-size: 1.5em;
   margin-bottom: 10px;
-}
-
-.ingredients-list {
-  list-style-type: none;
-  padding: 0;
-}
-
-.ingredient-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 5px;
 }
 
 .step-item {
@@ -295,8 +236,4 @@ ul {
   height: 100px;
   object-fit: cover;
   margin-right: 20px;
-}
-
-.step-description {
-  flex: 1;
 }
