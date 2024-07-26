@@ -42,8 +42,8 @@ function App() {
           <Route path="/bakery/search/:tags" element={<SearchPage />} />
         </Route>
         <Route path="/recipes" element={<Recipes />} />
-        <Route path="/recipes/:recipeId" element={<RecipeDetail />} />
-        <Route path="/recipes/:id" element={<EditRecipe />} />
+        <Route path="/recipes/:id" element={<RecipeDetail />} />
+        <Route path="/recipes/edit/:id" element={<EditRecipe />} />
         <Route path="/recipes/write" element={<WriteRecipe />} />
         <Route path="/diary" element={<Diary />} />
         <Route path="/users" element={<Users />} />
