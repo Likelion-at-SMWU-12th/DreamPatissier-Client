@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "../../styles/WriteRecipe.css";
 import representPicture from "./represent_picture.png";
 import init_image from "./init_recipe_image.png";
@@ -11,15 +12,16 @@ const mockUser = {
 const WriteRecipe = () => {
   const [image, setImage] = useState(representPicture);
   const [title, setTitle] = useState("");
-  const [tags, setTags] = useState([""]); // 변경된 부분
+  const [tags, setTags] = useState([""]);
   const [cookingTime, setCookingTime] = useState("");
-  const [equipment, setEquipment] = useState([""]); // 변경된 부분
+  const [equipment, setEquipment] = useState([""]);
   const [ingredients, setIngredients] = useState([{ item: "", quantity: "" }]);
   const [steps, setSteps] = useState([{ image: "", description: "" }]);
   const [user, setUser] = useState(mockUser);
 
   const fileInputRef = useRef(null);
   const stepFileInputRefs = useRef([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     return () => {
@@ -73,7 +75,7 @@ const WriteRecipe = () => {
 
     const recipeData = {
       author: user.id,
-      represent_img: image, // 수정된 부분
+      represent_img: image,
       title,
       tags,
       cookingTime,
@@ -85,6 +87,7 @@ const WriteRecipe = () => {
     try {
       await axios.post("/recipes", recipeData);
       alert("레시피가 등록되었습니다!");
+      navigate("/recipes");
     } catch (error) {
       console.error("레시피 등록에 실패했습니다:", error);
     }
@@ -116,11 +119,11 @@ const WriteRecipe = () => {
         <input
           className="input-recipe-data"
           type="text"
-          value={tags.join(", ")} // 배열을 문자열로 변환하여 표시
+          value={tags.join(", ")}
           placeholder="#웰니스 키워드를 작성해 주세요."
           onChange={(e) =>
             setTags(e.target.value.split(",").map((tag) => tag.trim()))
-          } // 입력값을 배열로 변환
+          }
         />
         <input
           className="input-recipe-data"
@@ -132,11 +135,11 @@ const WriteRecipe = () => {
         <input
           className="input-recipe-data"
           type="text"
-          value={equipment.join(", ")} // 배열을 문자열로 변환하여 표시
+          value={equipment.join(", ")}
           placeholder="조리기구를 하나만 작성해 주세요. (전자레인지/오븐/에어프라이어 등)"
           onChange={(e) =>
             setEquipment(e.target.value.split(",").map((eq) => eq.trim()))
-          } // 입력값을 배열로 변환
+          }
         />
 
         <div className="style2">
