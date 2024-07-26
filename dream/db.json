@@ -89,69 +89,35 @@
       "represent_img": "./images/bread_re.png"
     },
     {
-      "author": "user1",
-      "id": "4",
-      "represent_img": "./images/bread_re.png",
-      "title": "ㅇ",
-      "tags": [
-        "디저트",
-        "빵"
-      ],
-      "cookingTime": "ㅇ",
-      "equipment": [
-        "오븐"
-      ],
-      "ingredients": [
-        {
-          "item": "",
-          "quantity": ""
-        },
-        {
-          "item": "",
-          "quantity": ""
-        },
-        {
-          "item": "",
-          "quantity": ""
-        }
-      ],
-      "steps": [
-        {
-          "image": "",
-          "description": ""
-        },
-        {
-          "image": "",
-          "description": ""
-        }
-      ]
-    },
-    {
-      "id": "9ec3",
+      "id": "7507",
       "author": "12345",
-      "represent_img": "blob:http://localhost:3000/5faeee0f-e500-4eb7-98ea-4085f4cf28d5",
+      "represent_img": "blob:http://localhost:3000/be4cc014-66d4-49aa-a611-9d0ba5acf484",
       "title": "고양이가 좋아하는 빵",
       "tags": [
         "#웰니스"
       ],
       "cookingTime": "30분",
       "equipment": [
-        "에어프라이어"
+        "에어프라이기"
       ],
       "ingredients": [
         {
-          "item": "ㅋ",
-          "quantity": "ㅇ"
+          "item": "츄르",
+          "quantity": "야옹"
+        },
+        {
+          "item": "얼음",
+          "quantity": "애옹"
         }
       ],
       "steps": [
         {
-          "image": "blob:http://localhost:3000/6305ee8e-20e6-4386-aff4-c61b944137c1",
-          "description": "ㅇㅇ"
+          "image": "blob:http://localhost:3000/a1bd7f41-98f2-4629-a350-3acd8a67e416",
+          "description": "빠앙"
         },
         {
-          "image": "blob:http://localhost:3000/9863e8d9-1c4a-4ee4-9870-8a3a3c51113b",
-          "description": "ㅇ"
+          "image": "blob:http://localhost:3000/e6e4cd90-e9a8-49af-8e31-96ff25ddeeac",
+          "description": "뿌웅"
         }
       ]
     }
