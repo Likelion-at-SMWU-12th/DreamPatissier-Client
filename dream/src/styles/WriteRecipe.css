@@ -54,18 +54,19 @@
   font-size: 13px;
   padding: 10px 0 !important;
   border-radius: 5px;
+  border: 1px solid rgb(237, 237, 237);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.4) !important;
 }
 
 .ingredient-div input:first-child {
   padding-left: 15px !important;
-  flex: 2;
+  width: 70%; /* 필요한 만큼의 너비 설정 */
   margin-right: 13px;
 }
 
 .ingredient-div input:last-child {
   text-align: center;
-  flex: 1;
+  width: 30%; /* 나머지 input의 너비 */
 }
 
 .add-gredient-btn {
