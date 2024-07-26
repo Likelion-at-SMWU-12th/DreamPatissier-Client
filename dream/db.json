@@ -5,10 +5,7 @@
       "date": "2024-07-19",
       "image": "/bread_re.png",
       "name": "test1",
-      "tags": [
-        "#프로틴",
-        "#저당"
-      ],
+      "tags": ["#프로틴", "#저당"],
       "price": 10000,
       "reviewed": false
     },
@@ -17,10 +14,7 @@
       "date": "2024-07-05",
       "image": "/bread_re.png",
       "name": "test2",
-      "tags": [
-        "태그3",
-        "태그4"
-      ],
+      "tags": ["태그3", "태그4"],
       "price": 15000,
       "reviewed": true
     },
@@ -29,10 +23,7 @@
       "date": "2024-07-05",
       "image": "/bread_re.png",
       "name": "test3",
-      "tags": [
-        "태그3",
-        "태그4"
-      ],
+      "tags": ["태그3", "태그4"],
       "price": 15000,
       "reviewed": false
     },
@@ -41,10 +32,7 @@
       "date": "2024-07-05",
       "image": "/bread_re.png",
       "name": "test4",
-      "tags": [
-        "태그3",
-        "태그4"
-      ],
+      "tags": ["태그3", "태그4"],
       "price": 15000,
       "reviewed": true
     }
@@ -53,38 +41,24 @@
     {
       "id": "1",
       "title": "단팥빵",
-      "tags": [
-        "디저트",
-        "빵"
-      ],
-      "equipment": [
-        "오븐"
-      ],
+      "tags": ["디저트", "빵"],
+      "equipment": ["오븐"],
       "author": "user1",
       "represent_img": "./images/bread_re.png"
     },
     {
       "id": "2",
       "title": "바게트",
-      "tags": [
-        "빵"
-      ],
-      "equipment": [
-        "오븐"
-      ],
+      "tags": ["빵"],
+      "equipment": ["오븐"],
       "author": "user2",
       "represent_img": "./images/bread_re.png"
     },
     {
       "id": "3",
       "title": "크로와상",
-      "tags": [
-        "디저트",
-        "빵"
-      ],
-      "equipment": [
-        "오븐"
-      ],
+      "tags": ["디저트", "빵"],
+      "equipment": ["오븐"],
       "author": "user1",
       "represent_img": "./images/bread_re.png"
     },
@@ -93,21 +67,37 @@
       "author": "12345",
       "represent_img": "blob:http://localhost:3000/be4cc014-66d4-49aa-a611-9d0ba5acf484",
       "title": "고양이가 좋아하는 빵",
-      "tags": [
-        "#웰니스"
-      ],
+      "tags": ["#웰니스"],
       "cookingTime": "30분",
-      "equipment": [
-        "에어프라이기"
-      ],
+      "equipment": ["에어프라이기"],
       "ingredients": [
         {
-          "item": "츄르",
-          "quantity": "야옹"
+          "item": "볶은 땅콩",
+          "quantity": "180g"
         },
         {
-          "item": "얼음",
-          "quantity": "애옹"
+          "item": "버터",
+          "quantity": "20g"
+        },
+        {
+          "item": "계란",
+          "quantity": "3개"
+        },
+        {
+          "item": "꿀",
+          "quantity": "3큰술"
+        },
+        {
+          "item": "소금",
+          "quantity": "1꼬집"
+        },
+        {
+          "item": "소금",
+          "quantity": "1꼬집"
+        },
+        {
+          "item": "소금",
+          "quantity": "1꼬집"
         }
       ],
       "steps": [
@@ -128,19 +118,13 @@
         "id": 1,
         "breadName": "통밀빵",
         "bakeryName": "빵집 A",
-        "tags": [
-          "맛있다",
-          "건강한"
-        ],
+        "tags": ["맛있다", "건강한"],
         "review": "부드럽고 건강한 통밀빵이었습니다!"
       },
       {
         "breadName": "바게트",
         "bakeryName": "빵집 B",
-        "tags": [
-          "바삭하다",
-          "고소한"
-        ],
+        "tags": ["바삭하다", "고소한"],
         "review": "겉은 바삭하고 속은 촉촉한 바게트!"
       }
     ],
@@ -148,19 +132,13 @@
       {
         "breadName": "크루아상",
         "bakeryName": "빵집 C",
-        "tags": [
-          "버터",
-          "겉은 바삭"
-        ],
+        "tags": ["버터", "겉은 바삭"],
         "review": "버터 향이 진하고 겉은 바삭한 크루아상!"
       },
       {
         "breadName": "치아바타",
         "bakeryName": "빵집 D",
-        "tags": [
-          "겉은 바삭",
-          "속은 부드러움"
-        ],
+        "tags": ["겉은 바삭", "속은 부드러움"],
         "review": "겉은 바삭하고 속은 부드러운 치아바타!"
       }
     ],
@@ -168,10 +146,7 @@
       {
         "breadName": "호밀빵",
         "bakeryName": "빵집 E",
-        "tags": [
-          "건강한",
-          "무첨가"
-        ],
+        "tags": ["건강한", "무첨가"],
         "review": "건강한 호밀빵, 담백하고 고소한 맛!"
       }
     ],
@@ -179,19 +154,13 @@
       {
         "breadName": "앙버터빵",
         "bakeryName": "빵집 F",
-        "tags": [
-          "달콤한",
-          "버터"
-        ],
+        "tags": ["달콤한", "버터"],
         "review": "달콤한 앙버터와 풍부한 버터 맛이 일품!"
       },
       {
         "breadName": "식빵",
         "bakeryName": "빵집 G",
-        "tags": [
-          "부드러운",
-          "크림"
-        ],
+        "tags": ["부드러운", "크림"],
         "review": "부드럽고 크림 맛이 진한 식빵!"
       }
     ],
@@ -199,10 +168,7 @@
       {
         "breadName": "소보로빵",
         "bakeryName": "빵집 H",
-        "tags": [
-          "바삭한",
-          "달콤한"
-        ],
+        "tags": ["바삭한", "달콤한"],
         "review": "바삭하고 달콤한 소보로빵, 최고의 간식!"
       }
     ]
