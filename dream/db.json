@@ -39,30 +39,6 @@
   ],
   "recipes": [
     {
-      "id": "1",
-      "title": "단팥빵",
-      "tags": ["디저트", "빵"],
-      "equipment": ["오븐"],
-      "author": "user1",
-      "represent_img": "./images/bread_re.png"
-    },
-    {
-      "id": "2",
-      "title": "바게트",
-      "tags": ["빵"],
-      "equipment": ["오븐"],
-      "author": "user2",
-      "represent_img": "./images/bread_re.png"
-    },
-    {
-      "id": "3",
-      "title": "크로와상",
-      "tags": ["디저트", "빵"],
-      "equipment": ["오븐"],
-      "author": "user1",
-      "represent_img": "./images/bread_re.png"
-    },
-    {
       "id": "7507",
       "author": "12345",
       "represent_img": "blob:http://localhost:3000/be4cc014-66d4-49aa-a611-9d0ba5acf484",
