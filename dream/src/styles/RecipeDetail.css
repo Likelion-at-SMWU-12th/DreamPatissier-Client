@@ -65,10 +65,11 @@
 }
 
 .section-container {
+  padding: 0 10px;
   display: flex;
   justify-content: space-between;
-  width: 90%;
-  gap: 25px;
+  width: 93%;
+  gap: 20px;
 }
 
 .section-left,
@@ -158,16 +159,144 @@ ul {
 }
 
 .steps-container {
-  margin-top: 1rem;
+  padding: 0 10px;
+  width: 93%;
 }
 
 .step {
-  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.step-order {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-right: 16px;
 }
 
 .step-image {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
+  margin-right: 16px;
+}
+
+.step-description {
+  flex: 1;
+}
+.recipe-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.recipe-image-container {
+  text-align: center;
+}
+
+.recipe-image {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.title-tags {
+  flex: 1;
+}
+
+.recipe-title {
+  font-size: 2em;
+  margin: 0;
+}
+
+.recipe-tags {
+  font-size: 1.2em;
+  color: #666;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-button,
+.delete-button,
+.scrap-button {
+  padding: 10px 20px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.edit-button {
+  background-color: #4caf50;
+}
+
+.delete-button {
+  background-color: #f44336;
+}
+
+.scrap-button {
+  background-color: #2196f3;
+}
+
+.divider {
+  border: 1px solid #ddd;
+  margin: 20px 0;
+}
+
+.details-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ingredients-section,
+.cooking-info-section {
+  flex: 1;
+}
+
+.section-title {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.ingredients-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.ingredient-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.step-number {
+  font-size: 1.5em;
+  margin-right: 20px;
+}
+
+.step-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.step-description {
+  flex: 1;
 }
