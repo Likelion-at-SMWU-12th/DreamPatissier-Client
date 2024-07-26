@@ -5,6 +5,7 @@ import editIcon from "../assets/edit-icon.png";
 import deleteIcon from "../assets/delete-icon.png";
 import savedIcon from "../assets/saved-icon.png";
 import unsavedIcon from "../assets/unsaved-icon.png";
+import altIcon from "../assets/alt.png";
 
 const SearchBar = ({ searchTerm, setSearchTerm }) => (
   <input
@@ -162,16 +163,23 @@ const Recipes = () => {
       <div className="search-container">
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
-      {filteredRecipes.map((recipe) => (
-        <RecipeItem
-          key={recipe.id}
-          recipe={recipe}
-          currentUser={currentUser}
-          onToggleSave={handleToggleSave}
-          savedRecipes={savedRecipes}
-          onDelete={handleDeleteRecipe}
-        />
-      ))}
+      {filteredRecipes.length > 0 ? (
+        filteredRecipes.map((recipe) => (
+          <RecipeItem
+            key={recipe.id}
+            recipe={recipe}
+            currentUser={currentUser}
+            onToggleSave={handleToggleSave}
+            savedRecipes={savedRecipes}
+            onDelete={handleDeleteRecipe}
+          />
+        ))
+      ) : (
+        <div className="no-recipes-message">
+          <img src={altIcon}></img>
+          <p>레시피가 없습니다. 검색어를 변경해 보세요.</p>
+        </div>
+      )}
       <button className="add-recipe-btn" onClick={handleAddRecipe}>
         ✏️ 등록하기
       </button>
