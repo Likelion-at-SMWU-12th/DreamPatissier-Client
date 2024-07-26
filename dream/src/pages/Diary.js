@@ -26,12 +26,27 @@ const formatDateForSave = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-const tileClassName = ({ date, view }) => {
+const tileClassName = ({ date, view, activeStartDate }) => {
   if (view === "month") {
-    const isCurrentMonth = date.getMonth() === new Date().getMonth();
-    const isWeekend = date.getDay() === 6 || date.getDay() === 0;
-    if (!isCurrentMonth) return "not-current-month-tile";
-    if (isWeekend) return date.getDay() === 6 ? "saturday-tile" : "sunday-tile";
+    const currentMonth = activeStartDate.getMonth();
+    const currentYear = activeStartDate.getFullYear();
+
+    const isCurrentMonth =
+      date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+    const isSaturday = date.getDay() === 6;
+    const isSunday = date.getDay() === 0;
+
+    if (!isCurrentMonth) {
+      return "not-current-month-tile";
+    }
+
+    if (isSaturday) {
+      return "saturday-tile";
+    }
+
+    if (isSunday) {
+      return "sunday-tile";
+    }
   }
   return null;
 };
@@ -166,7 +181,9 @@ const Diary = () => {
         <Calendar
           onChange={handleDateChange}
           value={selectedDate}
-          tileClassName={tileClassName}
+          tileClassName={(props) =>
+            tileClassName({ ...props, activeStartDate })
+          }
           tileContent={(props) => tileContent({ ...props, reviews })}
           activeStartDate={activeStartDate}
         />

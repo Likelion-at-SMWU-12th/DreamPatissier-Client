@@ -5,21 +5,18 @@ import editIcon from "../assets/edit-icon.png";
 import deleteIcon from "../assets/delete-icon.png";
 import savedIcon from "../assets/saved-icon.png";
 import unsavedIcon from "../assets/unsaved-icon.png";
+import altIcon from "../assets/alt.png";
 
-// SearchBar 컴포넌트
-const SearchBar = ({ searchTerm, setSearchTerm }) => {
-  return (
-    <input
-      type="text"
-      className="search"
-      value={searchTerm}
-      placeholder="조리도구 및 웰니스 키워드를 검색해주세요."
-      onChange={(e) => setSearchTerm(e.target.value)}
-    />
-  );
-};
+const SearchBar = ({ searchTerm, setSearchTerm }) => (
+  <input
+    type="text"
+    className="search"
+    value={searchTerm}
+    placeholder="조리도구 및 웰니스 키워드를 검색해주세요."
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+);
 
-// RecipeItem 컴포넌트
 const RecipeItem = ({
   recipe,
   currentUser,
@@ -31,16 +28,19 @@ const RecipeItem = ({
   const isSaved = savedRecipes.includes(recipe.id);
   const navigate = useNavigate();
 
-  const handleEdit = () => {
+  const handleEditRecipe = () => {
+    navigate(`/recipes/edit/${recipe.id}`);
+  };
+
+  const handleDetailRecipe = () => {
     navigate(`/recipes/${recipe.id}`);
   };
 
-  // 배열이 아닌 경우 빈 배열로 설정
   const equipmentList = Array.isArray(recipe.equipment) ? recipe.equipment : [];
   const tagsList = Array.isArray(recipe.tags) ? recipe.tags : [];
 
   return (
-    <div className="recipe-item">
+    <div className="recipe-item" onClick={handleDetailRecipe}>
       <img
         src={recipe.represent_img}
         alt={recipe.title}
@@ -57,12 +57,15 @@ const RecipeItem = ({
         <div className="recipe-buttons">
           {isAuthor ? (
             <>
-              <button className="edit-btn" onClick={handleEdit}>
+              <button className="edit-btn" onClick={handleEditRecipe}>
                 <img src={editIcon} alt="수정하기" />
               </button>
               <button
                 className="delete-btn"
-                onClick={() => onDelete(recipe.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(recipe.id);
+                }}
               >
                 <img src={deleteIcon} alt="삭제하기" />
               </button>
@@ -70,7 +73,10 @@ const RecipeItem = ({
           ) : (
             <button
               className="save-btn"
-              onClick={() => onToggleSave(recipe.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleSave(recipe.id);
+              }}
             >
               <img src={isSaved ? savedIcon : unsavedIcon} alt="저장하기" />
             </button>
@@ -81,7 +87,6 @@ const RecipeItem = ({
   );
 };
 
-// Recipes 컴포넌트
 const Recipes = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [savedRecipes, setSavedRecipes] = useState([]);
@@ -90,19 +95,22 @@ const Recipes = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // API를 통해 레시피 데이터를 가져옴
-    fetch("http://localhost:3001/recipes")
-      .then((response) => response.json())
-      .then((data) => {
-        // 데이터 검증 및 변환
+    const fetchRecipes = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/recipes");
+        const data = await response.json();
         const validatedData = data.map((recipe) => ({
           ...recipe,
           equipment: Array.isArray(recipe.equipment) ? recipe.equipment : [],
           tags: Array.isArray(recipe.tags) ? recipe.tags : [],
         }));
         setRecipes(validatedData);
-      })
-      .catch((error) => console.error("Error fetching recipes:", error));
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
+      }
+    };
+
+    fetchRecipes();
   }, []);
 
   const filteredRecipes = recipes.filter(
@@ -118,27 +126,32 @@ const Recipes = () => {
         ? prevSaved.filter((id) => id !== recipeId)
         : [...prevSaved, recipeId];
 
-      if (prevSaved.includes(recipeId)) {
-        console.log(`레시피 ${recipeId}의 스크랩이 취소되었습니다.`);
-      } else {
-        console.log(`레시피 ${recipeId}이(가) 스크랩되었습니다.`);
-      }
+      console.log(
+        `레시피 ${recipeId}의 스크랩이 ${
+          prevSaved.includes(recipeId) ? "취소되었습니다" : "되었습니다"
+        }.`
+      );
 
       return updatedSaved;
     });
   };
 
   const handleDeleteRecipe = (recipeId) => {
-    fetch(`http://localhost:3001/recipes/${recipeId}`, {
-      method: "DELETE",
-    })
-      .then(() => {
+    const deleteRecipe = async () => {
+      try {
+        await fetch(`http://localhost:3001/recipes/${recipeId}`, {
+          method: "DELETE",
+        });
         setRecipes((prevRecipes) =>
           prevRecipes.filter((recipe) => recipe.id !== recipeId)
         );
         console.log(`레시피 ${recipeId}이(가) 삭제되었습니다.`);
-      })
-      .catch((error) => console.error("Error deleting recipe:", error));
+      } catch (error) {
+        console.error("Error deleting recipe:", error);
+      }
+    };
+
+    deleteRecipe();
   };
 
   const handleAddRecipe = () => {
@@ -150,16 +163,23 @@ const Recipes = () => {
       <div className="search-container">
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
-      {filteredRecipes.map((recipe) => (
-        <RecipeItem
-          key={recipe.id}
-          recipe={recipe}
-          currentUser={currentUser}
-          onToggleSave={handleToggleSave}
-          savedRecipes={savedRecipes}
-          onDelete={handleDeleteRecipe}
-        />
-      ))}
+      {filteredRecipes.length > 0 ? (
+        filteredRecipes.map((recipe) => (
+          <RecipeItem
+            key={recipe.id}
+            recipe={recipe}
+            currentUser={currentUser}
+            onToggleSave={handleToggleSave}
+            savedRecipes={savedRecipes}
+            onDelete={handleDeleteRecipe}
+          />
+        ))
+      ) : (
+        <div className="no-recipes-message">
+          <img src={altIcon}></img>
+          <p>레시피가 없습니다. 검색어를 변경해 보세요.</p>
+        </div>
+      )}
       <button className="add-recipe-btn" onClick={handleAddRecipe}>
         ✏️ 등록하기
       </button>

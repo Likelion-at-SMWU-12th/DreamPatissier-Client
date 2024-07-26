@@ -3,6 +3,7 @@ import "./index.css";
 import Menubar from "./pages/Menubar";
 import Bakery from "./pages/Bakery";
 import Recipes from "./pages/Recipes";
+import RecipeDetail from "./pages/recipes/RecipeDetail";
 import EditRecipe from "./pages/recipes/EditRecipe";
 import WriteRecipe from "./pages/recipes/WriteRecipe";
 import Diary from "./pages/Diary";
@@ -41,7 +42,8 @@ function App() {
           <Route path="/bakery/search/:tags" element={<SearchPage />} />
         </Route>
         <Route path="/recipes" element={<Recipes />} />
-        <Route path="/recipes/:id" element={<EditRecipe />} />
+        <Route path="/recipes/:id" element={<RecipeDetail />} />
+        <Route path="/recipes/edit/:id" element={<EditRecipe />} />
         <Route path="/recipes/write" element={<WriteRecipe />} />
         <Route path="/diary" element={<Diary />} />
         <Route path="/users" element={<Users />} />

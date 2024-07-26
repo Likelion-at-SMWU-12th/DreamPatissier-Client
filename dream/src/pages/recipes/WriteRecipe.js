@@ -1,25 +1,27 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "../../styles/WriteRecipe.css";
 import representPicture from "./represent_picture.png";
 import init_image from "./init_recipe_image.png";
 
 const mockUser = {
-  author: "12345",
+  id: "12345",
 };
 
 const WriteRecipe = () => {
   const [image, setImage] = useState(representPicture);
   const [title, setTitle] = useState("");
-  const [tags, settags] = useState("");
+  const [tags, setTags] = useState([""]);
   const [cookingTime, setCookingTime] = useState("");
-  const [equipment, setequipment] = useState("");
+  const [equipment, setEquipment] = useState([""]);
   const [ingredients, setIngredients] = useState([{ item: "", quantity: "" }]);
   const [steps, setSteps] = useState([{ image: "", description: "" }]);
-  const [user, setUser] = useState(mockUser); // User information state
+  const [user, setUser] = useState(mockUser);
 
   const fileInputRef = useRef(null);
   const stepFileInputRefs = useRef([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     return () => {
@@ -66,14 +68,14 @@ const WriteRecipe = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title || !tags || !cookingTime || !equipment || !image) {
+    if (!title || !tags.length || !cookingTime || !equipment.length || !image) {
       alert("모든 필드를 작성해 주세요.");
       return;
     }
 
     const recipeData = {
-      author: user.id, // Add user ID to the recipe data
-      image,
+      author: user.id,
+      represent_img: image,
       title,
       tags,
       cookingTime,
@@ -85,72 +87,11 @@ const WriteRecipe = () => {
     try {
       await axios.post("/recipes", recipeData);
       alert("레시피가 등록되었습니다!");
+      navigate("/recipes");
     } catch (error) {
       console.error("레시피 등록에 실패했습니다:", error);
     }
   };
-
-  const IngredientInput = ({ ingredient, index }) => (
-    <div className="ingredient-div" key={index}>
-      <input
-        type="text"
-        placeholder="재료명"
-        value={ingredient.item}
-        onChange={(e) =>
-          handleChange(
-            index,
-            "item",
-            e.target.value,
-            ingredients,
-            setIngredients
-          )
-        }
-      />
-      <input
-        type="text"
-        placeholder="수량"
-        value={ingredient.quantity}
-        onChange={(e) =>
-          handleChange(
-            index,
-            "quantity",
-            e.target.value,
-            ingredients,
-            setIngredients
-          )
-        }
-      />
-    </div>
-  );
-
-  const StepInput = ({ step, index }) => (
-    <div className="recipe-step" key={index}>
-      <input
-        type="file"
-        ref={(el) => (stepFileInputRefs.current[index] = el)}
-        style={{ display: "none" }}
-        onChange={(e) => handleStepImageChange(index, e)}
-      />
-      <div
-        className="image-container"
-        onClick={() => stepFileInputRefs.current[index].click()}
-      >
-        <img
-          src={step.image || init_image}
-          alt="조리 단계 사진"
-          className="image-preview"
-        />
-      </div>
-      <textarea
-        className="text-explain"
-        placeholder="조리방법"
-        value={step.description}
-        onChange={(e) =>
-          handleChange(index, "description", e.target.value, steps, setSteps)
-        }
-      />
-    </div>
-  );
 
   return (
     <div className="form-container">
@@ -178,9 +119,11 @@ const WriteRecipe = () => {
         <input
           className="input-recipe-data"
           type="text"
-          value={tags}
+          value={tags.join(", ")}
           placeholder="#웰니스 키워드를 작성해 주세요."
-          onChange={(e) => settags(e.target.value)}
+          onChange={(e) =>
+            setTags(e.target.value.split(",").map((tag) => tag.trim()))
+          }
         />
         <input
           className="input-recipe-data"
@@ -192,19 +135,47 @@ const WriteRecipe = () => {
         <input
           className="input-recipe-data"
           type="text"
-          value={equipment}
-          placeholder="전자레인지/오븐/에어프라이어 중 무엇을 사용하나요?"
-          onChange={(e) => setequipment(e.target.value)}
+          value={equipment.join(", ")}
+          placeholder="조리기구를 하나만 작성해 주세요. (전자레인지/오븐/에어프라이어 등)"
+          onChange={(e) =>
+            setEquipment(e.target.value.split(",").map((eq) => eq.trim()))
+          }
         />
+
         <div className="style2">
           <div>
             <div className="writerecipe-title">재료</div>
             {ingredients.map((ingredient, index) => (
-              <IngredientInput
-                ingredient={ingredient}
-                index={index}
-                key={index}
-              />
+              <div className="ingredient-div" key={index}>
+                <input
+                  type="text"
+                  placeholder="재료명"
+                  value={ingredient.item}
+                  onChange={(e) =>
+                    handleChange(
+                      index,
+                      "item",
+                      e.target.value,
+                      ingredients,
+                      setIngredients
+                    )
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="수량"
+                  value={ingredient.quantity}
+                  onChange={(e) =>
+                    handleChange(
+                      index,
+                      "quantity",
+                      e.target.value,
+                      ingredients,
+                      setIngredients
+                    )
+                  }
+                />
+              </div>
             ))}
             <button
               className="add-gredient-btn"
@@ -222,7 +193,38 @@ const WriteRecipe = () => {
           </div>
           <div className="recipe-step-container">
             {steps.map((step, index) => (
-              <StepInput step={step} index={index} key={index} />
+              <div className="recipe-step" key={index}>
+                <input
+                  type="file"
+                  ref={(el) => (stepFileInputRefs.current[index] = el)}
+                  style={{ display: "none" }}
+                  onChange={(e) => handleStepImageChange(index, e)}
+                />
+                <div
+                  className="image-container"
+                  onClick={() => stepFileInputRefs.current[index].click()}
+                >
+                  <img
+                    src={step.image || init_image}
+                    alt="조리 단계 사진"
+                    className="image-preview"
+                  />
+                </div>
+                <textarea
+                  className="text-explain"
+                  placeholder="조리방법"
+                  value={step.description}
+                  onChange={(e) =>
+                    handleChange(
+                      index,
+                      "description",
+                      e.target.value,
+                      steps,
+                      setSteps
+                    )
+                  }
+                />
+              </div>
             ))}
           </div>
         </div>
