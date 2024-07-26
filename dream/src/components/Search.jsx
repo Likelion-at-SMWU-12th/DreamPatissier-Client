@@ -12,7 +12,7 @@ const Search = ({ onSearch }) => {
   const handleSearchClick = () => {
     const tagsArray = keywords
       .split(",")
-      .map((tag) => tag.trim())
+      .map((tag) => tag.trim().toLowerCase().replace("#", ""))
       .filter((tag) => tag.length > 0);
     onSearch(tagsArray);
   };

@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import styled from "styled-components";
 import Search from "../components/Search";
 import Category from "../components/Category";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 
 // 이미지
@@ -84,13 +84,15 @@ function Bakery() {
       {location.pathname === "/bakery" && (
         <ProductBox>
           {randomProducts.map((product) => (
-            <Product
-              key={product.id}
-              imgSrc={product.imgSrc}
-              tags={product.tags}
-              title={product.title}
-              price={product.price}
-            />
+            <StyledLink to={`/product/${product.id}`} key={product.id}>
+              <Product
+                key={product.id}
+                imgSrc={product.imgSrc}
+                tags={product.tags}
+                title={product.title}
+                price={product.price}
+              />
+            </StyledLink>
           ))}
         </ProductBox>
       )}
@@ -135,6 +137,12 @@ const ProductBox = styled.div`
   align-items: center;
   gap: 10px;
   justify-content: center;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  display: block;
 `;
 
 const CategoryWrap = styled.div`

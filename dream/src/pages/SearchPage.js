@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import Product from "../components/Product";
@@ -65,13 +65,15 @@ const SearchPage = () => {
   return (
     <ProductWrap>
       {products.map((product) => (
-        <Product
-          key={product.id}
-          imgSrc={product.imgSrc}
-          tags={product.tags}
-          title={product.title}
-          price={product.price}
-        />
+        <StyledLink to={`/product/${product.id}`} key={product.id}>
+          <Product
+            key={product.id}
+            imgSrc={product.imgSrc}
+            tags={product.tags}
+            title={product.title}
+            price={product.price}
+          />
+        </StyledLink>
       ))}
     </ProductWrap>
   );
@@ -108,4 +110,10 @@ const ProductWrap = styled.div`
   align-items: center;
   gap: 10px;
   justify-content: center;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  display: block;
 `;
