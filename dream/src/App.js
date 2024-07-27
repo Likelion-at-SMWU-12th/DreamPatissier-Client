@@ -22,6 +22,7 @@ import CategoryPage from "./pages/CategoryPage";
 import Logout from "./pages/userpage/Logout";
 import SearchPage from "./pages/SearchPage";
 import Cart from "./pages/Cart";
+import Order from "./pages/Order";
 
 import profile from "./assets/logo.png";
 
@@ -60,6 +61,7 @@ function App() {
         <Route path="/accounts/logout/" element={<Logout />} />
         <Route path="/test/*" element={<TestBread />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/cart/order" element={<Order />} />
       </Routes>
     </>
   );

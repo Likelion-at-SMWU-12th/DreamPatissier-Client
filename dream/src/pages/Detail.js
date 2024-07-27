@@ -42,7 +42,7 @@ const Detail = () => {
   }
 
   return (
-    <Container>
+    <>
       <ImgBox>
         <img src={product.imgSrc} alt={product.title} />
       </ImgBox>
@@ -114,12 +114,11 @@ const Detail = () => {
         <ShopText>장바구니</ShopText>
       </CartButton>
       <Footer />
-    </Container>
+    </>
   );
 };
 
-const Container = styled.div``;
-
+// 스타일
 // 장바구니 버튼
 const CartButton = styled.button`
   position: fixed;
@@ -160,7 +159,8 @@ const ImgBox = styled.div`
 
 // 가격&빵이름
 const TitleInfo = styled.div`
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px 0 rgba(217, 217, 217, 0.5);
+  border-bottom: 1px solid #d9d9d9;
   padding-left: 25px;
   padding-bottom: 20px;
   margin-bottom: 17px;
@@ -265,7 +265,7 @@ const HrDiv = styled.div`
   margin-top: 15px;
   width: 100%;
   border-bottom: 1px solid #d9d9d9;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px 0 rgba(217, 217, 217, 0.5);
 `;
 
 export default Detail;

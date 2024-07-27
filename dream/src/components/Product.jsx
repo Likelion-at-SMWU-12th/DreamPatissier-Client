@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const Product = ({ id, imgSrc, tags, title, price, description }) => {
   const location = useLocation();
-  const isCartPage = location.pathname.startsWith("/cart"); // 현재 경로가 /cart로 시작하는지 확인
+  const isCartPage = location.pathname.startsWith("/cart");
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US").format(price);

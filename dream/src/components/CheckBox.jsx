@@ -164,24 +164,28 @@ const CheckboxItem = styled.div`
 
 const StyledCheck = styled.input`
   appearance: none;
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   border-radius: 50%;
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   position: relative;
   margin-right: 10px;
 
-  &:checked::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 8px;
-    height: 8px;
-    background-color: var(--yellow);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
+  &:checked {
+    border-color: var(--yellow);
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      width: 30%;
+      height: 50%;
+      border: solid var(--yellow);
+      border-width: 0 2px 2px 0;
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
   }
 `;
 
