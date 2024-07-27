@@ -59,4 +59,5 @@ const ContentWrap = styled.div`
   height: 100vh;
   background-color: white;
   padding-top: 70px;
+  margin-bottom: 100px;
 `;

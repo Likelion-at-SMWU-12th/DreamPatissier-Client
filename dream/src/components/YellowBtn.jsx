@@ -12,6 +12,10 @@ const YellowBtn = ({
   fontWeight,
   backgroundColor,
   border,
+  position,
+  right,
+  bottom,
+  zIndex,
 }) => {
   return (
     <ButtonBox
@@ -24,6 +28,10 @@ const YellowBtn = ({
       fontWeight={fontWeight}
       backgroundColor={backgroundColor}
       border={border}
+      position={position}
+      right={right}
+      bottom={bottom}
+      zIndex={zIndex}
     >
       {txt || "버튼"}
     </ButtonBox>
@@ -43,4 +51,8 @@ const ButtonBox = styled.button`
   box-shadow: 0px 2px 4px 0px #00000040;
   cursor: pointer;
   font-size: ${(props) => props.fontSize || "15px"};
+  position: ${(props) => props.position || "static"};
+  right: ${(props) => props.right || "auto"};
+  bottom: ${(props) => props.bottom || "auto"};
+  z-index: ${(props) => props.zIndex || "auto"};
 `;

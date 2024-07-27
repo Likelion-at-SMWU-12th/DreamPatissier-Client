@@ -36,7 +36,7 @@ const Users = () => {
         <Link to="/users/my-recipes" className="option-link">
           My 레시피 &gt;
         </Link>
-        <Link to="/test/result/{int:pk}" className="option-link">
+        <Link to="/test/result/1" className="option-link">
           빵 유형 테스트 &gt;
         </Link>
         <Link to="/of-use" className="option-link">

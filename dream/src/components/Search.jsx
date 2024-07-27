@@ -17,6 +17,12 @@ const Search = ({ onSearch }) => {
     onSearch(tagsArray);
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearchClick();
+    }
+  };
+
   return (
     <SearchWrap>
       <SearchBox>
@@ -25,6 +31,7 @@ const Search = ({ onSearch }) => {
           placeholder="#프로틴 #저당 등 웰니스 키워드를 검색해 주세요."
           value={keywords}
           onChange={handleInputChange}
+          onKeyPress={handleKeyPress}
         />
         <SearchButton onClick={handleSearchClick}>
           <SearchImg src={SearchIcon} alt="Search Icon" />
@@ -76,4 +83,5 @@ const SearchButton = styled.button`
   background: none;
   padding: 0;
   cursor: pointer;
+  margin-left: 50px;
 `;

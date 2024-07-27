@@ -1,7 +1,11 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const Product = ({ id, imgSrc, tags, title, price, description }) => {
+  const location = useLocation();
+  const isCartPage = location.pathname.startsWith("/cart");
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US").format(price);
   };
@@ -18,7 +22,8 @@ const Product = ({ id, imgSrc, tags, title, price, description }) => {
           ))}
         </Keywords>
         <Titles>{title}</Titles>
-        <Prices>{formatPrice(price)}원</Prices>
+        {!isCartPage && <Prices>{formatPrice(price)}원</Prices>}{" "}
+        {/* /cart 경로가 아닐 때만 가격 표시 */}
       </ProductText>
     </ProductBox>
   );
@@ -60,20 +65,23 @@ const Tag = styled.span`
   color: var(--yellow);
   font-weight: 800;
   font-size: 9px;
+  letter-spacing: -0.5px;
 `;
 
 const Titles = styled.p`
   color: var(--brown);
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 800;
   margin: 0;
   margin-top: 4px;
+  letter-spacing: -0.5px;
 `;
 
 const Prices = styled.p`
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 800;
   color: var(--brown);
   margin: 0;
   margin-top: 5px;
+  letter-spacing: -0.5px;
 `;

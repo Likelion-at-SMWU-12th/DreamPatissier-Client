@@ -23,6 +23,7 @@ function Bakery() {
   const location = useLocation();
   const [randomProducts, setRandomProducts] = useState([]);
   const [status, setStatus] = useState("loading");
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     // 더미 데이터 로드
@@ -38,6 +39,11 @@ function Bakery() {
         setStatus("error");
       });
   }, []);
+
+  const handleCategoryClick = (name) => {
+    setSelectedCategory(name);
+    navigate(`/bakery/${name}`);
+  };
 
   const handleSearch = (tagsArray) => {
     navigate(`/bakery/search/${tagsArray.join(",")}`);
@@ -76,7 +82,8 @@ function Bakery() {
             name={category.name}
             uiName={category.uiName}
             imgSrc={category.imgSrc}
-            onClick={() => navigate(`category/${category.name}`)}
+            isSelected={selectedCategory === category.name}
+            onClick={handleCategoryClick}
           />
         ))}
       </CategoryWrap>
