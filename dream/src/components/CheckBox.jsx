@@ -211,4 +211,6 @@ const SeeButton = styled.button`
   text-decoration-line: none;
   color: var(--grey);
   font-weight: 500;
+  border: none;
+  background-color: white;
 `;

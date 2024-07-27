@@ -1,14 +1,15 @@
-// SignForm.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../styles/SignForm.css";
 import YellowBtn from "../../src/components/YellowBtn";
 import Checkbox from "../components/CheckBox";
 import TermS from "../pages/accounts/TermS";
 import TermP from "../pages/accounts/TermP";
 import Popup from "../components/Popup";
 import styled from "styled-components";
+import canSeeIcon from "../assets/cansee.svg";
+import noSeeIcon from "../assets/nosee.svg";
+import delPasswordIcon from "../assets/delpassword.svg";
 
 const SignForm = () => {
   const [formData, setFormData] = useState({
@@ -20,6 +21,7 @@ const SignForm = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [allChecked, setAllChecked] = useState({
     termsAgree: false,
     privacyAgree: false,
@@ -148,21 +150,46 @@ const SignForm = () => {
   };
 
   return (
-    <div className="form-wrapper">
+    <FormWrapper>
       <HiddenDiv isError={isError} />
       <form onSubmit={handleSubmit}>
-        <div className="input-wrapper">
+        <InputWrapper>
           {[
             {
               id: "username",
               label: "아이디",
               placeholder: "영문소문자/숫자포함 4~12자",
+              buttons: [
+                <DelButton
+                  type="button"
+                  onClick={() => setFormData({ ...formData, username: "" })}
+                >
+                  <img src={delPasswordIcon} alt="Clear" />
+                </DelButton>,
+              ],
             },
             {
               id: "password",
               label: "비밀번호",
               placeholder: "영문/숫자/특수문자 혼합,10~16자",
               type: "password",
+              buttons: [
+                <SeeButton
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <img
+                    src={showPassword ? canSeeIcon : noSeeIcon}
+                    alt="Toggle visibility"
+                  />
+                </SeeButton>,
+                <DelButton
+                  type="button"
+                  onClick={() => setFormData({ ...formData, password: "" })}
+                >
+                  <img src={delPasswordIcon} alt="Clear" />
+                </DelButton>,
+              ],
             },
             {
               id: "confirmPassword",
@@ -171,6 +198,17 @@ const SignForm = () => {
               type: "password",
               value: confirmPassword,
               onChange: handleConfirmPasswordChange,
+              buttons: [
+                <SeeButton
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <img src={showPassword ? canSeeIcon : noSeeIcon} />
+                </SeeButton>,
+                <DelButton type="button" onClick={() => setConfirmPassword("")}>
+                  <img src={delPasswordIcon} alt="Clear" />
+                </DelButton>,
+              ],
             },
             { id: "nickname", label: "이름", placeholder: "이름" },
             {
@@ -186,46 +224,45 @@ const SignForm = () => {
               type = "text",
               value = formData[id],
               onChange = handleChange,
+              buttons = [],
             }) => (
-              <div className="input-box" key={id}>
-                <div className="label-box">
-                  <label className="label" htmlFor={id}>
-                    {label}
-                  </label>
+              <InputBox key={id}>
+                <LabelBox>
+                  <Label htmlFor={id}>{label}</Label>
                   {id !== "phone" && (
-                    <span className="mustfill">* 필수 입력 항목입니다.</span>
+                    <MustFill>* 필수 입력 항목입니다.</MustFill>
                   )}
-                </div>
-                <input
-                  className="input-field"
-                  type={type}
+                </LabelBox>
+                <InputField
+                  type={type === "password" && showPassword ? "text" : type}
                   id={id}
                   placeholder={placeholder}
                   value={value}
                   onChange={onChange}
                 />
-                {errors[id] && (
-                  <div className="error-message">{errors[id]}</div>
-                )}
-              </div>
+                {buttons.map((button, index) => (
+                  <React.Fragment key={index}>{button}</React.Fragment>
+                ))}
+                {errors[id] && <ErrorMessage>{errors[id]}</ErrorMessage>}
+              </InputBox>
             )
           )}
-        </div>
+        </InputWrapper>
         <Checkbox
           allChecked={allChecked}
           setAllChecked={setAllChecked}
           onShowTerms={() => setShowTerms(true)} // 팝업 열기
           onShowPrivacy={() => setShowPrivacy(true)} // 팝업 열기
         />
-        {message && <div className="message">{message}</div>}
-        <div className="btn-box">
+        {message && <Message>{message}</Message>}
+        <BtnBox>
           <YellowBtn
             txt="동의하고 가입하기"
             type="submit"
             width="340px"
             disabled={!allChecked.allChecked}
           />
-        </div>
+        </BtnBox>
       </form>
       {showTerms && (
         <Popup onClose={() => setShowTerms(false)}>
@@ -237,14 +274,108 @@ const SignForm = () => {
           <TermP />
         </Popup>
       )}
-    </div>
+    </FormWrapper>
   );
 };
 
 export default SignForm;
 
+const FormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  width: 100%;
+`;
+
 const HiddenDiv = styled.div`
   width: 100%;
   height: ${(props) => (props.isError ? "90px" : "0")};
   transition: height 0.4s;
+`;
+
+const InputWrapper = styled.div`
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const InputBox = styled.div`
+  margin-bottom: 15px;
+  width: 310px;
+  position: relative;
+`;
+
+const InputField = styled.input`
+  border-radius: 5px;
+  border: 2px solid #d9d9d9;
+  width: 300px;
+  height: 41px;
+  font-size: 14px;
+  outline: none;
+  text-indent: 8px;
+`;
+
+const LabelBox = styled.div`
+  padding-bottom: 5px;
+`;
+
+const Label = styled.label`
+  font-size: 18px;
+  margin-bottom: 5px;
+`;
+
+const MustFill = styled.span`
+  color: var(--grey);
+  font-size: 10px;
+  padding-left: 7px;
+`;
+
+const Message = styled.div`
+  text-align: center;
+  font-weight: 800;
+  color: red;
+  margin-top: 15px;
+  margin-bottom: -15px;
+  font-size: 12px;
+`;
+
+const BtnBox = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  padding-top: 10px;
+`;
+
+const ErrorMessage = styled.div`
+  font-weight: 800;
+  color: red;
+  font-size: 11px;
+  padding-top: 10px;
+  margin-bottom: -5px;
+`;
+
+const Button = styled.button`
+  margin-top: 10px;
+  background: none;
+  border: none;
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+
+  img {
+    width: 15px;
+    height: 15px;
+  }
+`;
+
+const SeeButton = styled(Button)`
+  right: 35px;
+`;
+
+const DelButton = styled(Button)`
+  right: 10px;
 `;
