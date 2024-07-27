@@ -210,7 +210,7 @@ const SignForm = () => {
                 </DelButton>,
               ],
             },
-            { id: "nickname", label: "이름", placeholder: "이름" },
+            { id: "nickname", label: "이름", placeholder: "빵사자" },
             {
               id: "phone",
               label: "연락처",
@@ -374,8 +374,10 @@ const Button = styled.button`
 
 const SeeButton = styled(Button)`
   right: 35px;
+  bottom: 11px;
 `;
 
 const DelButton = styled(Button)`
   right: 10px;
+  bottom: 11px;
 `;
