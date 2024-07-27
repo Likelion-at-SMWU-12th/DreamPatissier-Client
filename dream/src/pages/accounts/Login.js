@@ -14,7 +14,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
-  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
@@ -25,7 +24,7 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const togglePasswordVisibility = () => {
+  const togglePassword = () => {
     setShowPassword(!showPassword);
   };
 
@@ -39,6 +38,19 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!username && !password) {
+      setMessage("ⓘ 아이디와 비밀번호를 입력해주세요.");
+      return;
+    } else if (!username) {
+      setMessage("ⓘ 아이디를 입력해 주세요.");
+      return;
+    } else if (!password) {
+      setMessage("ⓘ 비밀번호를 입력해 주세요.");
+      return;
+    }
+
+    setMessage("");
 
     console.log("Submitted data:", { username, password });
 
@@ -59,19 +71,18 @@ const Login = () => {
         if (error.response) {
           console.error("Login failed", error.response.data);
           if (error.response.status === 400) {
-            setFieldErrors(error.response.data.errors);
-            setMessage("입력한 정보를 확인해 주세요.");
+            setMessage("ⓘ 입력한 정보를 확인해 주세요.");
           } else if (error.response.status === 401) {
             setMessage(
               error.response.data.errors.unauthorized ||
-                "아이디와 비밀번호를 정확히 입력해주세요."
+                "ⓘ 아이디와 비밀번호를 정확히 입력해주세요."
             );
           } else {
-            setMessage("서버 에러!");
+            setMessage("ⓘ 서버로부터의 응답을 처리하지 못했습니다.");
           }
         } else {
           console.error("Login error", error.message);
-          setMessage("서버 에러!");
+          setMessage("ⓘ 서버로부터 응답이 없습니다.");
         }
       });
   };
@@ -92,13 +103,10 @@ const Login = () => {
                 value={username}
                 onChange={handleUsernameChange}
               />
-              <DelButton onClick={clearUsername}>
+              <DelButton type="button" onClick={clearUsername}>
                 <img src={delPasswordIcon} alt="Clear" />
               </DelButton>
             </InputBoxWrapper>
-            {fieldErrors.username && (
-              <ErrorMessage>{fieldErrors.username}</ErrorMessage>
-            )}
             <InputBoxWrapper>
               <InputBox
                 type={showPassword ? "text" : "password"}
@@ -106,22 +114,20 @@ const Login = () => {
                 value={password}
                 onChange={handlePasswordChange}
               />
-              <SeeButton onClick={togglePasswordVisibility}>
+              <SeeButton type="button" onClick={togglePassword}>
                 <img
-                  src={showPassword ? noSeeIcon : canSeeIcon}
+                  src={showPassword ? canSeeIcon : noSeeIcon}
                   alt="Toggle visibility"
                 />
               </SeeButton>
-              <DelButton onClick={clearPassword}>
+              <DelButton type="button" onClick={clearPassword}>
                 <img src={delPasswordIcon} alt="Clear" />
               </DelButton>
             </InputBoxWrapper>
-            {fieldErrors.password && (
-              <ErrorMessage>{fieldErrors.password}</ErrorMessage>
-            )}
           </InputWrap>
-          <YellowBtn txt="로그인" type="submit" width={"275px"} />
           {message && <Message>{message}</Message>}
+
+          <YellowBtn txt="로그인" type="submit" width={"275px"} />
         </form>
         <Guide>
           아직 회원이 아니신가요?{" "}
@@ -175,7 +181,7 @@ const InputWrap = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 29px;
   border-radius: 5px;
   border: 2px solid #d9d9d9;
 `;
@@ -236,13 +242,10 @@ const DelButton = styled(Button)`
 `;
 
 const Message = styled.div`
-  margin-top: 10px;
+  margin-top: -20px;
+  margin-bottom: 7px;
   font-size: 12px;
   color: red;
-`;
-
-const ErrorMessage = styled.div`
-  color: red;
-  font-size: 12px;
-  margin-bottom: 10px;
+  padding-left: 9px;
+  font-weight: 800;
 `;
