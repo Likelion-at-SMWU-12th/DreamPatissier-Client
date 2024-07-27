@@ -337,7 +337,7 @@ const MustFill = styled.span`
 const Message = styled.div`
   text-align: center;
   font-weight: 800;
-  color: red;
+  color: #ff3b3b;
   margin-top: 15px;
   margin-bottom: -15px;
   font-size: 12px;
@@ -352,7 +352,7 @@ const BtnBox = styled.div`
 
 const ErrorMessage = styled.div`
   font-weight: 800;
-  color: red;
+  color: #ff3b3b;
   font-size: 11px;
   padding-top: 10px;
   margin-bottom: -5px;

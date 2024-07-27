@@ -213,4 +213,5 @@ const SeeButton = styled.button`
   font-weight: 500;
   border: none;
   background-color: white;
+  cursor: pointer;
 `;
