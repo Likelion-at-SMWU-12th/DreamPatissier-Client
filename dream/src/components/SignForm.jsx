@@ -8,6 +8,7 @@ import Checkbox from "../components/CheckBox";
 import TermS from "../pages/accounts/TermS";
 import TermP from "../pages/accounts/TermP";
 import Popup from "../components/Popup";
+import styled from "styled-components";
 
 const SignForm = () => {
   const [formData, setFormData] = useState({
@@ -27,6 +28,7 @@ const SignForm = () => {
   });
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
 
   // 입력 필드 값 변경 시 호출되는 함수
@@ -45,16 +47,20 @@ const SignForm = () => {
   // 폼 유효성 검사 함수
   const validateForm = () => {
     const newErrors = {};
+    let isErrorPresent = false;
 
     if (!formData.username) {
       newErrors.username = "ⓘ 아이디를 입력해 주세요.";
+      isErrorPresent = true;
     } else if (!/^[a-z0-9]{4,12}$/.test(formData.username)) {
       newErrors.username =
         "ⓘ 아이디는 영문 소문자와 숫자 4~12자리로 이루어져야 합니다.";
+      isErrorPresent = true;
     }
 
     if (!formData.password) {
       newErrors.password = "ⓘ 비밀번호를 입력해 주세요.";
+      isErrorPresent = true;
     } else if (
       !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{10,16}$/.test(
         formData.password
@@ -62,23 +68,29 @@ const SignForm = () => {
     ) {
       newErrors.password =
         "ⓘ 비밀번호는 영문, 숫자, 특수문자를 포함한 10~16자리여야 합니다.";
+      isErrorPresent = true;
     }
 
     if (!confirmPassword) {
       newErrors.confirmPassword = "ⓘ 비밀번호를 다시 한 번 입력해주세요.";
+      isErrorPresent = true;
     } else if (formData.password !== confirmPassword) {
       newErrors.confirmPassword = "ⓘ 비밀번호가 일치하지 않습니다.";
+      isErrorPresent = true;
     }
 
     if (!formData.nickname) {
       newErrors.nickname = "ⓘ 이름을 입력해 주세요.";
+      isErrorPresent = true;
     }
 
     if (formData.phone && !/^\d{10,11}$/.test(formData.phone)) {
       newErrors.phone = "ⓘ 유효한 연락처를 입력해주세요. 예) 01012345678";
+      isErrorPresent = true;
     }
 
     setErrors(newErrors);
+    setIsError(isErrorPresent);
     return Object.keys(newErrors).length === 0;
   };
 
@@ -102,6 +114,7 @@ const SignForm = () => {
       !allChecked.serviceAgree
     ) {
       setMessage("ⓘ 필수 약관에 동의해 주세요.");
+      setIsError(true);
       return;
     }
 
@@ -121,6 +134,7 @@ const SignForm = () => {
       .then((response) => {
         console.log("Signup successful", response.data);
         setMessage("회원가입이 완료되었습니다.");
+        setIsError(false);
         navigate("/signup-clear");
       })
       .catch((error) => {
@@ -129,11 +143,13 @@ const SignForm = () => {
           error.response ? error.response.data : error.message
         );
         setMessage("서버 오류!");
+        setIsError(true);
       });
   };
 
   return (
     <div className="form-wrapper">
+      <HiddenDiv isError={isError} />
       <form onSubmit={handleSubmit}>
         <div className="input-wrapper">
           {[
@@ -226,3 +242,9 @@ const SignForm = () => {
 };
 
 export default SignForm;
+
+const HiddenDiv = styled.div`
+  width: 100%;
+  height: ${(props) => (props.isError ? "90px" : "0")};
+  transition: height 0.4s;
+`;
