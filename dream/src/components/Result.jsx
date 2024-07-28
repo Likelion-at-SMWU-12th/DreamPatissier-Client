@@ -22,17 +22,21 @@ const Result = () => {
       </TypeImgBox>
       <TypeTextBox>
         <Text>
-          당신은 소중한 사람에게 애정표현을 아끼지 않는 따뜻한 마음을 가진
-          사람입니다.
+          <Text1>
+            당신은 소중한 사람에게 애정표현을 아끼지 않는 따뜻한 마음을 가진
+            사람입니다.
+          </Text1>
           <br />
+          <Text2>
+            상대방을 배려하는 예쁜 말을 자주 하여 다정한 모습으로 많은 사람들의
+            호감을 사곤 합니다.
+          </Text2>
           <br />
-          상대방을 배려하는 예쁜 말을 자주 하여 다정한 모습으로 많은 사람들의
-          호감을 사곤 합니다.
-          <br />
-          <br />
-          첫인상은 조금 까칠해 보일 수 있지만, 실제로는 속이 여리고 폭신한 인기
-          많은 식빵 같은 존재입니다.
-          {/*{resultData.description}*/}
+          <Text3>
+            첫인상은 조금 까칠해 보일 수 있지만, 실제로는 속이 여리고 폭신한
+            인기 많은 식빵 같은 존재입니다.
+            {/*{resultData.description}*/}
+          </Text3>
         </Text>
       </TypeTextBox>
       <RecommendTitle>
@@ -139,6 +143,13 @@ const Text = styled.div`
   margin: auto;
   color: #311505;
 `;
+
+const Text1 = styled.div``;
+
+const Text2 = styled.div``;
+
+const Text3 = styled.div``;
+
 const RecommendTitle = styled.div`
   font-size: 19px;
   letter-spacing: 1px;

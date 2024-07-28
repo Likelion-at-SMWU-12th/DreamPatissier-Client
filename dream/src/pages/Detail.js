@@ -12,14 +12,12 @@ const Detail = () => {
   const [status, setStatus] = useState("loading");
 
   useEffect(() => {
-    console.log("Fetching product details for id:", id);
     axios
       .get("/product.json")
       .then((response) => {
         const foundProduct = response.data.find(
           (product) => product.id === parseInt(id)
         );
-        console.log("Fetched product details:", foundProduct);
         setProduct(foundProduct);
         setStatus("success");
       })
