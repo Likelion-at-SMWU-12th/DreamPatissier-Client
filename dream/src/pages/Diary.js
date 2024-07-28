@@ -108,7 +108,7 @@ const Diary = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/reviews")
+      .get("http://localhost:3001/record")
       .then((response) => {
         const data = response.data;
         if (typeof data === "object" && data !== null) {
