@@ -13,7 +13,7 @@ import axios from "axios";
 
 const TestBread = () => {
   const [scores, setScores] = useState({ F: 0, T: 0, P: 0, J: 0 });
-  const [resultId, setResultId] = useState(null);
+  const [resultsData, setResultsData] = useState([]);
 
   const questions = [
     {
@@ -78,7 +78,17 @@ const TestBread = () => {
     },
   ];
 
-  // 최종 점수를 "FP"와 같은 문자열 형태로 변환하는 함수
+  useEffect(() => {
+    axios
+      .get("/test.json")
+      .then((response) => {
+        setResultsData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching test results", error);
+      });
+  }, []);
+
   const getResultString = (scores) => {
     const resultArray = [];
     if (scores.F >= scores.T) resultArray.push("F");
@@ -88,7 +98,6 @@ const TestBread = () => {
     return resultArray.join("");
   };
 
-  // 선택지 클릭 핸들러
   const handleOptionClick = (type, navigate, page) => {
     setScores((prevScores) => {
       const updatedScores = { ...prevScores, [type]: prevScores[type] + 1 };
@@ -96,19 +105,13 @@ const TestBread = () => {
       if (nextPage < questions.length) {
         navigate(`/test/questions/${nextPage + 1}`);
       } else {
-        // 최종 질문 후 점수 제출
         const resultString = getResultString(updatedScores);
-        console.log("Final Scores:", updatedScores); // 최종 점수 콘솔에 출력
-        console.log("Result String:", resultString); // 최종 결과 문자열 콘솔에 출력
-        axios
-          .post("/test/submit", { resultString })
-          .then((response) => {
-            setResultId(response.data.resultId); // 서버로부터 결과 ID를 받아옴
-            navigate(`/test/result/${response.data.resultId}`);
-          })
-          .catch((error) => {
-            console.error("Error submitting test results", error);
-          });
+        const result = resultsData.find((r) => r.type === resultString);
+        if (result) {
+          navigate(`/test/result/${result.id}`);
+        } else {
+          console.error("Result not found for type", resultString);
+        }
       }
       return updatedScores;
     });
@@ -125,20 +128,21 @@ const TestBread = () => {
           />
         }
       />
-      <Route path="result/:resultId" element={<Result />} />
+      <Route
+        path="result/:resultId"
+        element={<Result resultsData={resultsData} />}
+      />
       <Route path="/" element={<Navigate to="/test/questions/1" />} />
     </Routes>
   );
 };
 
-// 페이지 넘김 관련 컴포넌트
 const QuestionPage = ({ questions, handleOptionClick }) => {
   const { page } = useParams();
   const navigate = useNavigate();
-  const pageIndex = parseInt(page, 10) - 1; // 1 기반 인덱스를 0 기반 인덱스로 변환
+  const pageIndex = parseInt(page, 10) - 1;
 
   useEffect(() => {
-    // 페이지 인덱스가 유효한지 확인하고 유효하지 않으면 첫 번째 질문으로 리다이렉트
     if (isNaN(pageIndex) || pageIndex < 0 || pageIndex >= questions.length) {
       navigate("/test/questions/1");
     }

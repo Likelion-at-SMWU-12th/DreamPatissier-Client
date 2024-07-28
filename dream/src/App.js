@@ -23,6 +23,7 @@ import Logout from "./pages/userpage/Logout";
 import SearchPage from "./pages/SearchPage";
 import Cart from "./pages/Cart";
 import Order from "./pages/Order";
+import OrderClear from "./pages/OrderClear";
 
 import profile from "./assets/logo.png";
 
@@ -62,6 +63,7 @@ function App() {
         <Route path="/test/*" element={<TestBread />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/cart/order" element={<Order />} />
+        <Route path="/cart/orderclear" element={<OrderClear />} />
       </Routes>
     </>
   );
