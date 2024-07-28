@@ -25,15 +25,18 @@
 
 .product-image {
   border-radius: 10px;
-  width: 80px;
-  height: 80px;
+  width: 89px;
+  height: 89px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .product-date {
-  font-weight: 800;
-  font-size: 13px;
-  margin-bottom: 13px;
+  color: #000;
+  font-family: Inter;
+  font-size: 15px !important;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 }
 
 .product-info {
@@ -61,7 +64,7 @@
 
 .product-price {
   color: #471d06;
-  font-size: 14px;
+  font-size: 15px !important;
   font-weight: 800;
 }
 

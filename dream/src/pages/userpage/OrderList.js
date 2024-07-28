@@ -8,7 +8,7 @@ const OrderList = () => {
   const [products, setProducts] = useState([
     {
       id: 1,
-      date: "2024-07-19",
+      date: "2024.07.19",
       image: profile,
       name: "test1",
       tags: ["#프로틴", "#저당"],
@@ -17,7 +17,7 @@ const OrderList = () => {
     },
     {
       id: 2,
-      date: "2024-07-05",
+      date: "2024.07.05",
       image: profile,
       name: "test2",
       tags: ["태그3", "태그4"],
@@ -26,7 +26,7 @@ const OrderList = () => {
     },
     {
       id: 3,
-      date: "2024-07-05",
+      date: "2024.07.05",
       image: profile,
       name: "test3",
       tags: ["태그3", "태그4"],
@@ -35,7 +35,7 @@ const OrderList = () => {
     },
     {
       id: 4,
-      date: "2024-07-05",
+      date: "2024.07.05",
       image: profile,
       name: "test4",
       tags: ["태그3", "태그4"],
