@@ -1,48 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Order.css";
 import profile from "./bread.png";
 
 const OrderList = () => {
   const navigate = useNavigate();
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      date: "2024.07.19",
-      image: profile,
-      name: "test1",
-      tags: ["#프로틴", "#저당"],
-      price: 10000,
-      reviewed: false,
-    },
-    {
-      id: 2,
-      date: "2024.07.05",
-      image: profile,
-      name: "test2",
-      tags: ["태그3", "태그4"],
-      price: 15000,
-      reviewed: true,
-    },
-    {
-      id: 3,
-      date: "2024.07.05",
-      image: profile,
-      name: "test3",
-      tags: ["태그3", "태그4"],
-      price: 15000,
-      reviewed: false,
-    },
-    {
-      id: 4,
-      date: "2024.07.05",
-      image: profile,
-      name: "test4",
-      tags: ["태그3", "태그4"],
-      price: 15000,
-      reviewed: true,
-    },
-  ]);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/orders")
+      .then((response) => response.json())
+      .then((data) => setProducts(data))
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
 
   const handleReviewClick = (id) => {
     console.log(`Review for product ${id}`);
@@ -62,7 +32,7 @@ const OrderList = () => {
             <div className="product-date">{product.date}</div>
             <div className="product-show">
               <img
-                src={product.image}
+                src={product.image || profile} // Fallback to a default image if not provided
                 alt={product.name}
                 className="product-image"
               />
