@@ -24,7 +24,7 @@ const Result = ({ resultsData }) => {
           );
         })
         .catch((error) => {
-          console.error("Error fetching recommended products", error);
+          console.error("데이터 가져오기 실패~!!! 왜?? :", error);
         });
     }
   }, [result]);
@@ -43,11 +43,11 @@ const Result = ({ resultsData }) => {
       </TypeImgBox>
       <TypeTextBox>
         <Text>
-          <Text1>{result.description1}</Text1>
-          <br />
-          <Text2>{result.description2}</Text2>
-          <br />
-          <Text3>{result.description3}</Text3>
+          {result.description1}
+          <br /> <br />
+          {result.description2}
+          <br /> <br />
+          {result.description3}
         </Text>
       </TypeTextBox>
       <RecommendTitle>
@@ -153,13 +153,6 @@ const Text = styled.div`
   margin: auto;
   color: #311505;
 `;
-
-const Text1 = styled.div``;
-
-const Text2 = styled.div``;
-
-const Text3 = styled.div``;
-
 const RecommendTitle = styled.div`
   font-size: 19px;
   letter-spacing: 1px;
@@ -183,7 +176,7 @@ const TypeProductWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 338px;
+  width: 85%;
   margin-bottom: 50px;
 `;
 
