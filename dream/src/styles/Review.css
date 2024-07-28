@@ -18,7 +18,10 @@
 
 .product-show2 {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
 .product-image2 {
@@ -45,7 +48,8 @@
   flex-direction: column;
   padding: 0;
   margin: 0 13px;
-  margin-bottom: 25px;
+  flex: 1;
+  margin-left: 15px;
 }
 
 .product-card2 {
@@ -64,12 +68,33 @@
   background-color: white;
   border: 0;
   height: 35px;
-  margin-left: 150px;
+  cursor: pointer;
 }
 
 .show_review_text {
+  padding: 6px 0;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.info-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.product-like-show {
+  padding-top: 1px;
+  color: #000;
+  font-family: Inter;
   font-size: 15px;
-  border: 1px solid brown;
-  padding: 10px 10px;
-  border-radius: 5px;
+  font-weight: 700;
+}
+
+.product-date-show {
+  padding-top: 2px;
+  color: #979797;
+  font-family: Inter;
+  font-size: 13px;
+  font-weight: 600;
 }
