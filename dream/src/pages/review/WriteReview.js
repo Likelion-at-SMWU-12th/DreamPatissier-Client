@@ -28,7 +28,7 @@ const WriteReview = () => {
 
     try {
       let now = new Date();
-      now.setHours(now.getHours() + 9); // 시간대 조정
+      now.setHours(now.getHours() + 9);
       let writedate = now.toISOString().split("T")[0];
 
       const reviewData = {
@@ -42,7 +42,7 @@ const WriteReview = () => {
       console.log("Review data:", reviewData);
 
       // Step 1: 리뷰 데이터 전송
-      await axios.post("http://localhost:3001/reviews", reviewData);
+      await axios.post("http://127.0.0.1:8000/reviews", reviewData);
 
       // Step 2: 주문의 'reviewed' 상태 업데이트
       const orderId = product.orderId || product.id;
@@ -52,7 +52,7 @@ const WriteReview = () => {
 
       console.log("Order ID for update:", orderId);
 
-      await axios.put(`http://localhost:3001/orders/${orderId}`, {
+      await axios.put(`http://127.0.0.1:8000/orders/${orderId}`, {
         reviewed: true,
       });
 
