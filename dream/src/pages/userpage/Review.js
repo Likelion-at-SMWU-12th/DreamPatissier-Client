@@ -71,7 +71,7 @@ const Review = () => {
               </div>
               <div className="info-container">
                 <div className="product-like-show">{product.like}</div>
-                <div className="product-date-show">{product.date}</div>
+                <div className="product-date-show">{product.writedate}</div>
               </div>
               <div className="show_review_text">{product.description}</div>
             </div>
