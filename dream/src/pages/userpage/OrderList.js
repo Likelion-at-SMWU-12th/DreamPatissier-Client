@@ -14,9 +14,8 @@ const OrderList = () => {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  const handleReviewClick = (id) => {
-    console.log(`Review for product ${id}`);
-    navigate(`/users/reviews/${id}`);
+  const handleReviewClick = (product) => {
+    navigate(`/users/reviews/${product.id}`, { state: { product } });
   };
 
   const handleAddToCartClick = (id) => {
@@ -27,52 +26,49 @@ const OrderList = () => {
     <div className="order-list">
       <div className="orderlist-title">주문목록</div>
       {products.map((product) => (
-        <React.Fragment key={product.id}>
-          <div className="product-card">
-            <div className="product-date">{product.date}</div>
-            <div className="product-show">
-              <img
-                src={product.image || profile} // Fallback to a default image if not provided
-                alt={product.name}
-                className="product-image"
-              />
-              <div className="product-info">
-                <h3 className="product-name">{product.name}</h3>
-                <div className="product-tags">{product.tags.join("\t")}</div>
-                <div className="product-price">
-                  {product.price.toLocaleString()}원
-                </div>
+        <div key={product.id} className="product-card">
+          <div className="product-date">{product.date}</div>
+          <div className="product-show">
+            <img
+              src={product.image || profile}
+              alt={product.name}
+              className="product-image"
+            />
+            <div className="product-info">
+              <h3 className="product-name">{product.name}</h3>
+              <div className="product-tags">{product.tags.join(" ")}</div>
+              <div className="product-price">
+                {product.price.toLocaleString()}원
               </div>
             </div>
-
-            <div className="product-actions">
-              {!product.reviewed && (
-                <>
-                  <button
-                    className="write-review"
-                    onClick={() => handleReviewClick(product.id)}
-                  >
-                    리뷰쓰기
-                  </button>
-                  <button
-                    className="add"
-                    onClick={() => handleAddToCartClick(product.id)}
-                  >
-                    같은 빵 담기
-                  </button>
-                </>
-              )}
-              {product.reviewed && (
+          </div>
+          <div className="product-actions">
+            {!product.reviewed && (
+              <>
+                <button
+                  className="write-review"
+                  onClick={() => handleReviewClick(product)}
+                >
+                  리뷰쓰기
+                </button>
                 <button
                   className="add"
                   onClick={() => handleAddToCartClick(product.id)}
                 >
                   같은 빵 담기
                 </button>
-              )}
-            </div>
+              </>
+            )}
+            {product.reviewed && (
+              <button
+                className="add"
+                onClick={() => handleAddToCartClick(product.id)}
+              >
+                같은 빵 담기
+              </button>
+            )}
           </div>
-        </React.Fragment>
+        </div>
       ))}
     </div>
   );

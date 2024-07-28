@@ -1,80 +1,84 @@
 {
-  "reviews": [
+  "orders": [
     {
-      "id": 1,
-      "date": "2024.07.19",
-      "image": "",
-      "name": "test1",
-      "tags": ["#프로틴", "#저당"],
-      "price": 10000,
       "reviewed": true,
-      "like": "만족해요",
-      "description": "건강빵이라고 해서 걱정했는데 정말 맛있었어요. 앞으로도 빵을 구매할 때 웰니스빵인지 확인하고 구매할 예정입니다."
+      "id": "1"
     },
     {
       "id": "2",
-      "date": "2024-07-05",
+      "date": "2024.07.05",
       "image": "",
       "name": "test2",
-      "tags": ["태그3", "태그4"],
+      "tags": [
+        "태그3",
+        "태그4"
+      ],
       "price": 15000,
       "reviewed": true
     },
     {
       "id": "3",
-      "date": "2024-07-05",
+      "date": "2024.07.05",
       "image": "",
       "name": "test3",
-      "tags": ["태그3", "태그4"],
+      "tags": [
+        "태그3",
+        "태그4"
+      ],
       "price": 15000,
       "reviewed": false
     },
     {
       "id": "4",
-      "date": "2024-07-05",
+      "date": "2024.07.05",
       "image": "",
       "name": "test4",
-      "tags": ["태그3", "태그4"],
+      "tags": [
+        "태그3",
+        "태그4"
+      ],
       "price": 15000,
       "reviewed": true
     }
   ],
-  "recipes": [
+  "reviews": [
     {
-      "id": "800c",
-      "author": "12345",
-      "represent_img": "blob:http://localhost:3000/4c585610-0c6f-429d-b9f2-559c26705903",
-      "title": "ㅇ",
-      "tags": ["ㅇ"],
-      "cookingTime": "ㅇ",
-      "equipment": ["ㅇ"],
-      "ingredients": [
-        {
-          "item": "ㅇ",
-          "quantity": "ㅇ"
-        }
+      "id": "1",
+      "orderId": 1,
+      "date": "2024.07.19",
+      "image": "",
+      "name": "test1",
+      "tags": [
+        "#프로틴",
+        "#저당"
       ],
-      "steps": [
-        {
-          "image": "blob:http://localhost:3000/944535b1-a395-4a65-a2c2-180e57adfe7d",
-          "description": "ㅇ"
-        }
-      ]
+      "price": 10000,
+      "reviewed": true,
+      "like": "dislike",
+      "description": "ㅇㅇ",
+      "writedate": "2024-07-28"
     }
   ],
+  "recipes": [],
   "record": {
     "2024-07-20": [
       {
         "id": 1,
         "breadName": "통밀빵",
         "bakeryName": "빵집 A",
-        "tags": ["맛있다", "건강한"],
+        "tags": [
+          "맛있다",
+          "건강한"
+        ],
         "review": "부드럽고 건강한 통밀빵이었습니다!"
       },
       {
         "breadName": "바게트",
         "bakeryName": "빵집 B",
-        "tags": ["바삭하다", "고소한"],
+        "tags": [
+          "바삭하다",
+          "고소한"
+        ],
         "review": "겉은 바삭하고 속은 촉촉한 바게트!"
       }
     ],
@@ -82,13 +86,19 @@
       {
         "breadName": "크루아상",
         "bakeryName": "빵집 C",
-        "tags": ["버터", "겉은 바삭"],
+        "tags": [
+          "버터",
+          "겉은 바삭"
+        ],
         "review": "버터 향이 진하고 겉은 바삭한 크루아상!"
       },
       {
         "breadName": "치아바타",
         "bakeryName": "빵집 D",
-        "tags": ["겉은 바삭", "속은 부드러움"],
+        "tags": [
+          "겉은 바삭",
+          "속은 부드러움"
+        ],
         "review": "겉은 바삭하고 속은 부드러운 치아바타!"
       }
     ],
@@ -96,7 +106,10 @@
       {
         "breadName": "호밀빵",
         "bakeryName": "빵집 E",
-        "tags": ["건강한", "무첨가"],
+        "tags": [
+          "건강한",
+          "무첨가"
+        ],
         "review": "건강한 호밀빵, 담백하고 고소한 맛!"
       }
     ],
@@ -104,13 +117,19 @@
       {
         "breadName": "앙버터빵",
         "bakeryName": "빵집 F",
-        "tags": ["달콤한", "버터"],
+        "tags": [
+          "달콤한",
+          "버터"
+        ],
         "review": "달콤한 앙버터와 풍부한 버터 맛이 일품!"
       },
       {
         "breadName": "식빵",
         "bakeryName": "빵집 G",
-        "tags": ["부드러운", "크림"],
+        "tags": [
+          "부드러운",
+          "크림"
+        ],
         "review": "부드럽고 크림 맛이 진한 식빵!"
       }
     ],
@@ -118,7 +137,10 @@
       {
         "breadName": "소보로빵",
         "bakeryName": "빵집 H",
-        "tags": ["바삭한", "달콤한"],
+        "tags": [
+          "바삭한",
+          "달콤한"
+        ],
         "review": "바삭하고 달콤한 소보로빵, 최고의 간식!"
       }
     ]

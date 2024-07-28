@@ -1,27 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../../styles/WriteReview.css";
-import profile from "./bread.png";
 
 const WriteReview = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    if (location.state && location.state.product) {
+      setProduct(location.state.product);
+    } else {
+      console.error("No product data available");
+      navigate("/");
+    }
+  }, [location.state, navigate]);
+
   const [selectedButton, setSelectedButton] = useState("");
+  const [reviewText, setReviewText] = useState("");
 
-  const product = {
-    id: 1,
-    image: profile,
-    date: "2024-07-19",
-    name: "test1",
-    tags: ["#프로틴", "#저당"],
-    price: 10000,
-    reviewed: false,
+  const handleSubmit = async () => {
+    if (!selectedButton || !reviewText) {
+      alert("Please select a rating and write a review.");
+      return;
+    }
+
+    try {
+      let now = new Date();
+      now.setHours(now.getHours() + 9); // 시간대 조정
+      let writedate = now.toISOString().split("T")[0];
+
+      const reviewData = {
+        ...product,
+        like: selectedButton,
+        description: reviewText,
+        writedate: writedate,
+        reviewed: true,
+      };
+
+      console.log("Review data:", reviewData);
+
+      // Step 1: 리뷰 데이터 전송
+      await axios.post("http://localhost:3001/reviews", reviewData);
+
+      // Step 2: 주문의 'reviewed' 상태 업데이트
+      const orderId = product.orderId || product.id;
+      if (!orderId) {
+        throw new Error("Order ID is missing from product data.");
+      }
+
+      console.log("Order ID for update:", orderId);
+
+      await axios.put(`http://localhost:3001/orders/${orderId}`, {
+        reviewed: true,
+      });
+
+      alert("리뷰가 제출되었습니다!");
+      navigate("/users/orders");
+    } catch (error) {
+      console.error("There was an error submitting your review:", error);
+      alert("리뷰 제출에 실패했습니다. 다시 시도해 주세요.");
+    }
   };
 
-  const handleSubmit = () => {
-    alert("리뷰가 제출되었습니다!");
-  };
-
-  const handleButtonClick = (button) => {
-    setSelectedButton(button);
-  };
+  if (!product) return null;
 
   return (
     <div>
@@ -50,7 +93,7 @@ const WriteReview = () => {
           className={`show-button ${
             selectedButton === "dislike" ? "selected" : ""
           }`}
-          onClick={() => handleButtonClick("dislike")}
+          onClick={() => setSelectedButton("dislike")}
         >
           별로예요 👎🏻
         </button>
@@ -58,7 +101,7 @@ const WriteReview = () => {
           className={`show-button ${
             selectedButton === "like" ? "selected" : ""
           }`}
-          onClick={() => handleButtonClick("like")}
+          onClick={() => setSelectedButton("like")}
         >
           만족해요 👍🏻
         </button>
@@ -68,6 +111,8 @@ const WriteReview = () => {
         className="text_review"
         placeholder="여기에 리뷰를 작성하세요"
         rows="9"
+        value={reviewText}
+        onChange={(e) => setReviewText(e.target.value)}
       />
       <div className="submit-button-container">
         <button className="submit-review" onClick={handleSubmit}>
