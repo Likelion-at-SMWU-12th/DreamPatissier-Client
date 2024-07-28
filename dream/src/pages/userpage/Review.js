@@ -10,7 +10,7 @@ const Review = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/reviews")
+      .get("http://127.0.0.1:8000/reviews")
       .then((response) => setProducts(response.data))
       .catch((error) =>
         console.error("데이터를 가져오는 중 오류 발생:", error)
@@ -25,7 +25,7 @@ const Review = () => {
 
     if (confirmed) {
       axios
-        .delete(`http://localhost:3001/reviews/${id}/`)
+        .delete(`http://127.0.0.1:8000/reviews/${id}/`)
         .then((response) => {
           console.log("리뷰가 성공적으로 삭제되었습니다");
           setProducts((prevProducts) =>
