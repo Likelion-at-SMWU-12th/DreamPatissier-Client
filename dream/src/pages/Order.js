@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import YellowBtn from "../components/YellowBtn";
 import TossPay from "../assets/tosspay.png";
 import NPay from "../assets/npay.png";
 import KakaoPay from "../assets/kakaopay.png";
+import { useNavigate } from "react-router-dom";
 
 const Order = () => {
+  const navigate = useNavigate();
+
+  const [selectedPay, setSelectedPay] = useState("");
+
   return (
     <>
       <DeliveryWrap>
@@ -23,21 +28,36 @@ const Order = () => {
       <PayWrap>
         <PayTitle>결제수단</PayTitle>
         <PayOption>
-          <StyledCheck type="checkbox" />
-          <PayText>
+          <StyledCheck
+            type="radio"
+            name="payment"
+            checked={selectedPay === "toss"}
+            onChange={() => setSelectedPay("toss")}
+          />
+          <PayText isSelected={selectedPay === "toss"}>
             <PayImage src={TossPay} alt="토스페이" /> 토스페이
           </PayText>
         </PayOption>
         <PayOption>
-          <StyledCheck type="checkbox" />
-          <PayText>
+          <StyledCheck
+            type="radio"
+            name="payment"
+            checked={selectedPay === "npay"}
+            onChange={() => setSelectedPay("npay")}
+          />
+          <PayText isSelected={selectedPay === "npay"}>
             <PayImage src={NPay} alt="네이버페이" />
             네이버페이
           </PayText>
         </PayOption>
         <PayOption>
-          <StyledCheck type="checkbox" />
-          <PayText>
+          <StyledCheck
+            type="radio"
+            name="payment"
+            checked={selectedPay === "kakao"}
+            onChange={() => setSelectedPay("kakao")}
+          />
+          <PayText isSelected={selectedPay === "kakao"}>
             <PayImage src={KakaoPay} alt="카카오페이" /> 카카오페이
           </PayText>
         </PayOption>
@@ -55,6 +75,7 @@ const Order = () => {
       </Guide>
       <ButtonContainer>
         <YellowBtn
+          onBtnClick={() => navigate("/cart/orderclear")}
           txt="결제하기"
           width={"85%"}
           position={"relative"}
@@ -157,7 +178,7 @@ const PayImage = styled.img`
 
 const PayText = styled.div`
   margin-left: 10px;
-  color: var(--grey);
+  color: ${(props) => (props.isSelected ? "var(--yellow)" : "var(--grey)")};
   display: flex;
   align-items: center;
   font-size: 13px;
