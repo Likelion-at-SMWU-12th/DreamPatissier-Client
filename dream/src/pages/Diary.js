@@ -5,6 +5,8 @@ import axios from "axios";
 import "react-calendar/dist/Calendar.css";
 import "../styles/Diary.css";
 import Bread from "../assets/bread_stamp.png";
+import editIcon from "../assets/edit-icon.png";
+import deleteIcon from "../assets/delete-icon.png";
 
 const getWeekday = (day) => {
   const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
@@ -168,6 +170,10 @@ const Diary = () => {
     }
   };
 
+  const handleEditReview = (id) => {
+    navigate(`/edit/${id}`);
+  };
+
   return (
     <>
       <div className="selection-container">
@@ -195,28 +201,32 @@ const Diary = () => {
             </button>
             {reviewList.length > 0 && (
               <div className="review-container">
-                <h3>후기</h3>
                 {reviewList.map((review) => (
                   <div key={review.id} className="review-item">
-                    <p>
-                      <strong>빵 이름:</strong> {review.breadName}
-                    </p>
-                    <p>
-                      <strong>빵 가게 이름:</strong> {review.bakeryName}
-                    </p>
-                    <p>
-                      <strong>태그:</strong> {review.tags.join(", ")}
-                    </p>
-                    <p>
-                      <strong>후기:</strong> {review.review}
-                    </p>
-                    <button
-                      onClick={() => handleDeleteReview(review.id)}
-                      className="delete-button"
-                    >
-                      삭제
-                    </button>
-                    <hr />
+                    <img src={Bread} className="review-stamp-image" />
+                    <hr className="vertical-line" />
+                    <div className="review-content">
+                      <div className="bread-title">
+                        [{review.bakeryName}] {review.breadName}
+                      </div>
+                      <div className="review-tag">{review.tags.join(", ")}</div>
+                      <div className="review-text">{review.review}</div>
+                      <img src={Bread} className="review-show-image" />
+                    </div>
+                    <div className="button-div">
+                      <button
+                        onClick={() => handleEditReview(review.id)}
+                        className="diary-edit-button"
+                      >
+                        <img src={editIcon} alt="Edit" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteReview(review.id)}
+                        className="diary-delete-button"
+                      >
+                        <img src={deleteIcon} alt="Delete" />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
