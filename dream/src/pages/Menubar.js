@@ -5,7 +5,9 @@ import logo from "../assets/logo.png";
 
 const Menubar = () => {
   const location = useLocation();
-  const isTestPath = location.pathname.startsWith("/test");
+  const isTestPath =
+    location.pathname.startsWith("/test") ||
+    location.pathname.startsWith("/cart/orderclear");
 
   const getLinkClass = (path) => {
     return location.pathname.startsWith(path)

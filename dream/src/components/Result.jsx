@@ -1,69 +1,76 @@
 import React, { useEffect, useState } from "react";
-// import axios from "axios";
 import styled from "styled-components";
-// import { useParams } from "react-router-dom";
-import Testplain from "../assets/test-plain.png";
-import logoIcon from "../assets/logoIcon.svg";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import YellowBtn from "./YellowBtn";
-import { useNavigate } from "react-router-dom";
-import PlantBread from "../assets/TE-plant.png";
+import LogoIcon from "../assets/logoIcon.svg";
 
-const Result = () => {
+const Result = ({ resultsData }) => {
+  const { resultId } = useParams();
   const navigate = useNavigate();
+  const result = resultsData.find((r) => r.id.toString() === resultId);
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
+
+  useEffect(() => {
+    if (result && result.recommend) {
+      axios
+        .get("/product.json")
+        .then((response) => {
+          const recommended = response.data.filter((product) =>
+            result.recommend.includes(product.id)
+          );
+          setRecommendedProducts(
+            recommended.sort(() => 0.5 - Math.random()).slice(0, 2)
+          );
+        })
+        .catch((error) => {
+          console.error("데이터 가져오기 실패~!!! 왜?? :", error);
+        });
+    }
+  }, [result]);
+
+  if (!result) {
+    return <div>결과를 찾을 수 없습니다.</div>;
+  }
 
   return (
     <ResultWrap>
       <TitleBox>
-        <Styledh1>{/*{resultData.title}*/}폭신한 인기쟁이 식빵</Styledh1>
+        <Styledh1>{result.title}</Styledh1>
       </TitleBox>
       <TypeImgBox>
-        {/*<img src={resultData.img} alt="result" />*/}
-        <TypeImg src={Testplain} />
+        <TypeImg src={result.img} alt="result" />
       </TypeImgBox>
       <TypeTextBox>
         <Text>
-          당신은 소중한 사람에게 애정표현을 아끼지 않는 따뜻한 마음을 가진
-          사람입니다.
-          <br />
-          <br />
-          상대방을 배려하는 예쁜 말을 자주 하여 다정한 모습으로 많은 사람들의
-          호감을 사곤 합니다.
-          <br />
-          <br />
-          첫인상은 조금 까칠해 보일 수 있지만, 실제로는 속이 여리고 폭신한 인기
-          많은 식빵 같은 존재입니다.
-          {/*{resultData.description}*/}
+          {result.description1}
+          <br /> <br />
+          {result.description2}
+          <br /> <br />
+          {result.description3}
         </Text>
       </TypeTextBox>
       <RecommendTitle>
-        <BngImg src={logoIcon} />
-        빵긋빵굿의 추천빵 <BngImg src={logoIcon} />
+        <BngImg src={LogoIcon} alt="logo" />
+        빵긋빵굿의 추천빵
+        <BngImg src={LogoIcon} alt="logo" />
       </RecommendTitle>
       <TypeProductWrap>
-        <ProductBox /* 나중에  navigate 넣기... */>
-          <ProductImg src={PlantBread} />
-          <ProductText>
-            <Titles>[몽블렁제] 식물성 식빵</Titles>
-            <Keywords>
-              <Tag>#식물성 #프로틴</Tag>
-            </Keywords>
-          </ProductText>
-        </ProductBox>
-        <ProductBox /* 나중에  navigate 넣기... */>
-          <ProductImg src={PlantBread} />
-          <ProductText>
-            <Titles>[몽블렁제] 식물성 식빵</Titles>
-            <Keywords>
-              <Tag>#식물성 #프로틴</Tag>
-            </Keywords>
-          </ProductText>
-        </ProductBox>
-        {/*
-        <ul>
-          {resultData.recommend.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>*/}
+        {recommendedProducts.map((item, index) => (
+          <StyledLink to={`/bakery/product/${item.id}`} key={item.id}>
+            <ProductBox>
+              <ProductImg src={item.imgSrc} alt={item.title} />
+              <ProductText>
+                <Titles>{item.title}</Titles>
+                <Keywords>
+                  {item.tags.map((tag, idx) => (
+                    <Tag key={idx}>{tag}</Tag>
+                  ))}
+                </Keywords>
+              </ProductText>
+            </ProductBox>
+          </StyledLink>
+        ))}
       </TypeProductWrap>
       <ButtonWrap>
         <YellowBtn
@@ -85,18 +92,21 @@ const Result = () => {
 
 export default Result;
 
+// 스타일 정의
 const ResultWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 `;
+
 const TitleBox = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
   margin-top: 50px;
 `;
+
 const Styledh1 = styled.p`
   font-family: "Noto Sans KR";
   font-size: 22px;
@@ -105,15 +115,18 @@ const Styledh1 = styled.p`
   color: #311505;
   margin: 0px;
 `;
+
 const TypeImgBox = styled.div`
   padding: 45px;
   display: flex;
   justify-content: center;
 `;
+
 const TypeImg = styled.img`
   width: 181px;
   height: auto;
 `;
+
 const TypeTextBox = styled.div`
   background-color: #ffecc4;
   display: flex;
@@ -127,6 +140,7 @@ const TypeTextBox = styled.div`
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.25);
   padding: 20px 10px;
 `;
+
 const Text = styled.div`
   font-size: 17px;
   letter-spacing: -0.41px;
@@ -162,7 +176,7 @@ const TypeProductWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 338px;
+  width: 85%;
   margin-bottom: 50px;
 `;
 
@@ -180,7 +194,7 @@ const ProductImg = styled.img`
 const ProductText = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  text-align: left;
 `;
 
 const Titles = styled.div`
@@ -210,4 +224,10 @@ const ButtonWrap = styled.div`
   gap: 17px;
   align-items: center;
   margin-bottom: 100px;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  display: block;
 `;

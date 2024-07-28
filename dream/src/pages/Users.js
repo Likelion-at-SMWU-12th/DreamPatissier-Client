@@ -1,14 +1,23 @@
 import React from "react";
 import "../styles/Users.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import advertise from "../assets/advertise.png";
 import profile from "../assets/myprofile.png";
 
-//
-// 마이페이지
-//
-
 const Users = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    const confirmLogout = window.confirm("로그아웃하시겠습니까?");
+    if (confirmLogout) {
+      // 로그아웃 로직 추가
+      localStorage.removeItem("token");
+      // 로그인 페이지로 이동
+      navigate("/accounts/login/");
+    }
+  };
+
   return (
     <div className="user-page">
       <div className="profile-section">
@@ -42,7 +51,11 @@ const Users = () => {
         <Link to="/of-use" className="option-link">
           서비스 이용약관 &gt;
         </Link>
-        <Link to="/accounts/logout/" className="option-link">
+        <Link
+          to="/accounts/logout/"
+          className="option-link"
+          onClick={handleLogout}
+        >
           로그아웃 &gt;
         </Link>
       </div>
