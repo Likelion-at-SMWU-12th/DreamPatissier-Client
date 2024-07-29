@@ -15,10 +15,10 @@ const SignForm = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
+    confirmPassword: "",
     nickname: "",
     phone: "",
   });
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -33,20 +33,12 @@ const SignForm = () => {
   const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
 
-  // 입력 필드 값 변경 시 호출되는 함수
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
     setErrors({ ...errors, [id]: "" });
   };
 
-  // 비밀번호 확인 필드 값 변경 시 호출되는 함수
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-    setErrors({ ...errors, confirmPassword: "" });
-  };
-
-  // 폼 유효성 검사 함수
   const validateForm = () => {
     const newErrors = {};
     let isErrorPresent = false;
@@ -73,10 +65,10 @@ const SignForm = () => {
       isErrorPresent = true;
     }
 
-    if (!confirmPassword) {
+    if (!formData.confirmPassword) {
       newErrors.confirmPassword = "ⓘ 비밀번호를 다시 한 번 입력해주세요.";
       isErrorPresent = true;
-    } else if (formData.password !== confirmPassword) {
+    } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "ⓘ 비밀번호가 일치하지 않습니다.";
       isErrorPresent = true;
     }
@@ -96,20 +88,9 @@ const SignForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // 폼 제출 시 호출되는 함수
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // 현재 입력된 데이터를 배열 형태로 콘솔에 출력
-    console.log("Form data before validation:", [
-      formData.username,
-      formData.password,
-      confirmPassword,
-      formData.nickname,
-      formData.phone,
-    ]);
-
-    // 필수 항목 체크 확인
     if (
       !allChecked.termsAgree ||
       !allChecked.privacyAgree ||
@@ -120,7 +101,6 @@ const SignForm = () => {
       return;
     }
 
-    // 유효성 검사
     if (!validateForm()) {
       setMessage(
         "ⓘ 회원가입에 실패했습니다. 입력하신 정보를 다시 한번 확인해 주세요."
@@ -128,16 +108,44 @@ const SignForm = () => {
       return;
     }
 
-    // 서버에 데이터 전송
-    console.log("Sending data to server:", formData);
+    const submitData = {
+      username: formData.username,
+      password: formData.password,
+      password2: formData.confirmPassword, // Here we use 'password2' for confirmation
+      last_name: formData.nickname,
+      phone: formData.phone,
+    };
+
+    console.log("Sending data to server:", submitData);
 
     axios
-      .post("http://127.0.0.1:8000/accounts/signup/", formData)
+      .post("http://127.0.0.1:8000/accounts/signup/", submitData)
       .then((response) => {
         console.log("Signup successful", response.data);
+
+        // 자동 로그인 처리
+        axios
+          .post("http://127.0.0.1:8000/accounts/login/", {
+            username: formData.username,
+            password: formData.password,
+          })
+          .then((loginResponse) => {
+            console.log("Login successful", loginResponse.data);
+            localStorage.setItem("token", loginResponse.data.token);
+            localStorage.setItem("nickname", loginResponse.data.nickname);
+            localStorage.setItem("username", formData.username);
+            navigate("/bakery");
+          })
+          .catch((loginError) => {
+            console.error("Login failed", loginError.response.data);
+            setMessage(
+              "자동 로그인에 실패했습니다. 로그인 페이지로 이동합니다."
+            );
+            navigate("/accounts/login/");
+          });
+
         setMessage("회원가입이 완료되었습니다.");
         setIsError(false);
-        navigate("/signup-clear");
       })
       .catch((error) => {
         console.error(
@@ -196,8 +204,8 @@ const SignForm = () => {
               label: "비밀번호 확인",
               placeholder: "비밀번호를 한 번 더 입력해 주세요.",
               type: "password",
-              value: confirmPassword,
-              onChange: handleConfirmPasswordChange,
+              value: formData.confirmPassword,
+              onChange: handleChange,
               buttons: [
                 <SeeButton
                   type="button"
@@ -205,7 +213,12 @@ const SignForm = () => {
                 >
                   <img src={showPassword ? canSeeIcon : noSeeIcon} />
                 </SeeButton>,
-                <DelButton type="button" onClick={() => setConfirmPassword("")}>
+                <DelButton
+                  type="button"
+                  onClick={() =>
+                    setFormData({ ...formData, confirmPassword: "" })
+                  }
+                >
                   <img src={delPasswordIcon} alt="Clear" />
                 </DelButton>,
               ],
