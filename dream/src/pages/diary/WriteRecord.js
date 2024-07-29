@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/RecordDetail.css";
 import Picture from "../../assets/picture_button.png";
-import axios from "axios"; // axios를 임포트
+import axios from "axios";
 
 const ImageUploadComponent = ({ images, onAddImage, onRemoveImage }) => (
   <div className="image-upload-container">
@@ -119,19 +119,19 @@ const RecordDetail = () => {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/diary/", // Django API 엔드포인트에 맞는 URL
+        "http://127.0.0.1:8000/diary/",
         record, // 전송할 데이터
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Token your_token_here", // 토큰 인증
+            Authorization: "Token your_token_here",
           },
         }
       );
 
       if (response.status === 201) {
         console.log("저장할 데이터:", record);
-        navigate("/diary"); // 성공적으로 저장되면 다른 페이지로 이동
+        navigate("/diary");
       } else {
         console.error("Failed to save record. Status code:", response.status);
         console.error("Error details:", response.data);
