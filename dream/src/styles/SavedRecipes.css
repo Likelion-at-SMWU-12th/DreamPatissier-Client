@@ -1,0 +1,46 @@
+.tool_img_saved {
+  padding-top: 1px;
+  width: 12px;
+  height: 12px;
+}
+
+.time_img_saved {
+  padding-top: 1px;
+  width: 12px;
+  height: 13px;
+}
+
+.saved-recipe-sub-show {
+  margin-right: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #8a8888;
+  font-family: "Noto Sans KR";
+}
+
+.product-show3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.info-container2 {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.product-image3 {
+  border-radius: 10px;
+  margin-right: 5px;
+  width: 85px;
+  height: 85px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.save-btn {
+  background-color: white;
+  border: 0;
+}
