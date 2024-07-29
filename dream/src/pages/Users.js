@@ -25,8 +25,10 @@ const Users = () => {
       <div className="profile-section">
         <img src={profile} alt="Profile" className="profile-pic" />
         <div className="profile-info">
-          <h2 className="profile-name">{nickname}</h2>
-          <p className="profile-email">{username}</p>
+          <h2 className="profile-name">{nickname ? nickname : "UNKNOWN"}</h2>
+          <p className="profile-email">
+            {username ? username : "로그인 후 이용해주세요."}
+          </p>
         </div>
       </div>
 
