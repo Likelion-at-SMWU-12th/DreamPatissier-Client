@@ -120,7 +120,7 @@ const RecordDetail = () => {
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/diary/",
-        record, // 전송할 데이터
+        record,
         {
           headers: {
             "Content-Type": "application/json",
@@ -195,7 +195,7 @@ const RecordDetail = () => {
         value={recordContent}
         placeholder="맛평가 등 기록하고 싶은 내용을 작성해 주세요."
         onChange={(e) => setRecordContent(e.target.value)}
-        rows="4"
+        rows="10"
       />
       <button className="save-button" onClick={handleSave}>
         ✔️ 저 장
