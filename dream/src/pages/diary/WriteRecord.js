@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/RecordDetail.css";
 import Picture from "../../assets/picture_button.png";
+import axios from "axios"; // axios를 임포트
 
 const ImageUploadComponent = ({ images, onAddImage, onRemoveImage }) => (
   <div className="image-upload-container">
@@ -109,33 +110,31 @@ const RecordDetail = () => {
   const handleSave = async () => {
     const recordDateString = recordDate.toISOString().split("T")[0];
     const record = {
-      breadName,
-      bakeryName: storeName,
+      date: recordDateString,
+      bread_name: breadName,
+      bakery_name: storeName,
       tags: breadType.split(",").map((tag) => tag.trim()),
       review: recordContent,
     };
 
     try {
-      const response = await fetch(
-        `http://localhost:3001/reviews/${recordDateString}`,
+      const response = await axios.post(
+        "http://127.0.0.1:8000/diary/", // Django API 엔드포인트에 맞는 URL
+        record, // 전송할 데이터
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: "Token your_token_here", // 토큰 인증
           },
-          body: JSON.stringify({
-            [recordDateString]: [record],
-          }),
         }
       );
 
-      if (response.ok) {
+      if (response.status === 201) {
         console.log("저장할 데이터:", record);
-        navigate("/diary");
+        navigate("/diary"); // 성공적으로 저장되면 다른 페이지로 이동
       } else {
         console.error("Failed to save record. Status code:", response.status);
-        const errorData = await response.json();
-        console.error("Error details:", errorData);
+        console.error("Error details:", response.data);
       }
     } catch (error) {
       console.error("Error saving record:", error);
@@ -199,7 +198,7 @@ const RecordDetail = () => {
         rows="4"
       />
       <button className="save-button" onClick={handleSave}>
-        ✔️ 저장하기
+        ✔️ 저 장
       </button>
     </div>
   );
