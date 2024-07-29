@@ -41,10 +41,8 @@ const WriteReview = () => {
 
       console.log("Review data:", reviewData);
 
-      // Step 1: 리뷰 데이터 전송
       await axios.post("http://127.0.0.1:8000/reviews", reviewData);
 
-      // Step 2: 주문의 'reviewed' 상태 업데이트
       const orderId = product.orderId || product.id;
       if (!orderId) {
         throw new Error("Order ID is missing from product data.");
