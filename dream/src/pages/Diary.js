@@ -108,7 +108,7 @@ const Diary = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/record")
+      .get("http://127.0.0.1:8000/record")
       .then((response) => {
         const data = response.data;
         if (typeof data === "object" && data !== null) {
@@ -136,7 +136,7 @@ const Diary = () => {
 
   const handleAddRecord = () => {
     const date = formatDateForSave(selectedDate);
-    navigate(`/record/${date}`);
+    navigate(`/record/write`);
   };
 
   const updateDate = (year, month) => {
@@ -151,7 +151,7 @@ const Diary = () => {
   const handleDeleteReview = async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3001/reviews/${id}`
+        `http://127.0.0.1:8000/reviews/${id}`
       );
 
       if (response.status === 200) {
