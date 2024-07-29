@@ -259,6 +259,7 @@ const WriteRecipe = ({ recipeId }) => {
                   />
                 </div>
                 <textarea
+                  rows="5"
                   className="text-explain"
                   placeholder="조리방법"
                   value={step.description}
