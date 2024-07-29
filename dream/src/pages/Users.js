@@ -6,14 +6,16 @@ import profile from "../assets/myprofile.png";
 
 const Users = () => {
   const navigate = useNavigate();
+  const username = localStorage.getItem("username");
+  const nickname = localStorage.getItem("nickname");
 
   const handleLogout = (e) => {
     e.preventDefault();
     const confirmLogout = window.confirm("로그아웃하시겠습니까?");
     if (confirmLogout) {
-      // 로그아웃 로직 추가
       localStorage.removeItem("token");
-      // 로그인 페이지로 이동
+      localStorage.removeItem("nickname");
+      localStorage.removeItem("username");
       navigate("/accounts/login/");
     }
   };
@@ -23,8 +25,10 @@ const Users = () => {
       <div className="profile-section">
         <img src={profile} alt="Profile" className="profile-pic" />
         <div className="profile-info">
-          <h2 className="profile-name">빵사자</h2>
-          <p className="profile-email">likelion@example.com</p>
+          <h2 className="profile-name">{nickname ? nickname : "UNKNOWN"}</h2>
+          <p className="profile-email">
+            {username ? username : "로그인 후 이용해주세요."}
+          </p>
         </div>
       </div>
 
