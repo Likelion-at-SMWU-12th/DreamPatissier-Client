@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
+import Sidebar from "../components/SideBar";
 import "../styles/Menubar.css";
 import logo from "../assets/logo.png";
+import styled from "styled-components";
 
 const Menubar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleSide = () => {
+    setIsOpen(!isOpen);
+  };
+
   const location = useLocation();
   const isTestPath =
     location.pathname.startsWith("/test") ||
@@ -31,9 +38,9 @@ const Menubar = () => {
             <Link to="/users" className="icon">
               <i className="fas fa-user"></i>
             </Link>
-            <Link to="/menu" className="icon">
+            <SidebarBtn onClick={toggleSide} className="icon">
               <i className="fas fa-bars"></i>
-            </Link>
+            </SidebarBtn>
           </div>
         </div>
         {!isTestPath && (
@@ -58,9 +65,16 @@ const Menubar = () => {
           </div>
         )}
       </div>
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
       <Outlet />
     </>
   );
 };
 
 export default Menubar;
+
+const SidebarBtn = styled.button`
+  border: none;
+  background-color: white;
+  margin-left: -7px;
+`;
