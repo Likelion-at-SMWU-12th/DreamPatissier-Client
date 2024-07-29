@@ -50,7 +50,7 @@ function App() {
         <Route path="/recipes/edit/:id" element={<EditRecipe />} />
         <Route path="/recipes/write" element={<WriteRecipe />} />
         <Route path="/diary" element={<Diary />} />
-        <Route path="/diary/write" element={<WriteRecord />} />
+        <Route path="/record/write" element={<WriteRecord />} />
         <Route path="/users" element={<Users />} />
         <Route path="/users/orders" element={<OrderList />} />
         <Route path="/users/reviews" element={<Review />} />
