@@ -13,7 +13,7 @@ const SignClear = () => {
     <>
       <Bar>
         <Title>회원가입</Title>
-        <CancelIcon src={Cancel} />
+        <CancelIcon src={Cancel} onClick={() => navigate("/bakery")} />
       </Bar>
       <ContentsWrap>
         <LogoIcon src={Logo} />
