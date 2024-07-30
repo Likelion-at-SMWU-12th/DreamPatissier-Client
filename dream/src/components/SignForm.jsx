@@ -17,6 +17,8 @@ const SignForm = () => {
     termsAgree: false,
     privacyAgree: false,
     serviceAgree: false,
+    adsAgree: false,
+    marketingAgree: false,
     allChecked: false,
   });
   const [showPopup, setShowPopup] = useState({
@@ -33,24 +35,62 @@ const SignForm = () => {
     setShowPopup({ show: false, title: "", content: null });
   };
 
+  const handleAllCheckedChange = () => {
+    const newCheckedStatus = !allChecked.allChecked;
+    setAllChecked({
+      termsAgree: newCheckedStatus,
+      privacyAgree: newCheckedStatus,
+      serviceAgree: newCheckedStatus,
+      adsAgree: newCheckedStatus,
+      marketingAgree: newCheckedStatus,
+      allChecked: newCheckedStatus,
+    });
+  };
+
+  const handleIndividualCheck = (name) => {
+    setAllChecked((prevState) => {
+      const updatedState = {
+        ...prevState,
+        [name]: !prevState[name],
+      };
+      const allAreChecked = Object.keys(updatedState).every(
+        (key) => updatedState[key] === true
+      );
+      updatedState.allChecked = allAreChecked;
+      return updatedState;
+    });
+  };
+
   return (
     <>
       <HiddenDiv />
       <form>
         <AgreeContainer>
           <CheckboxItem>
-            <StyledCheck type="checkbox" />
+            <StyledCheck
+              type="checkbox"
+              checked={allChecked.allChecked}
+              onChange={handleAllCheckedChange}
+            />
             <Allcheck htmlFor="allAgree">약관 전체 동의</Allcheck>
           </CheckboxItem>
           <StyledLine />
           <CheckboxItem>
-            <StyledCheck type="checkbox" />
+            <StyledCheck
+              type="checkbox"
+              checked={allChecked.termsAgree}
+              onChange={() => handleIndividualCheck("termsAgree")}
+            />
             <SmallCheck htmlFor="termsAgree">
               [필수] 만 14세 이상 서비스 이용 동의
             </SmallCheck>
           </CheckboxItem>
           <CheckboxItem>
-            <StyledCheck type="checkbox" />
+            <StyledCheck
+              type="checkbox"
+              checked={allChecked.privacyAgree}
+              onChange={() => handleIndividualCheck("privacyAgree")}
+            />
             <SmallCheck htmlFor="privacyAgree">
               [필수] 개인정보 수집/이용 동의
             </SmallCheck>
@@ -62,7 +102,11 @@ const SignForm = () => {
             </SeeButton>
           </CheckboxItem>
           <CheckboxItem>
-            <StyledCheck type="checkbox" />
+            <StyledCheck
+              type="checkbox"
+              checked={allChecked.serviceAgree}
+              onChange={() => handleIndividualCheck("serviceAgree")}
+            />
             <SmallCheck htmlFor="serviceAgree">
               [필수] 서비스 이용 약관
             </SmallCheck>
@@ -74,13 +118,21 @@ const SignForm = () => {
             </SeeButton>
           </CheckboxItem>
           <CheckboxItem>
-            <StyledCheck type="checkbox" />
+            <StyledCheck
+              type="checkbox"
+              checked={allChecked.adsAgree}
+              onChange={() => handleIndividualCheck("adsAgree")}
+            />
             <SmallCheck htmlFor="adsAgree">
               [선택] 광고성 정보 수신 동의
             </SmallCheck>
           </CheckboxItem>
           <CheckboxItem>
-            <StyledCheck type="checkbox" />
+            <StyledCheck
+              type="checkbox"
+              checked={allChecked.marketingAgree}
+              onChange={() => handleIndividualCheck("marketingAgree")}
+            />
             <SmallCheck htmlFor="marketingAgree">
               [선택] 마케팅 정보/이용 동의
             </SmallCheck>
@@ -90,7 +142,7 @@ const SignForm = () => {
           <YellowBtn
             txt="동의하고 가입하기"
             type="submit"
-            width="340px"
+            width="80%"
             disabled={!allChecked.allChecked}
           />
         </BtnBox>
@@ -146,11 +198,14 @@ const AgreeContainer = styled.div`
   margin-top: 20px;
   display: flex;
   flex-direction: column;
+  text-align: center;
 `;
 
 const CheckboxItem = styled.div`
   display: flex;
   justify-content: left;
+  margin-left: 60px;
+  width: 300px;
 `;
 
 const StyledCheck = styled.input`
@@ -193,13 +248,13 @@ const SmallCheck = styled.label`
 `;
 
 const StyledLine = styled.div`
-  margin: 5px 0px;
+  margin: 0px 60px 5px 60px;
   border-bottom: var(--yellow) 1px solid;
 `;
 
 const SeeButton = styled.button`
   position: absolute;
-  right: 10px;
+  right: 60px;
   font-size: 10px;
   text-decoration-line: none;
   color: var(--grey);

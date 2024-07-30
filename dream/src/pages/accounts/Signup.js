@@ -55,7 +55,6 @@ const CancelIcon = styled.img`
 const ContentWrap = styled.div`
   justify-content: center;
   align-items: center;
-  display: flex;
   height: 100vh;
   background-color: white;
   padding-top: 70px;
