@@ -105,7 +105,7 @@ const Login = () => {
                   placeholder="아이디"
                   onChange={handleNameChange}
                 ></IdInput>
-                <DelBtn onClick={clearUsername}>
+                <DelBtn type="button" onClick={clearUsername}>
                   <DelIcon src={delPasswordIcon} />
                 </DelBtn>
               </IdBox>
@@ -117,10 +117,10 @@ const Login = () => {
                   value={password}
                   onChange={handlePwChange}
                 ></PaInput>
-                <SeeBtn onClick={togglePassword}>
+                <SeeBtn type="button" onClick={togglePassword}>
                   <SeeIcon src={showPassword ? canSeeIcon : noSeeIcon} />
                 </SeeBtn>
-                <DelBtn onClick={clearPassword}>
+                <DelBtn type="button" onClick={clearPassword}>
                   <DelIcon src={delPasswordIcon} />
                 </DelBtn>
               </PaBox>
