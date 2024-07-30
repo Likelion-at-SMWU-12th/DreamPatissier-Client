@@ -16,11 +16,11 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleUsernameChange = (e) => {
+  const handleNameChange = (e) => {
     setUsername(e.target.value);
   };
 
-  const handlePasswordChange = (e) => {
+  const handlePwChange = (e) => {
     setPassword(e.target.value);
   };
 
@@ -64,7 +64,7 @@ const Login = () => {
         // 로그인 성공 후 토큰 로컬 스토리지에 저장
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("nickname", response.data.nickname);
-        localStorage.setItem("username", username); // username 저장
+        localStorage.setItem("username", username);
         // 페이지 이동
         navigate("/bakery");
       })
@@ -97,38 +97,36 @@ const Login = () => {
           <IconLogo src={logoIcon} />
         </ImgBox>
         <form onSubmit={handleSubmit}>
-          <InputWrap>
-            <InputBoxWrapper>
-              <InputBox
-                type="text"
-                placeholder="아이디"
-                value={username}
-                onChange={handleUsernameChange}
-              />
-              <DelButton type="button" onClick={clearUsername}>
-                <img src={delPasswordIcon} alt="Clear" />
-              </DelButton>
-            </InputBoxWrapper>
-            <InputBoxWrapper>
-              <InputBox
-                type={showPassword ? "text" : "password"}
-                placeholder="비밀번호"
-                value={password}
-                onChange={handlePasswordChange}
-              />
-              <SeeButton type="button" onClick={togglePassword}>
-                <img
-                  src={showPassword ? canSeeIcon : noSeeIcon}
-                  alt="Toggle visibility"
-                />
-              </SeeButton>
-              <DelButton type="button" onClick={clearPassword}>
-                <img src={delPasswordIcon} alt="Clear" />
-              </DelButton>
-            </InputBoxWrapper>
-          </InputWrap>
+          <LoginFormWarp>
+            <LoginForm>
+              <IdBox>
+                <IdInput
+                  value={username}
+                  placeholder="아이디"
+                  onChange={handleNameChange}
+                ></IdInput>
+                <DelBtn onClick={clearUsername}>
+                  <DelIcon src={delPasswordIcon} />
+                </DelBtn>
+              </IdBox>
+              <LoginHrDiv />
+              <PaBox>
+                <PaInput
+                  type={showPassword ? "static" : "password"}
+                  placeholder="비밀번호"
+                  value={password}
+                  onChange={handlePwChange}
+                ></PaInput>
+                <SeeBtn onClick={togglePassword}>
+                  <SeeIcon src={showPassword ? canSeeIcon : noSeeIcon} />
+                </SeeBtn>
+                <DelBtn onClick={clearPassword}>
+                  <DelIcon src={delPasswordIcon} />
+                </DelBtn>
+              </PaBox>
+            </LoginForm>
+          </LoginFormWarp>
           {message && <Message>{message}</Message>}
-
           <YellowBtn txt="로그인" type="submit" width={"275px"} />
         </form>
         <Guide>
@@ -155,18 +153,17 @@ const LoginBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 250px;
+  width: 300px;
   padding: 20px;
 `;
 
 const ImgBox = styled.div`
   width: 200px;
-  height: 250px;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
 `;
 
 const TitleLogo = styled.img`
@@ -178,36 +175,62 @@ const IconLogo = styled.img`
   width: 100px;
 `;
 
-const InputWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 29px;
+const LoginFormWarp = styled.div`
+  width: auto;
+  height: auto;
+  margin: 50px 0px 30px 0px;
+`;
+
+const LoginForm = styled.div`
+  text-align: center;
   border-radius: 5px;
   border: 2px solid #d9d9d9;
+  width: 270px;
 `;
 
-const InputBoxWrapper = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 275px;
-  height: 40px;
-  margin-bottom: 10px;
-`;
-
-const InputBox = styled.input`
-  line-height: 0;
-  width: 105%;
-  height: 100%;
-  padding: 5px 10px;
-  font-size: 14px;
+const IdInput = styled.input`
+  border: none;
+  width: 250px;
+  height: 45px;
   outline: none;
-  margin-top: 10px;
-  border: #d9d9d9 1px solid;
-  border-radius: 0px;
 `;
+
+const IdBox = styled.div`
+  display: flex;
+  padding: 0px 10px;
+`;
+
+const LoginHrDiv = styled.div`
+  border-bottom: 1px solid #d9d9d9;
+  width: 100%;
+`;
+
+const PaBox = styled.div`
+  display: flex;
+  padding: 0px 10px;
+`;
+
+const PaInput = styled.input`
+  border: 1px solid #d9d9d9;
+  width: 250px;
+  height: 45px;
+  border: none;
+  outline: none;
+`;
+
+const SeeBtn = styled.button`
+  border: none;
+  background-color: white;
+`;
+const SeeIcon = styled.img``;
+
+const DelBtn = styled.button`
+  border: none;
+  background-color: white;
+  cursor: pointer;
+`;
+
+const DelIcon = styled.img``;
 
 const Guide = styled.div`
   margin-top: 20px;
@@ -219,28 +242,6 @@ const Highlight = styled(Link)`
   color: var(--brown);
   text-decoration: underline;
   font-weight: bold;
-`;
-
-const Button = styled.button`
-  margin-top: 10px;
-  background: none;
-  border: none;
-  position: absolute;
-  right: 10px;
-  cursor: pointer;
-
-  img {
-    width: 15px;
-    height: 15px;
-  }
-`;
-
-const SeeButton = styled(Button)`
-  right: 35px;
-`;
-
-const DelButton = styled(Button)`
-  right: 10px;
 `;
 
 const Message = styled.div`
