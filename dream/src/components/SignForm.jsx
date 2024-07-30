@@ -11,8 +11,39 @@ import noSeeIcon from "../assets/nosee.svg";
 import delPasswordIcon from "../assets/delpassword.svg";
 
 const SignForm = () => {
-  const [showT, setShowT] = useState(false);
-  const [showP, setShowP] = useState(false);
+  // 비밀번호 & 비밀번호 확인 지우기 버튼
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+
+  const handlePwChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handlePw2Change = (e) => {
+    setPassword2(e.target.value);
+  };
+
+  const clearPassword = () => {
+    setPassword("");
+  };
+
+  const clearPassword2 = () => {
+    setPassword2("");
+  };
+
+  // 비밀번호 & 비밀번호 보이기(토글) 버튼
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
+
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const togglePassword2 = () => {
+    setShowPassword2(!showPassword2);
+  };
+
+  // 체크박스 관련
   const [allChecked, setAllChecked] = useState({
     termsAgree: false,
     privacyAgree: false,
@@ -26,14 +57,6 @@ const SignForm = () => {
     title: "",
     content: null,
   });
-
-  const openPopup = (title, content) => {
-    setShowPopup({ show: true, title, content });
-  };
-
-  const closePopup = () => {
-    setShowPopup({ show: false, title: "", content: null });
-  };
 
   const handleAllCheckedChange = () => {
     const newCheckedStatus = !allChecked.allChecked;
@@ -61,10 +84,82 @@ const SignForm = () => {
     });
   };
 
+  // 팝업
+  const openPopup = (title, content) => {
+    setShowPopup({ show: true, title, content });
+  };
+
+  const closePopup = () => {
+    setShowPopup({ show: false, title: "", content: null });
+  };
+
   return (
     <>
       <HiddenDiv />
+
+      {/* 인풋 필드 */}
       <form>
+        <SignInputContainer>
+          <SignInputWarp>
+            <SignBox>
+              <LabelBox htmlFor="username" type="static">
+                아이디 <RequiredEnter>* 필수 입력 항목입니다.</RequiredEnter>
+              </LabelBox>
+              <SignInput placeholder="영문소문자/숫자,4~12자"></SignInput>
+            </SignBox>
+            <SignBox>
+              <LabelBox htmlFor="password">
+                비밀번호 <RequiredEnter>* 필수 입력 항목입니다.</RequiredEnter>
+              </LabelBox>
+              <SignInputBox>
+                <SignInput
+                  value={password}
+                  type={showPassword ? "static" : "password"}
+                  placeholder="영문/숫자/특수문자 혼합,10~16자"
+                  onChange={handlePwChange}
+                ></SignInput>
+                <PWSeeBtn type="button" onClick={togglePassword}>
+                  <img src={showPassword ? canSeeIcon : noSeeIcon} />
+                </PWSeeBtn>
+                <PWDelBtn type="button" onClick={clearPassword}>
+                  <img src={delPasswordIcon} />
+                </PWDelBtn>
+              </SignInputBox>
+            </SignBox>
+            <SignBox>
+              <LabelBox htmlFor="password2">
+                비밀번호 확인{" "}
+                <RequiredEnter>* 필수 입력 항목입니다.</RequiredEnter>
+              </LabelBox>
+              <SignInputBox>
+                <SignInput
+                  onChange={handlePw2Change}
+                  type={showPassword2 ? "static" : "password"}
+                  value={password2}
+                  placeholder="비밀번호를 한 번 더 입력해 주세요."
+                ></SignInput>
+                <PW2SeeBtn type="button" onClick={togglePassword2}>
+                  <img src={showPassword2 ? canSeeIcon : noSeeIcon} />
+                </PW2SeeBtn>
+                <PW2DelBtn type="button" onClick={clearPassword2}>
+                  <img src={delPasswordIcon} />
+                </PW2DelBtn>
+              </SignInputBox>
+            </SignBox>
+            <SignBox>
+              <LabelBox htmlFor="nickname">
+                이름 <RequiredEnter>* 필수 입력 항목입니다.</RequiredEnter>
+              </LabelBox>
+              <SignInput placeholder="김사자"></SignInput>
+            </SignBox>
+            <SignBox>
+              <LabelBox htmlFor="phone">연락처</LabelBox>
+              <SignInput placeholder="-없이 숫자만 입력해 주세요."></SignInput>
+            </SignBox>
+          </SignInputWarp>
+        </SignInputContainer>
+
+        {/* 체크박스  */}
         <AgreeContainer>
           <CheckboxItem>
             <StyledCheck
@@ -138,25 +233,29 @@ const SignForm = () => {
             </SmallCheck>
           </CheckboxItem>
         </AgreeContainer>
-        <BtnBox>
+        {showPopup.show && (
+          <Popup title={showPopup.title} onClose={closePopup}>
+            {showPopup.content}
+          </Popup>
+        )}
+
+        {/* 가입 버튼 */}
+        <YBtnBox>
           <YellowBtn
             txt="동의하고 가입하기"
             type="submit"
             width="80%"
             disabled={!allChecked.allChecked}
           />
-        </BtnBox>
+        </YBtnBox>
       </form>
-      {showPopup.show && (
-        <Popup title={showPopup.title} onClose={closePopup}>
-          {showPopup.content}
-        </Popup>
-      )}
     </>
   );
 };
 
 export default SignForm;
+
+// 스타일
 
 const HiddenDiv = styled.div`
   width: 100%;
@@ -164,7 +263,83 @@ const HiddenDiv = styled.div`
   transition: height 0.4s;
 `;
 
-const BtnBox = styled.div`
+//인풋필드 스타일
+const SignInputContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+const SignInputWarp = styled.div`
+  width: 75%;
+`;
+const SignBox = styled.div``;
+
+const LabelBox = styled.label`
+  font-size: 18px;
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 5px;
+`;
+const RequiredEnter = styled.div`
+  font-size: 9px;
+  color: #8a8888;
+  margin-left: 7px;
+`;
+
+const SignInputBox = styled.div`
+  display: flex;
+  position: relative;
+`;
+
+const SignInput = styled.input`
+  font-size: 14px;
+  width: 94%;
+  border: 2px solid #d9d9d9;
+  height: 44px;
+  border-radius: 5px;
+  outline: none;
+  padding: 0px 0px 0px 10px;
+  margin-bottom: 25px;
+`;
+
+const PWSeeBtn = styled.button`
+  border: none;
+  background-color: white;
+  position: absolute;
+  top: 48.5%;
+  right: 12%;
+  transform: translateY(-100%);
+`;
+
+const PW2SeeBtn = styled.button`
+  border: none;
+  background-color: white;
+  position: absolute;
+  top: 48.5%;
+  right: 12%;
+  transform: translateY(-100%);
+`;
+
+const PWDelBtn = styled.button`
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  position: absolute;
+  top: 48%;
+  right: 5%;
+  transform: translateY(-100%);
+`;
+
+const PW2DelBtn = styled.button`
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  position: absolute;
+  top: 48%;
+  right: 5%;
+  transform: translateY(-100%);
+`;
+
+const YBtnBox = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 10px;
@@ -195,7 +370,7 @@ const Button = styled.button`
 
 // Checkbox 관련 스타일
 const AgreeContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 0px;
   display: flex;
   flex-direction: column;
   text-align: center;
