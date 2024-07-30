@@ -11,24 +11,39 @@ import noSeeIcon from "../assets/nosee.svg";
 import delPasswordIcon from "../assets/delpassword.svg";
 
 const SignForm = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    confirmPassword: "",
+    nickname: "",
+    phone: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+
   // 비밀번호 & 비밀번호 확인 지우기 버튼
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
 
   const handlePwChange = (e) => {
     setPassword(e.target.value);
+    handleChange(e);
   };
 
   const handlePw2Change = (e) => {
     setPassword2(e.target.value);
+    handleChange(e);
   };
 
   const clearPassword = () => {
     setPassword("");
+    setFormData({ ...formData, password: "" });
   };
 
   const clearPassword2 = () => {
     setPassword2("");
+    setFormData({ ...formData, confirmPassword: "" });
   };
 
   // 비밀번호 & 비밀번호 보이기(토글) 버튼
@@ -52,6 +67,7 @@ const SignForm = () => {
     marketingAgree: false,
     allChecked: false,
   });
+
   const [showPopup, setShowPopup] = useState({
     show: false,
     title: "",
@@ -93,19 +109,136 @@ const SignForm = () => {
     setShowPopup({ show: false, title: "", content: null });
   };
 
+  // 유효성 검사
+  const validateForm = () => {
+    const newErrors = {};
+    let isErrorPresent = false;
+
+    if (!formData.username) {
+      newErrors.username = "ⓘ 아이디를 입력해 주세요.";
+      isErrorPresent = true;
+    } else if (!/^[a-z0-9]{4,12}$/.test(formData.username)) {
+      newErrors.username =
+        "ⓘ 아이디는 영문 소문자와 숫자 4~12자리로 이루어져야 합니다.";
+      isErrorPresent = true;
+    }
+
+    if (!formData.password) {
+      newErrors.password = "ⓘ 비밀번호를 입력해 주세요.";
+      isErrorPresent = true;
+    } else if (
+      !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{10,16}$/.test(
+        formData.password
+      )
+    ) {
+      newErrors.password =
+        "ⓘ 비밀번호는 영문, 숫자, 특수문자를 포함한 10~16자리여야 합니다.";
+      isErrorPresent = true;
+    }
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "ⓘ 비밀번호를 다시 한 번 입력해주세요.";
+      isErrorPresent = true;
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "ⓘ 비밀번호가 일치하지 않습니다.";
+      isErrorPresent = true;
+    }
+
+    if (!formData.nickname) {
+      newErrors.nickname = "ⓘ 이름을 입력해 주세요.";
+      isErrorPresent = true;
+    }
+
+    if (formData.phone && !/^\d{10,11}$/.test(formData.phone)) {
+      newErrors.phone = "ⓘ 유효한 연락처를 입력해주세요. 예) 01012345678";
+      isErrorPresent = true;
+    }
+
+    setErrors(newErrors);
+    return !isErrorPresent;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (
+      !allChecked.termsAgree ||
+      !allChecked.privacyAgree ||
+      !allChecked.serviceAgree
+    ) {
+      setMessage("ⓘ 필수 약관에 동의해 주세요.");
+      return;
+    }
+
+    if (!validateForm()) {
+      setMessage(
+        "ⓘ 회원가입에 실패했습니다. 입력하신 정보를 다시 한번 확인해 주세요."
+      );
+      return;
+    }
+
+    const submitData = {
+      username: formData.username,
+      password: formData.password,
+      password2: formData.confirmPassword,
+      last_name: formData.nickname,
+      phone: formData.phone,
+    };
+
+    axios
+      .post("http://127.0.0.1:8000/accounts/signup/", submitData)
+      .then((response) => {
+        axios
+          .post("http://127.0.0.1:8000/accounts/login/", {
+            username: formData.username,
+            password: formData.password,
+          })
+          .then((loginResponse) => {
+            localStorage.setItem("token", loginResponse.data.token);
+            localStorage.setItem("nickname", loginResponse.data.nickname);
+            localStorage.setItem("username", formData.username);
+            navigate("/accounts/signup-clear");
+          })
+          .catch((loginError) => {
+            setMessage(
+              "자동 로그인에 실패했습니다. 로그인 페이지로 이동합니다."
+            );
+            navigate("/accounts/login/");
+          });
+
+        setMessage("회원가입이 완료되었습니다.");
+      })
+      .catch((error) => {
+        setMessage("서버 오류!");
+      });
+  };
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+    setErrors({ ...errors, [id]: "" });
+  };
+
   return (
     <>
-      <HiddenDiv />
-
       {/* 인풋 필드 */}
-      <form>
+      <form onSubmit={handleSubmit}>
         <SignInputContainer>
           <SignInputWarp>
             <SignBox>
-              <LabelBox htmlFor="username" type="static">
+              <LabelBox htmlFor="username">
                 아이디 <RequiredEnter>* 필수 입력 항목입니다.</RequiredEnter>
               </LabelBox>
-              <SignInput placeholder="영문소문자/숫자,4~12자"></SignInput>
+              <SignInput
+                id="username"
+                placeholder="영문소문자/숫자,4~12자"
+                value={formData.username}
+                onChange={handleChange}
+              />
+              {/* 인풋 필드 별 에러메세지 */}
+              {errors.username && (
+                <ErrorMessage>{errors.username}</ErrorMessage>
+              )}
             </SignBox>
             <SignBox>
               <LabelBox htmlFor="password">
@@ -113,18 +246,26 @@ const SignForm = () => {
               </LabelBox>
               <SignInputBox>
                 <SignInput
+                  id="password"
                   value={password}
                   type={showPassword ? "static" : "password"}
                   placeholder="영문/숫자/특수문자 혼합,10~16자"
                   onChange={handlePwChange}
-                ></SignInput>
+                />
                 <PWSeeBtn type="button" onClick={togglePassword}>
-                  <img src={showPassword ? canSeeIcon : noSeeIcon} />
+                  <img
+                    src={showPassword ? canSeeIcon : noSeeIcon}
+                    alt="Toggle visibility"
+                  />
                 </PWSeeBtn>
                 <PWDelBtn type="button" onClick={clearPassword}>
-                  <img src={delPasswordIcon} />
+                  <img src={delPasswordIcon} alt="Clear" />
                 </PWDelBtn>
               </SignInputBox>
+              {/* 인풋 필드 별 에러메세지 */}
+              {errors.password && (
+                <ErrorMessage>{errors.password}</ErrorMessage>
+              )}
             </SignBox>
             <SignBox>
               <LabelBox htmlFor="password2">
@@ -133,33 +274,58 @@ const SignForm = () => {
               </LabelBox>
               <SignInputBox>
                 <SignInput
-                  onChange={handlePw2Change}
-                  type={showPassword2 ? "static" : "password"}
+                  id="confirmPassword"
                   value={password2}
+                  type={showPassword2 ? "static" : "password"}
                   placeholder="비밀번호를 한 번 더 입력해 주세요."
-                ></SignInput>
+                  onChange={handlePw2Change}
+                />
                 <PW2SeeBtn type="button" onClick={togglePassword2}>
-                  <img src={showPassword2 ? canSeeIcon : noSeeIcon} />
+                  <img
+                    src={showPassword2 ? canSeeIcon : noSeeIcon}
+                    alt="Toggle visibility"
+                  />
                 </PW2SeeBtn>
                 <PW2DelBtn type="button" onClick={clearPassword2}>
-                  <img src={delPasswordIcon} />
+                  <img src={delPasswordIcon} alt="Clear" />
                 </PW2DelBtn>
               </SignInputBox>
+              {/* 인풋 필드 별 에러메세지 */}
+
+              {errors.confirmPassword && (
+                <ErrorMessage>{errors.confirmPassword}</ErrorMessage>
+              )}
             </SignBox>
             <SignBox>
               <LabelBox htmlFor="nickname">
                 이름 <RequiredEnter>* 필수 입력 항목입니다.</RequiredEnter>
               </LabelBox>
-              <SignInput placeholder="김사자"></SignInput>
+              <SignInput
+                id="nickname"
+                placeholder="김사자"
+                value={formData.nickname}
+                onChange={handleChange}
+              />
+              {/* 인풋 필드 별 에러메세지 */}
+
+              {errors.nickname && (
+                <ErrorMessage>{errors.nickname}</ErrorMessage>
+              )}
             </SignBox>
             <SignBox>
               <LabelBox htmlFor="phone">연락처</LabelBox>
-              <SignInput placeholder="-없이 숫자만 입력해 주세요."></SignInput>
+              <SignInput
+                id="phone"
+                placeholder="-없이 숫자만 입력해 주세요."
+                value={formData.phone}
+                onChange={handleChange}
+              />
+              {errors.phone && <ErrorMessage>{errors.phone}</ErrorMessage>}
             </SignBox>
           </SignInputWarp>
         </SignInputContainer>
 
-        {/* 체크박스  */}
+        {/* 체크박스 */}
         <AgreeContainer>
           <CheckboxItem>
             <StyledCheck
@@ -238,6 +404,8 @@ const SignForm = () => {
             {showPopup.content}
           </Popup>
         )}
+        {/* 버튼 위 에러메세지 */}
+        {message && <Message>{message}</Message>}
 
         {/* 가입 버튼 */}
         <YBtnBox>
@@ -254,16 +422,9 @@ const SignForm = () => {
 };
 
 export default SignForm;
-
 // 스타일
 
-const HiddenDiv = styled.div`
-  width: 100%;
-  height: ${(props) => (props.isError ? "90px" : "0")};
-  transition: height 0.4s;
-`;
-
-//인풋필드 스타일
+// 인풋필드 스타일
 const SignInputContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -354,7 +515,8 @@ const ErrorMessage = styled.div`
   color: #ff3b3b;
   font-size: 11px;
   padding-top: 10px;
-  margin-bottom: -5px;
+  margin-top: -25px;
+  margin-bottom: 7px;
 `;
 
 // 버튼
@@ -363,20 +525,6 @@ const YBtnBox = styled.div`
   justify-content: center;
   margin-top: 10px;
   padding-top: 10px;
-`;
-
-const Button = styled.button`
-  margin-top: 10px;
-  background: none;
-  border: none;
-  position: absolute;
-  right: 10px;
-  cursor: pointer;
-
-  img {
-    width: 15px;
-    height: 15px;
-  }
 `;
 
 // Checkbox 관련 스타일
