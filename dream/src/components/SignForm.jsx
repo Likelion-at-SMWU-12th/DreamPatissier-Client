@@ -339,11 +339,14 @@ const PW2DelBtn = styled.button`
   transform: translateY(-100%);
 `;
 
-const YBtnBox = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-  padding-top: 10px;
+// 에러메세지
+const Message = styled.div`
+  text-align: center;
+  font-weight: 800;
+  color: #ff3b3b;
+  margin-top: 15px;
+  margin-bottom: -15px;
+  font-size: 12px;
 `;
 
 const ErrorMessage = styled.div`
@@ -352,6 +355,14 @@ const ErrorMessage = styled.div`
   font-size: 11px;
   padding-top: 10px;
   margin-bottom: -5px;
+`;
+
+// 버튼
+const YBtnBox = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  padding-top: 10px;
 `;
 
 const Button = styled.button`
