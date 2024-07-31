@@ -26,8 +26,6 @@ import Cart from "./pages/Cart";
 import Order from "./pages/Order";
 import OrderClear from "./pages/OrderClear";
 
-import profile from "./assets/logo.png";
-
 function App() {
   const location = useLocation();
   const hideMenubar =

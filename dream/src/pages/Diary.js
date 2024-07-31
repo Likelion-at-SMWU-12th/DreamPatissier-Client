@@ -108,7 +108,7 @@ const Diary = () => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/record")
+      .get("http://127.0.0.1:8000/diary")
       .then((response) => {
         const data = response.data;
         if (typeof data === "object" && data !== null) {
@@ -136,7 +136,7 @@ const Diary = () => {
 
   const handleAddRecord = () => {
     const date = formatDateForSave(selectedDate);
-    navigate(`/record/write`);
+    navigate(`http://127.0.0.1:8000/record/write`);
   };
 
   const updateDate = (year, month) => {

@@ -85,7 +85,7 @@ const WriteRecipe = () => {
     };
 
     try {
-      await axios.post("/recipes", recipeData);
+      await axios.post("http://127.0.0.1:8000/recipes", recipeData);
       alert("레시피가 등록되었습니다!");
       navigate("/recipes");
     } catch (error) {
