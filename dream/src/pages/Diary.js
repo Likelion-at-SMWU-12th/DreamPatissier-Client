@@ -32,7 +32,6 @@ const tileClassName = ({ date, view, activeStartDate }) => {
   if (view === "month") {
     const currentMonth = activeStartDate.getMonth();
     const currentYear = activeStartDate.getFullYear();
-
     const isCurrentMonth =
       date.getMonth() === currentMonth && date.getFullYear() === currentYear;
     const isSaturday = date.getDay() === 6;
@@ -56,14 +55,16 @@ const tileClassName = ({ date, view, activeStartDate }) => {
 const tileContent = ({ date, view, reviews }) => {
   if (view === "month") {
     const dateKey = formatDateForSave(date);
-    return (
-      <div className="calendar-date">
-        {reviews[dateKey] && (
+
+    if (reviews[dateKey] && reviews[dateKey].length > 0) {
+      return (
+        <div className="calendar-date">
           <img src={Bread} alt="Bread" className="bread-icon" />
-        )}
-        {!reviews[dateKey] && date.getDate()}
-      </div>
-    );
+        </div>
+      );
+    } else {
+      return <div className="calendar-date">{date.getDate()}</div>;
+    }
   }
   return null;
 };
@@ -104,15 +105,24 @@ const Diary = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeStartDate, setActiveStartDate] = useState(new Date());
   const [reviews, setReviews] = useState({});
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchReviewsByDate = (date) => {
+    const formattedDate = formatDateForSave(date);
     axios
-      .get("http://127.0.0.1:8000/record")
+      .get(`http://127.0.0.1:8000/diary/by_date/?date=${formattedDate}`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
       .then((response) => {
         const data = response.data;
         if (typeof data === "object" && data !== null) {
-          setReviews(data);
+          setReviews((prevReviews) => ({
+            ...prevReviews,
+            [formattedDate]: data,
+          }));
         } else {
           console.error(
             "Fetched data is not in the expected object format:",
@@ -121,11 +131,17 @@ const Diary = () => {
         }
       })
       .catch((error) => console.error("Error fetching reviews:", error));
-  }, []);
+  };
+
+  useEffect(() => {
+    fetchReviewsByDate(selectedDate);
+  }, [selectedDate, token]);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
     setActiveStartDate(new Date(date.getFullYear(), date.getMonth(), 1));
+    fetchReviewsByDate(date);
+    console.log("선택된 날짜:", formatDate(date));
   };
 
   const handleTodayClick = () => {
@@ -135,8 +151,7 @@ const Diary = () => {
   };
 
   const handleAddRecord = () => {
-    const date = formatDateForSave(selectedDate);
-    navigate(`/record/write`);
+    navigate(`/record/write/`);
   };
 
   const updateDate = (year, month) => {
@@ -148,26 +163,32 @@ const Diary = () => {
   const selectedDateKey = formatDateForSave(selectedDate);
   const reviewList = reviews[selectedDateKey] || [];
 
-  const handleDeleteReview = async (id) => {
-    try {
-      const response = await axios.delete(
-        `http://127.0.0.1:8000/reviews/${id}`
-      );
-
-      if (response.status === 200) {
-        setReviews((prevReviews) => {
-          const newReviews = { ...prevReviews };
-          newReviews[selectedDateKey] = newReviews[selectedDateKey].filter(
-            (review) => review.id !== id
+  const handleDeleteReview = (id) => {
+    axios
+      .delete(`http://127.0.0.1:8000/diary/${id}`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setReviews((prevReviews) => {
+            const newReviews = { ...prevReviews };
+            newReviews[selectedDateKey] = newReviews[selectedDateKey].filter(
+              (review) => review.id !== id
+            );
+            return newReviews;
+          });
+        } else {
+          console.error(
+            "Failed to delete review. Status code:",
+            response.status
           );
-          return newReviews;
-        });
-      } else {
-        console.error("Failed to delete review. Status code:", response.status);
-      }
-    } catch (error) {
-      console.error("Error deleting review:", error);
-    }
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting review:", error);
+      });
   };
 
   const handleEditReview = (id) => {
@@ -182,7 +203,6 @@ const Diary = () => {
           오늘
         </button>
       </div>
-
       <div className="diary-container">
         <Calendar
           onChange={handleDateChange}
@@ -201,34 +221,39 @@ const Diary = () => {
             </button>
             {reviewList.length > 0 && (
               <div className="review-container">
-                {reviewList.map((review) => (
-                  <div key={review.id} className="review-item">
-                    <img src={Bread} className="review-stamp-image" />
-                    <hr className="vertical-line" />
-                    <div className="review-content">
-                      <div className="bread-title">
-                        [{review.bakeryName}] {review.breadName}
+                {reviewList.map((review) => {
+                  const tags = Array.isArray(review.tags) ? review.tags : [];
+                  const tagsString = tags.join(", ");
+
+                  return (
+                    <div key={review.id} className="review-item">
+                      <img src={Bread} className="review-stamp-image" />
+                      <hr className="vertical-line" />
+                      <div className="review-content">
+                        <div className="bread-title">
+                          [{review.bakeryName}] {review.breadName}
+                        </div>
+                        <div className="review-tag">{tagsString}</div>
+                        <div className="review-text">{review.review}</div>
+                        <img src={Bread} className="review-show-image" />
                       </div>
-                      <div className="review-tag">{review.tags.join(", ")}</div>
-                      <div className="review-text">{review.review}</div>
-                      <img src={Bread} className="review-show-image" />
+                      <div className="button-div">
+                        <button
+                          onClick={() => handleEditReview(review.id)}
+                          className="diary-edit-button"
+                        >
+                          <img src={editIcon} alt="Edit" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteReview(review.id)}
+                          className="diary-delete-button"
+                        >
+                          <img src={deleteIcon} alt="Delete" />
+                        </button>
+                      </div>
                     </div>
-                    <div className="button-div">
-                      <button
-                        onClick={() => handleEditReview(review.id)}
-                        className="diary-edit-button"
-                      >
-                        <img src={editIcon} alt="Edit" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteReview(review.id)}
-                        className="diary-delete-button"
-                      >
-                        <img src={deleteIcon} alt="Delete" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

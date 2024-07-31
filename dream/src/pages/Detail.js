@@ -4,7 +4,7 @@ import axios from "axios";
 import Footer from "../components/Footer";
 import styled, { keyframes, css } from "styled-components";
 import ShopIcon from "../assets/shoppingcart.svg";
-import Review from "./userpage/Review";
+// import Review from "./userpage/Review";
 
 const Detail = () => {
   const navigate = useNavigate();

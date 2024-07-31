@@ -55,12 +55,10 @@ const formatDate = (date) => {
     .padStart(2, "0")}일 (${dayName})`;
 };
 
-const RecordDetail = () => {
-  const { date } = useParams();
+const EditRecord = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const [recordDate, setRecordDate] = useState(
-    date ? new Date(date) : new Date()
-  );
+  const [recordDate, setRecordDate] = useState(new Date());
   const [images, setImages] = useState([]);
   const [storeName, setStoreName] = useState("");
   const [breadName, setBreadName] = useState("");
@@ -71,10 +69,26 @@ const RecordDetail = () => {
   const datePickerRef = useRef(null);
 
   useEffect(() => {
-    if (date) {
-      setRecordDate(new Date(date));
+    if (id) {
+      axios
+        .get(`http://127.0.0.1:8000/diary/${id}/`, {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        })
+        .then((response) => {
+          const record = response.data;
+          setRecordDate(new Date(record.date));
+          setStoreName(record.bakery_name || "");
+          setBreadName(record.bread_name || "");
+          setBreadType((record.tags || []).join(", "));
+          setRecordContent(record.review || "");
+          // 이미지 처리는 서버에서 이미지를 어떻게 제공하는지에 따라 달라질 수 있음
+          // 서버가 이미지 URL을 제공한다면, 이를 처리하여 이미지 상태를 설정해야 합니다.
+        })
+        .catch((error) => console.error("Error fetching record:", error));
     }
-  }, [date]);
+  }, [id, token]);
 
   const handleDateChange = (date) => {
     if (date) {
@@ -119,13 +133,13 @@ const RecordDetail = () => {
     };
 
     axios
-      .post("http://127.0.0.1:8000/diary/", record, {
+      .put(`http://127.0.0.1:8000/diary/${id}/`, record, {
         headers: {
           Authorization: `Token ${token}`,
         },
       })
       .then((response) => {
-        if (response.status === 201) {
+        if (response.status === 200) {
           console.log("저장할 데이터:", record);
           navigate("/diary");
         } else {
@@ -201,4 +215,4 @@ const RecordDetail = () => {
   );
 };
 
-export default RecordDetail;
+export default EditRecord;
