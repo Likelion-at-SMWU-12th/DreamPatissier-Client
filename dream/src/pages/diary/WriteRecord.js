@@ -107,7 +107,7 @@ const RecordDetail = () => {
     setImages(images.filter((_, i) => i !== index));
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     const recordDateString = recordDate.toISOString().split("T")[0];
     const record = {
       date: recordDateString,
@@ -117,28 +117,25 @@ const RecordDetail = () => {
       review: recordContent,
     };
 
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/diary/",
-        record,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Token your_token_here",
-          },
+    axios
+      .post("http://127.0.0.1:8000/diary/", record, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Token your_token_here",
+        },
+      })
+      .then((response) => {
+        if (response.status === 201) {
+          console.log("저장할 데이터:", record);
+          navigate("/diary");
+        } else {
+          console.error("Failed to save record. Status code:", response.status);
+          console.error("Error details:", response.data);
         }
-      );
-
-      if (response.status === 201) {
-        console.log("저장할 데이터:", record);
-        navigate("/diary");
-      } else {
-        console.error("Failed to save record. Status code:", response.status);
-        console.error("Error details:", response.data);
-      }
-    } catch (error) {
-      console.error("Error saving record:", error);
-    }
+      })
+      .catch((error) => {
+        console.error("Error saving record:", error);
+      });
   };
 
   return (
