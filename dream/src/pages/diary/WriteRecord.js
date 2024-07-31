@@ -67,6 +67,7 @@ const RecordDetail = () => {
   const [breadType, setBreadType] = useState("");
   const [recordContent, setRecordContent] = useState("");
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const datePickerRef = useRef(null);
 
   useEffect(() => {
@@ -120,8 +121,7 @@ const RecordDetail = () => {
     axios
       .post("http://127.0.0.1:8000/diary/", record, {
         headers: {
-          "Content-Type": "application/json",
-          Authorization: "Token your_token_here",
+          Authorization: `Token ${token}`,
         },
       })
       .then((response) => {
