@@ -15,46 +15,40 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => (
     className="search"
     value={searchTerm}
     placeholder="조리도구 및 웰니스 키워드를 검색해주세요."
-    onChange={(e) => setSearchTerm(e.target.value)} // 검색어 변경 시 호출
+    onChange={(e) => setSearchTerm(e.target.value)}
   />
 );
 
-// 개별 레시피 아이템 컴포넌트
+// 레시피 항목 컴포넌트
 const RecipeItem = ({
   recipe,
   currentUser,
   onToggleSave,
-  savedRecipes,
+  isSaved,
   onDelete,
 }) => {
-  const isAuthor = recipe.author === currentUser; // 현재 사용자가 레시피의 작성자인지 여부
-  const isSaved = savedRecipes.includes(recipe.id); // 레시피가 저장된 상태인지 여부
+  const isAuthor = recipe.author === currentUser;
   const navigate = useNavigate();
 
-  // 레시피 수정 페이지로 이동
   const handleEditRecipe = (e) => {
     e.stopPropagation();
     navigate(`/recipes/edit/${recipe.id}`);
   };
 
-  // 레시피 상세 페이지로 이동
   const handleDetailRecipe = () => {
     navigate(`/recipes/${recipe.id}`);
   };
 
-  // 레시피 삭제 호출
   const handleDeleteRecipe = (e) => {
     e.stopPropagation();
     onDelete(recipe.id);
   };
 
-  // 레시피 저장 상태 토글 호출
   const handleToggleSave = (e) => {
     e.stopPropagation();
     onToggleSave(recipe.id);
   };
 
-  // 장비와 태그 리스트를 배열로 변환
   const equipmentList = Array.isArray(recipe.equipment) ? recipe.equipment : [];
   const tagsList = Array.isArray(recipe.tags) ? recipe.tags : [];
 
@@ -85,7 +79,10 @@ const RecipeItem = ({
             </>
           ) : (
             <button className="save-btn" onClick={handleToggleSave}>
-              <img src={isSaved ? savedIcon : unsavedIcon} alt="저장하기" />
+              <img
+                src={isSaved ? savedIcon : unsavedIcon}
+                alt={isSaved ? "저장됨" : "저장되지 않음"}
+              />
             </button>
           )}
         </div>
@@ -94,41 +91,51 @@ const RecipeItem = ({
   );
 };
 
+// 레시피 목록 컴포넌트
 const Recipes = () => {
-  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
-  const [savedRecipes, setSavedRecipes] = useState([]); // 저장된 레시피 목록 상태
-  const [recipes, setRecipes] = useState([]); // 레시피 목록 상태
-  const currentUser = "user1"; // 현재 사용자
+  const [searchTerm, setSearchTerm] = useState("");
+  const [savedRecipes, setSavedRecipes] = useState([]);
+  const [recipes, setRecipes] = useState([]);
+  const [token, setToken] = useState("");
+
+  const currentUser = localStorage.getItem("nickname");
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 레시피를 서버에서 가져오는 함수
-    const fetchRecipes = () => {
-      const token = localStorage.getItem("token"); // 로컬 스토리지에서 토큰 가져오기
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
 
-      if (!token) {
-        console.error("No token found in localStorage.");
-        return;
-      }
+    // 로컬 저장소에서 저장된 레시피 ID 목록을 가져옴
+    const loadSavedRecipes = () => {
+      const saved = JSON.parse(localStorage.getItem("savedRecipes")) || [];
+      setSavedRecipes(saved);
+    };
+
+    // 서버에서 레시피를 가져옴
+    const fetchRecipes = () => {
+      if (!storedToken) return;
 
       axios
         .get("http://127.0.0.1:8000/recipes/", {
           headers: {
-            Authorization: `Bearer ${token}`, // 인증 헤더 설정
+            Authorization: `Token ${storedToken}`,
           },
         })
         .then((response) => {
           if (response.status === 200) {
             const data = response.data;
             if (Array.isArray(data)) {
-              const validatedData = data.map((recipe) => ({
-                ...recipe,
-                equipment: Array.isArray(recipe.equipment)
-                  ? recipe.equipment
-                  : [],
-                tags: Array.isArray(recipe.tags) ? recipe.tags : [],
-              }));
-              setRecipes(validatedData); // 상태 업데이트
+              setRecipes(
+                data.map((recipe) => ({
+                  ...recipe,
+                  equipment: Array.isArray(recipe.equipment)
+                    ? recipe.equipment
+                    : [],
+                  tags: Array.isArray(recipe.tags) ? recipe.tags : [],
+                }))
+              );
             } else {
               console.error("Data is not an array", data);
             }
@@ -136,25 +143,28 @@ const Recipes = () => {
             console.error("Unexpected response status:", response.status);
           }
         })
-        .catch((error) => {
-          if (error.response) {
-            // 서버 응답 오류
-            console.error("Error fetching recipes:", error.response.data);
-            console.error("Error status:", error.response.status);
-          } else if (error.request) {
-            // 요청은 했으나 응답 없음
-            console.error("Error fetching recipes: No response received");
-          } else {
-            // 기타 오류
-            console.error("Error fetching recipes:", error.message);
-          }
-        });
+        .catch(handleError);
     };
 
-    fetchRecipes(); // 컴포넌트 마운트 시 레시피 가져오기
+    loadSavedRecipes();
+    fetchRecipes();
   }, []);
 
-  // 검색어에 맞게 레시피 필터링
+  const handleError = (error) => {
+    if (error.response) {
+      console.error(
+        "Error:",
+        error.response.data,
+        "Status:",
+        error.response.status
+      );
+    } else if (error.request) {
+      console.error("Error: No response received");
+    } else {
+      console.error("Error:", error.message);
+    }
+  };
+
   const filteredRecipes = recipes.filter(
     (recipe) =>
       recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -166,12 +176,13 @@ const Recipes = () => {
       )
   );
 
-  // 레시피 저장 상태 토글
   const handleToggleSave = (recipeId) => {
     setSavedRecipes((prevSaved) => {
       const updatedSaved = prevSaved.includes(recipeId)
         ? prevSaved.filter((id) => id !== recipeId)
         : [...prevSaved, recipeId];
+
+      localStorage.setItem("savedRecipes", JSON.stringify(updatedSaved));
 
       console.log(
         `레시피 ${recipeId}의 스크랩이 ${
@@ -183,10 +194,7 @@ const Recipes = () => {
     });
   };
 
-  // 레시피 삭제
   const handleDeleteRecipe = (recipeId) => {
-    const token = localStorage.getItem("token");
-
     if (!token) {
       console.error("No token found in localStorage.");
       return;
@@ -204,22 +212,9 @@ const Recipes = () => {
         );
         console.log(`레시피 ${recipeId}이(가) 삭제되었습니다.`);
       })
-      .catch((error) => {
-        if (error.response) {
-          // 서버 응답 오류
-          console.error("Error deleting recipe:", error.response.data);
-          console.error("Error status:", error.response.status);
-        } else if (error.request) {
-          // 요청은 했으나 응답 없음
-          console.error("Error deleting recipe: No response received");
-        } else {
-          // 기타 오류
-          console.error("Error deleting recipe:", error.message);
-        }
-      });
+      .catch(handleError);
   };
 
-  // 레시피 추가 페이지로 이동
   const handleAddRecipe = () => {
     navigate("/recipes/write");
   };
@@ -229,6 +224,9 @@ const Recipes = () => {
       <div className="search-container">
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
+      <div className="token-display">
+        <p>현재 토큰: {token}</p>
+      </div>
       {filteredRecipes.length > 0 ? (
         filteredRecipes.map((recipe) => (
           <RecipeItem
@@ -236,7 +234,7 @@ const Recipes = () => {
             recipe={recipe}
             currentUser={currentUser}
             onToggleSave={handleToggleSave}
-            savedRecipes={savedRecipes}
+            isSaved={savedRecipes.includes(recipe.id)}
             onDelete={handleDeleteRecipe}
           />
         ))

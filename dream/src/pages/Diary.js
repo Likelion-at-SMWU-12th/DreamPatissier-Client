@@ -104,11 +104,16 @@ const Diary = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeStartDate, setActiveStartDate] = useState(new Date());
   const [reviews, setReviews] = useState({});
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/diary")
+      .get("http://127.0.0.1:8000/diary/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
       .then((response) => {
         const data = response.data;
         if (typeof data === "object" && data !== null) {
@@ -121,7 +126,7 @@ const Diary = () => {
         }
       })
       .catch((error) => console.error("Error fetching reviews:", error));
-  }, []);
+  }, [token, navigate]);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -135,8 +140,7 @@ const Diary = () => {
   };
 
   const handleAddRecord = () => {
-    const date = formatDateForSave(selectedDate);
-    navigate(`http://127.0.0.1:8000/record/write`);
+    navigate(`/record/write/`);
   };
 
   const updateDate = (year, month) => {
@@ -148,26 +152,32 @@ const Diary = () => {
   const selectedDateKey = formatDateForSave(selectedDate);
   const reviewList = reviews[selectedDateKey] || [];
 
-  const handleDeleteReview = async (id) => {
-    try {
-      const response = await axios.delete(
-        `http://127.0.0.1:8000/reviews/${id}`
-      );
-
-      if (response.status === 200) {
-        setReviews((prevReviews) => {
-          const newReviews = { ...prevReviews };
-          newReviews[selectedDateKey] = newReviews[selectedDateKey].filter(
-            (review) => review.id !== id
+  const handleDeleteReview = (id) => {
+    axios
+      .delete(`http://127.0.0.1:8000/reviews/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setReviews((prevReviews) => {
+            const newReviews = { ...prevReviews };
+            newReviews[selectedDateKey] = newReviews[selectedDateKey].filter(
+              (review) => review.id !== id
+            );
+            return newReviews;
+          });
+        } else {
+          console.error(
+            "Failed to delete review. Status code:",
+            response.status
           );
-          return newReviews;
-        });
-      } else {
-        console.error("Failed to delete review. Status code:", response.status);
-      }
-    } catch (error) {
-      console.error("Error deleting review:", error);
-    }
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting review:", error);
+      });
   };
 
   const handleEditReview = (id) => {
@@ -181,6 +191,10 @@ const Diary = () => {
         <button onClick={handleTodayClick} className="today-button">
           오늘
         </button>
+      </div>
+
+      <div className="token-display">
+        <strong>Current Token:</strong> {token ? token : "No token available"}
       </div>
 
       <div className="diary-container">
