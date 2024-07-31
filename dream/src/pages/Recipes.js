@@ -203,7 +203,7 @@ const Recipes = () => {
     axios
       .delete(`http://127.0.0.1:8000/recipes/${recipeId}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Token ${token}`,
         },
       })
       .then(() => {
@@ -223,9 +223,6 @@ const Recipes = () => {
     <div className="container">
       <div className="search-container">
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      </div>
-      <div className="token-display">
-        <p>현재 토큰: {token}</p>
       </div>
       {filteredRecipes.length > 0 ? (
         filteredRecipes.map((recipe) => (

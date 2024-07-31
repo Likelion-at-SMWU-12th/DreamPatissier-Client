@@ -191,13 +191,18 @@ ul {
 }
 
 .recipe-title {
-  font-size: 2em;
+  font-size: 18px;
   margin: 0;
 }
 
 .recipe-tags {
-  font-size: 1.2em;
-  color: #666;
+  color: #ffb415;
+  font-family: Inter;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.408px;
 }
 
 .action-buttons {
