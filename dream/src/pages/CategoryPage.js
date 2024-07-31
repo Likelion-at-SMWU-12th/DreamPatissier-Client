@@ -16,6 +16,7 @@ const CategoryPage = () => {
 
     // 카테고리별 제품 목록을 API에서 가져옴
     axios
+
       .get(`http://127.0.0.1:8000/bakery/category/${categoryName}/`, {
         headers: {
           Authorization: `Token ${token}`, // 헤더에 토큰을 추가
