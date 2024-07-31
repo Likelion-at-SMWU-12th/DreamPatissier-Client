@@ -11,16 +11,19 @@ const CategoryPage = () => {
   const [status, setStatus] = useState("loading"); // 데이터 로딩 및 오류 상태
 
   useEffect(() => {
+    console.log(`Fetching products for category: ${categoryName}`);
+    const token = localStorage.getItem("token"); // 로컬스토리지에서 토큰을 가져옴
+
     // 카테고리별 제품 목록을 API에서 가져옴
     axios
-      .get("/product.json")
-      // .get(`http://127.0.0.1:8000/bakery/${categoryName}/`)
+      .get(`http://127.0.0.1:8000/bakery/category/${categoryName}/`, {
+        headers: {
+          Authorization: `Token ${token}`, // 헤더에 토큰을 추가
+        },
+      })
       .then((response) => {
-        // 카테고리별로 제품을 필터링함
-        const filteredProducts = response.data.filter(
-          (product) => product.categoryName === categoryName
-        );
-        setProducts(filteredProducts); // 필터링된 제품 목록을 상태에 저장
+        console.log("Fetched products:", response.data);
+        setProducts(response.data); // 응답 데이터를 상태에 저장
         setStatus("success"); // 데이터 로딩 성공
       })
       .catch((error) => {
@@ -59,6 +62,7 @@ const CategoryPage = () => {
       </MsgBox>
     );
   }
+
   return (
     <ProductWrap>
       {products.map((product) => (

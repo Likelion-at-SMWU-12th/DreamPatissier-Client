@@ -26,9 +26,15 @@ function Bakery() {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
+    const token = localStorage.getItem("token"); // 로컬스토리지에서 토큰을 가져옴
+
     // 백엔드 API 호출로 데이터 로드
     axios
-      .get("/bakery/") // 백엔드의 메인 페이지 API 호출
+      .get("/bakery/", {
+        headers: {
+          Authorization: `Token ${token}`, // 헤더에 토큰을 추가
+        },
+      }) // 백엔드의 메인 페이지 API 호출
       .then((response) => {
         const shuffledProducts = response.data.sort(() => 0.5 - Math.random());
         setRandomProducts(shuffledProducts);

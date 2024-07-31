@@ -39,10 +39,12 @@ function App() {
     <>
       {!hideMenubar && <Menubar />}
       <Routes>
-        <Route path="/bakery" element={<Bakery />}>
-          <Route path="/bakery/:categoryName/" element={<CategoryPage />} />
-          <Route path="/bakery/search/:tags" element={<SearchPage />} />
-        </Route>
+        <Route path="/bakery" element={<Bakery />} />
+        <Route
+          path="/bakery/category/:categoryName"
+          element={<CategoryPage />}
+        />
+        <Route path="/bakery/search/:tags" element={<SearchPage />} />
         <Route path="/bakery/product/:id" element={<Detail />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/recipes/:id" element={<RecipeDetail />} />
