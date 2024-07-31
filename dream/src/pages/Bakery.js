@@ -105,9 +105,9 @@ function Bakery() {
             <StyledLink to={`/bakery/product/${product.id}`} key={product.id}>
               <Product
                 key={product.id}
-                imgSrc={product.imgSrc}
+                imgSrc={product.img_src} // imgSrc -> img_src
                 tags={product.tags}
-                title={product.title}
+                name={product.name} // title -> name
                 price={product.price}
               />
             </StyledLink>
@@ -123,6 +123,7 @@ function Bakery() {
     </div>
   );
 }
+
 // 카테고리 데이터
 const categories = [
   { name: "bread", uiName: "식빵", imgSrc: Morning },
