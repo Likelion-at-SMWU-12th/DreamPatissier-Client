@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Footer from "../components/Footer";
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import ShopIcon from "../assets/shoppingcart.svg";
 // import Review from "./userpage/Review";
 
 const Detail = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("loading");
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     axios
@@ -29,6 +31,13 @@ const Detail = () => {
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US").format(price);
+  };
+
+  const handleAddToCart = () => {
+    setShowPopup(true);
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 4000);
   };
 
   if (status === "loading") {
@@ -61,17 +70,7 @@ const Detail = () => {
       </Section>
       <Section>
         <SectionTitle>상품정보</SectionTitle>
-        <Info>
-          아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이
-          안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면
-          아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직
-          못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직
-          연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이 안됐슴니다.
-          왜냐면 아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직
-          못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직
-          연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이 안됐슴니다.
-          왜냐면 아직 못했으니까요.
-        </Info>
+        <Info>아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.</Info>
       </Section>
       <Section>
         <SectionTitle>상품구성</SectionTitle>
@@ -85,11 +84,7 @@ const Detail = () => {
             <Writer>빵**</Writer>|<Date>2024.07.19</Date>
           </WriterInfo>
           <ReviewText>
-            아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이
-            안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면
-            아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직
-            못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직
-            연동이 안됐슴니다. 왜냐면 아직 못했으니까요.
+            아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.
           </ReviewText>
         </ReviewBox>
         <HrDiv />
@@ -107,15 +102,22 @@ const Detail = () => {
           </ReviewText>
         </ReviewBox>
       </Section>
-      <CartButton>
+      <CartButton onClick={handleAddToCart}>
         <Icon src={ShopIcon} alt="장바구니 아이콘" />
         <ShopText>장바구니</ShopText>
       </CartButton>
+      {showPopup && (
+        <PopWrap showPopup={showPopup}>
+          <CartPop>
+            <PopText>장바구니에 상품을 담았어요</PopText>
+            <GoBtn onClick={() => navigate("/cart")}>바로가기 &gt;</GoBtn>
+          </CartPop>
+        </PopWrap>
+      )}
       <Footer />
     </>
   );
 };
-
 // 스타일
 // 장바구니 버튼
 const CartButton = styled.button`
@@ -264,6 +266,60 @@ const HrDiv = styled.div`
   width: 100%;
   border-bottom: 1px solid #d9d9d9;
   box-shadow: 0 2px 4px 0 rgba(217, 217, 217, 0.5);
+`;
+
+// 팝업 애니메이션 정의
+const fadeOut = keyframes`
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+`;
+
+// 팝업
+const PopWrap = styled.div`
+  justify-content: center;
+  display: flex;
+  position: fixed;
+  right: 0;
+  left: 10%;
+  bottom: 5%;
+  z-index: 4;
+  width: 80%;
+  animation: ${(props) =>
+    props.showPopup
+      ? css`
+          ${fadeOut} 5s forwards
+        `
+      : "none"};
+`;
+
+const CartPop = styled.div`
+  background-color: var(--yellow);
+  border-radius: 10px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 46px;
+  display: flex;
+  padding: 0px 19px;
+`;
+
+const PopText = styled.div`
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--brown);
+`;
+
+const GoBtn = styled.button`
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--brown);
+  border: none;
+  background-color: var(--yellow);
+  cursor: pointer;
 `;
 
 export default Detail;
