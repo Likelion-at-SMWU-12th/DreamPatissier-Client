@@ -224,9 +224,6 @@ const Recipes = () => {
       <div className="search-container">
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
-      <div className="token-display">
-        <p>현재 토큰: {token}</p>
-      </div>
       {filteredRecipes.length > 0 ? (
         filteredRecipes.map((recipe) => (
           <RecipeItem
