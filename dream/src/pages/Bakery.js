@@ -26,9 +26,9 @@ function Bakery() {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
-    // 더미 데이터 로드
+    // 백엔드 API 호출로 데이터 로드
     axios
-      .get("/product.json")
+      .get("/bakery/") // 백엔드의 메인 페이지 API 호출
       .then((response) => {
         const shuffledProducts = response.data.sort(() => 0.5 - Math.random());
         setRandomProducts(shuffledProducts);
@@ -42,7 +42,7 @@ function Bakery() {
 
   const handleCategoryClick = (name) => {
     setSelectedCategory(name);
-    navigate(`/bakery/${name}`);
+    navigate(`/bakery/category/${name}`);
   };
 
   const handleSearch = (tagsArray) => {
