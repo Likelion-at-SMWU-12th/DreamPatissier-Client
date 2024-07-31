@@ -265,7 +265,7 @@ const Diary = () => {
                       <hr className="vertical-line" />
                       <div className="review-content">
                         <div className="bread-title">
-                          [{review.bakeryName}] {review.breadName}
+                          [{review.bakery_name}] {review.bread_name}
                         </div>
                         <div className="review-tag">{tagsString}</div>
                         <div className="review-text">{review.review}</div>
