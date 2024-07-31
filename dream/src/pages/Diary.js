@@ -8,11 +8,13 @@ import Bread from "../assets/bread_stamp.png";
 import editIcon from "../assets/edit-icon.png";
 import deleteIcon from "../assets/delete-icon.png";
 
+// 요일을 한글로 변환하는 함수
 const getWeekday = (day) => {
   const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
   return `(${weekdays[day]})`;
 };
 
+// 날짜를 '년 월 일 (요일)' 형식으로 포맷팅하는 함수
 const formatDate = (date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -21,6 +23,7 @@ const formatDate = (date) => {
   return `${year}년 ${month}월 ${day}일 ${weekday}`;
 };
 
+// 날짜를 'YYYY-MM-DD' 형식으로 포맷팅하는 함수
 const formatDateForSave = (date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -28,7 +31,8 @@ const formatDateForSave = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-const tileClassName = ({ date, view, activeStartDate }) => {
+// 달력 타일의 클래스 이름을 설정하는 함수
+const tileClassName = ({ date, view, activeStartDate, reviews }) => {
   if (view === "month") {
     const currentMonth = activeStartDate.getMonth();
     const currentYear = activeStartDate.getFullYear();
@@ -37,21 +41,27 @@ const tileClassName = ({ date, view, activeStartDate }) => {
     const isSaturday = date.getDay() === 6;
     const isSunday = date.getDay() === 0;
 
+    const dateKey = formatDateForSave(date);
+    const hasReview = reviews[dateKey] && reviews[dateKey].length > 0;
+
     if (!isCurrentMonth) {
       return "not-current-month-tile";
     }
 
     if (isSaturday) {
-      return "saturday-tile";
+      return hasReview ? "saturday-tile with-review" : "saturday-tile";
     }
 
     if (isSunday) {
-      return "sunday-tile";
+      return hasReview ? "sunday-tile with-review" : "sunday-tile";
     }
+
+    return hasReview ? "calendar-tile with-review" : "calendar-tile";
   }
   return null;
 };
 
+// 달력 타일의 내용을 설정하는 함수
 const tileContent = ({ date, view, reviews }) => {
   if (view === "month") {
     const dateKey = formatDateForSave(date);
@@ -69,6 +79,7 @@ const tileContent = ({ date, view, reviews }) => {
   return null;
 };
 
+// 연도와 월을 선택할 수 있는 컴포넌트
 const YearMonthPicker = ({ selectedDate, updateDate }) => {
   const currentYear = selectedDate.getFullYear();
   const currentMonth = selectedDate.getMonth();
@@ -108,10 +119,10 @@ const Diary = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const navigate = useNavigate();
 
-  const fetchReviewsByDate = (date) => {
-    const formattedDate = formatDateForSave(date);
+  // 모든 리뷰를 가져오는 함수
+  const fetchAllReviews = () => {
     axios
-      .get(`http://127.0.0.1:8000/diary/by_date/?date=${formattedDate}`, {
+      .get("http://127.0.0.1:8000/diary/", {
         headers: {
           Authorization: `Token ${token}`,
         },
@@ -119,10 +130,13 @@ const Diary = () => {
       .then((response) => {
         const data = response.data;
         if (typeof data === "object" && data !== null) {
-          setReviews((prevReviews) => ({
-            ...prevReviews,
-            [formattedDate]: data,
-          }));
+          const reviewsMap = data.reduce((acc, review) => {
+            const dateKey = formatDateForSave(new Date(review.date));
+            if (!acc[dateKey]) acc[dateKey] = [];
+            acc[dateKey].push(review);
+            return acc;
+          }, {});
+          setReviews(reviewsMap);
         } else {
           console.error(
             "Fetched data is not in the expected object format:",
@@ -134,35 +148,40 @@ const Diary = () => {
   };
 
   useEffect(() => {
-    fetchReviewsByDate(selectedDate);
-  }, [selectedDate, token]);
+    fetchAllReviews();
+  }, [token]);
 
+  // 날짜를 변경하는 함수
   const handleDateChange = (date) => {
     setSelectedDate(date);
     setActiveStartDate(new Date(date.getFullYear(), date.getMonth(), 1));
-    fetchReviewsByDate(date);
     console.log("선택된 날짜:", formatDate(date));
   };
 
+  // '오늘' 버튼 클릭 시 오늘 날짜로 설정하는 함수
   const handleTodayClick = () => {
     const today = new Date();
     setSelectedDate(today);
     setActiveStartDate(new Date(today.getFullYear(), today.getMonth(), 1));
   };
 
+  // 새 기록 추가 버튼 클릭 시 기록 추가 페이지로 이동하는 함수
   const handleAddRecord = () => {
     navigate(`/record/write/`);
   };
 
+  // 연도와 월을 업데이트하는 함수
   const updateDate = (year, month) => {
     const newDate = new Date(year, month, 1);
     setActiveStartDate(newDate);
     setSelectedDate(newDate);
   };
 
+  // 선택된 날짜의 리뷰 목록
   const selectedDateKey = formatDateForSave(selectedDate);
   const reviewList = reviews[selectedDateKey] || [];
 
+  // 리뷰 삭제 함수
   const handleDeleteReview = (id) => {
     axios
       .delete(`http://127.0.0.1:8000/diary/${id}`, {
@@ -191,6 +210,7 @@ const Diary = () => {
       });
   };
 
+  // 리뷰 수정 함수
   const handleEditReview = (id) => {
     navigate(`/edit/${id}`);
   };
@@ -208,7 +228,7 @@ const Diary = () => {
           onChange={handleDateChange}
           value={selectedDate}
           tileClassName={(props) =>
-            tileClassName({ ...props, activeStartDate })
+            tileClassName({ ...props, activeStartDate, reviews })
           }
           tileContent={(props) => tileContent({ ...props, reviews })}
           activeStartDate={activeStartDate}
