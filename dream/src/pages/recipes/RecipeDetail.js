@@ -13,14 +13,17 @@ const RecipeDetail = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    const fetchRecipe = async () => {
-      try {
-        const response = await axios.get(`/recipes/${id}`);
-        setRecipe(response.data);
-        setIsAuthor(response.data.authorId === /* 로그인된 사용자 ID */ 1);
-      } catch (error) {
-        console.error("레시피 불러오기에 실패했습니다:", error);
-      }
+    const fetchRecipe = () => {
+      axios
+        .get(`/recipes/${id}`)
+        .then((response) => {
+          setRecipe(response.data);
+          // 로그인된 사용자 ID를 적절히 교체해야 합니다.
+          setIsAuthor(response.data.authorId === /* 로그인된 사용자 ID */ 1);
+        })
+        .catch((error) => {
+          console.error("레시피 불러오기에 실패했습니다:", error);
+        });
     };
 
     fetchRecipe();
