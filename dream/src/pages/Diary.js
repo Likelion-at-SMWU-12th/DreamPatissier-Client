@@ -269,7 +269,10 @@ const Diary = () => {
                         </div>
                         <div className="review-tag">{tagsString}</div>
                         <div className="review-text">{review.review}</div>
-                        <img src={Bread} className="review-show-image" />
+                        <img
+                          src={review.img_src}
+                          className="review-show-image"
+                        />
                       </div>
                       <div className="button-div">
                         <button
