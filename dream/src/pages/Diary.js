@@ -167,7 +167,8 @@ const Diary = () => {
 
   // 새 기록 추가 버튼 클릭 시 기록 추가 페이지로 이동하는 함수
   const handleAddRecord = () => {
-    navigate(`/record/write/`);
+    const formattedDate = formatDateForSave(selectedDate);
+    navigate(`/record/write/${formattedDate}`);
   };
 
   // 연도와 월을 업데이트하는 함수
@@ -210,7 +211,6 @@ const Diary = () => {
       });
   };
 
-  // 리뷰 수정 함수
   const handleEditReview = (id) => {
     navigate(`/edit/${id}`);
   };
