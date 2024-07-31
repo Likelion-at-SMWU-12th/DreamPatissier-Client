@@ -7,14 +7,14 @@ import profile from "../assets/myprofile.png";
 const Users = () => {
   const navigate = useNavigate();
   const username = localStorage.getItem("username");
-  const nickname = localStorage.getItem("nickname");
+  const last_name = localStorage.getItem("last_name");
 
   const handleLogout = (e) => {
     e.preventDefault();
     const confirmLogout = window.confirm("로그아웃하시겠습니까?");
     if (confirmLogout) {
       localStorage.removeItem("token");
-      localStorage.removeItem("nickname");
+      localStorage.removeItem("last_name");
       localStorage.removeItem("username");
       navigate("/accounts/login/");
     }
@@ -25,7 +25,7 @@ const Users = () => {
       <div className="profile-section">
         <img src={profile} alt="Profile" className="profile-pic" />
         <div className="profile-info">
-          <h2 className="profile-name">{nickname ? nickname : "UNKNOWN"}</h2>
+          <h2 className="profile-name">{last_name ? last_name : "UNKNOWN"}</h2>
           <p className="profile-email">
             {username ? username : "로그인 후 이용해주세요."}
           </p>
