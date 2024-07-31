@@ -107,9 +107,10 @@ const Diary = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchReviewsByDate = (date) => {
+    const formattedDate = formatDateForSave(date);
     axios
-      .get("http://127.0.0.1:8000/diary/", {
+      .get(`http://127.0.0.1:8000/diary/by_date/?date=${formattedDate}`, {
         headers: {
           Authorization: `Token ${token}`,
         },
@@ -117,7 +118,10 @@ const Diary = () => {
       .then((response) => {
         const data = response.data;
         if (typeof data === "object" && data !== null) {
-          setReviews(data);
+          setReviews((prevReviews) => ({
+            ...prevReviews,
+            [formattedDate]: data,
+          }));
         } else {
           console.error(
             "Fetched data is not in the expected object format:",
@@ -126,11 +130,17 @@ const Diary = () => {
         }
       })
       .catch((error) => console.error("Error fetching reviews:", error));
-  }, [token, navigate]);
+  };
+
+  useEffect(() => {
+    fetchReviewsByDate(selectedDate);
+  }, [selectedDate, token]);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
     setActiveStartDate(new Date(date.getFullYear(), date.getMonth(), 1));
+    fetchReviewsByDate(date); // 날짜가 변경될 때 기록을 가져옵니다.
+    console.log("선택된 날짜:", formatDate(date)); // 선택한 날짜를 로그에 찍음
   };
 
   const handleTodayClick = () => {
@@ -192,11 +202,6 @@ const Diary = () => {
           오늘
         </button>
       </div>
-
-      <div className="token-display">
-        <strong>Current Token:</strong> {token ? token : "No token available"}
-      </div>
-
       <div className="diary-container">
         <Calendar
           onChange={handleDateChange}
@@ -215,34 +220,39 @@ const Diary = () => {
             </button>
             {reviewList.length > 0 && (
               <div className="review-container">
-                {reviewList.map((review) => (
-                  <div key={review.id} className="review-item">
-                    <img src={Bread} className="review-stamp-image" />
-                    <hr className="vertical-line" />
-                    <div className="review-content">
-                      <div className="bread-title">
-                        [{review.bakeryName}] {review.breadName}
+                {reviewList.map((review) => {
+                  const tags = Array.isArray(review.tags) ? review.tags : [];
+                  const tagsString = tags.join(", ");
+
+                  return (
+                    <div key={review.id} className="review-item">
+                      <img src={Bread} className="review-stamp-image" />
+                      <hr className="vertical-line" />
+                      <div className="review-content">
+                        <div className="bread-title">
+                          [{review.bakeryName}] {review.breadName}
+                        </div>
+                        <div className="review-tag">{tagsString}</div>
+                        <div className="review-text">{review.review}</div>
+                        <img src={Bread} className="review-show-image" />
                       </div>
-                      <div className="review-tag">{review.tags.join(", ")}</div>
-                      <div className="review-text">{review.review}</div>
-                      <img src={Bread} className="review-show-image" />
+                      <div className="button-div">
+                        <button
+                          onClick={() => handleEditReview(review.id)}
+                          className="diary-edit-button"
+                        >
+                          <img src={editIcon} alt="Edit" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteReview(review.id)}
+                          className="diary-delete-button"
+                        >
+                          <img src={deleteIcon} alt="Delete" />
+                        </button>
+                      </div>
                     </div>
-                    <div className="button-div">
-                      <button
-                        onClick={() => handleEditReview(review.id)}
-                        className="diary-edit-button"
-                      >
-                        <img src={editIcon} alt="Edit" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteReview(review.id)}
-                        className="diary-delete-button"
-                      >
-                        <img src={deleteIcon} alt="Delete" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
