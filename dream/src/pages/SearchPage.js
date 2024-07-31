@@ -11,21 +11,17 @@ const SearchPage = () => {
   const [status, setStatus] = useState("loading");
 
   useEffect(() => {
-    const tagArray = tags
-      .split(",")
-      .map((tag) => tag.trim().toLowerCase())
-      .filter((tag) => tag.length > 0);
+    const token = localStorage.getItem("token");
+    const encodedTags = encodeURIComponent(tags);
 
     axios
-      .get("/product.json")
+      .get(`http://127.0.0.1:8000/bakery/search/${encodedTags}/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
       .then((response) => {
-        const filteredProducts = response.data.filter((product) => {
-          const lowerCaseTags = product.tags.map((tag) => tag.toLowerCase());
-          return tagArray.some((tag) =>
-            lowerCaseTags.some((productTag) => productTag.includes(tag))
-          );
-        });
-        setProducts(filteredProducts);
+        setProducts(response.data);
         setStatus("success");
       })
       .catch((error) => {
@@ -68,9 +64,9 @@ const SearchPage = () => {
         <StyledLink to={`/bakery/product/${product.id}`} key={product.id}>
           <Product
             key={product.id}
-            imgSrc={product.imgSrc}
+            imgSrc={product.img_src} // imgSrc -> img_src
             tags={product.tags}
-            title={product.title}
+            name={product.name} // title -> name
             price={product.price}
           />
         </StyledLink>
