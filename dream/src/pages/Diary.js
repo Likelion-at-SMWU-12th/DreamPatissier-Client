@@ -117,10 +117,15 @@ const Diary = () => {
   const [activeStartDate, setActiveStartDate] = useState(new Date());
   const [reviews, setReviews] = useState({});
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   // 모든 리뷰를 가져오는 함수
   const fetchAllReviews = () => {
+    setIsLoading(true);
+    setError(null);
+
     axios
       .get("http://127.0.0.1:8000/diary/", {
         headers: {
@@ -144,7 +149,13 @@ const Diary = () => {
           );
         }
       })
-      .catch((error) => console.error("Error fetching reviews:", error));
+      .catch((error) => {
+        setError("Error fetching reviews.");
+        console.error("Error fetching reviews:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -184,6 +195,9 @@ const Diary = () => {
 
   // 리뷰 삭제 함수
   const handleDeleteReview = (id) => {
+    setIsLoading(true);
+    setError(null);
+
     axios
       .delete(`http://127.0.0.1:8000/diary/${id}`, {
         headers: {
@@ -191,14 +205,8 @@ const Diary = () => {
         },
       })
       .then((response) => {
-        if (response.status === 200) {
-          setReviews((prevReviews) => {
-            const newReviews = { ...prevReviews };
-            newReviews[selectedDateKey] = newReviews[selectedDateKey].filter(
-              (review) => review.id !== id
-            );
-            return newReviews;
-          });
+        if (response.status === 204) {
+          fetchAllReviews(); // 리뷰 삭제 후 전체 리뷰를 다시 가져오기
         } else {
           console.error(
             "Failed to delete review. Status code:",
@@ -207,7 +215,11 @@ const Diary = () => {
         }
       })
       .catch((error) => {
+        setError("Error deleting review.");
         console.error("Error deleting review:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -224,6 +236,8 @@ const Diary = () => {
         </button>
       </div>
       <div className="diary-container">
+        {isLoading && <div>Loading...</div>}
+        {error && <div>{error}</div>}
         <Calendar
           onChange={handleDateChange}
           value={selectedDate}
