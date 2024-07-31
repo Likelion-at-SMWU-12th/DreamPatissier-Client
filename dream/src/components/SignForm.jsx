@@ -200,19 +200,26 @@ const SignForm = () => {
             navigate("/accounts/signup-clear");
           })
           .catch((loginError) => {
-            setMessage(
-              "자동 로그인에 실패했습니다. 로그인 페이지로 이동합니다."
-            );
+            if (loginError.response && loginError.response.data) {
+              setMessage(Object.values(loginError.response.data).join(" "));
+            } else {
+              setMessage(
+                "자동 로그인에 실패했습니다. 로그인 페이지로 이동합니다."
+              );
+            }
             navigate("/accounts/login/");
           });
 
         setMessage("회원가입이 완료되었습니다.");
       })
       .catch((error) => {
-        setMessage("서버 오류!");
+        if (error.response && error.response.data) {
+          setMessage(Object.values(error.response.data.errors).join(" "));
+        } else {
+          setMessage("서버 오류!");
+        }
       });
   };
-
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
