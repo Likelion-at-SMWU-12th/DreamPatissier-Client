@@ -14,7 +14,7 @@ const ImageUploadComponent = ({ images, onAddImage, onRemoveImage }) => (
       id="file-input"
       onChange={(e) => {
         if (e.target.files.length) {
-          onAddImage(URL.createObjectURL(e.target.files[0]));
+          onAddImage(e.target.files[0]);
         }
       }}
       style={{ display: "none" }}
@@ -26,7 +26,7 @@ const ImageUploadComponent = ({ images, onAddImage, onRemoveImage }) => (
       <div className="image-preview-scroll">
         {images.map((image, index) => (
           <div key={index} className="image-preview">
-            <img src={image} alt={`preview-${index}`} />
+            <img src={URL.createObjectURL(image)} alt={`preview-${index}`} />
             <button
               onClick={() => onRemoveImage(index)}
               aria-label="Remove image"
@@ -98,45 +98,77 @@ const RecordDetail = () => {
 
   const handleAddImage = (newImage) => {
     if (images.length < 3) {
-      setImages([...images, newImage]);
+      setImages((prevImages) => {
+        const updatedImages = [...prevImages, newImage];
+        console.log("이미지 추가됨:", newImage);
+        return updatedImages;
+      });
     } else {
       alert("최대 3장까지만 등록할 수 있습니다.");
     }
   };
 
   const handleRemoveImage = (index) => {
-    setImages(images.filter((_, i) => i !== index));
+    setImages((prevImages) => {
+      const updatedImages = prevImages.filter((_, i) => i !== index);
+      console.log("이미지 제거됨, 인덱스:", index);
+      return updatedImages;
+    });
   };
 
   const handleSave = () => {
     const recordDateString = recordDate.toISOString().split("T")[0];
-    const record = {
-      date: recordDateString,
-      bread_name: breadName,
-      bakery_name: storeName,
-      tags: breadType.split(",").map((tag) => tag.trim()),
-      review: recordContent,
-    };
+    const formData = new FormData();
+    formData.append("date", recordDateString);
+    formData.append("bread_name", breadName);
+    formData.append("bakery_name", storeName);
+    formData.append(
+      "tags",
+      JSON.stringify(breadType.split(",").map((tag) => tag.trim()))
+    );
+    formData.append("review", recordContent);
+
+    // 이미지 파일을 인덱스 없이 순서대로 추가
+    images.forEach((image) => {
+      formData.append("img_src", image);
+    });
+
+    // 디버깅용으로 formData 내용 확인
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
 
     axios
-      .post("http://127.0.0.1:8000/diary/", record, {
+      .post("http://127.0.0.1:8000/diary/", formData, {
         headers: {
           Authorization: `Token ${token}`,
         },
       })
       .then((response) => {
         if (response.status === 201) {
-          console.log("저장할 데이터:", record);
+          console.log("기록이 성공적으로 저장되었습니다!");
+          console.log("서버 응답 데이터:", response.data);
           navigate("/diary");
         } else {
-          console.error("Failed to save record. Status code:", response.status);
-          console.error("Error details:", response.data);
+          console.error(
+            "기록 저장에 실패했습니다. 상태 코드:",
+            response.status
+          );
+          console.error("오류 세부 사항:", response.data);
         }
       })
       .catch((error) => {
-        console.error("Error saving record:", error);
+        console.error("기록 저장 중 오류 발생:", error);
       });
   };
+
+  useEffect(() => {
+    return () => {
+      images.forEach((image) => {
+        URL.revokeObjectURL(URL.createObjectURL(image));
+      });
+    };
+  }, [images]);
 
   return (
     <div className="diary-form">
@@ -195,7 +227,7 @@ const RecordDetail = () => {
         rows="10"
       />
       <button className="save-button" onClick={handleSave}>
-        ✔️ 저 장
+        ✔️ 저장
       </button>
     </div>
   );
