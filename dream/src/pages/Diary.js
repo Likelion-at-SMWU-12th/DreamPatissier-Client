@@ -55,6 +55,7 @@ const tileClassName = ({ date, view, activeStartDate }) => {
 const tileContent = ({ date, view, reviews }) => {
   if (view === "month") {
     const dateKey = formatDateForSave(date);
+
     if (reviews[dateKey] && reviews[dateKey].length > 0) {
       return (
         <div className="calendar-date">
