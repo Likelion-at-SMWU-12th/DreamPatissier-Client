@@ -32,7 +32,6 @@ const tileClassName = ({ date, view, activeStartDate }) => {
   if (view === "month") {
     const currentMonth = activeStartDate.getMonth();
     const currentYear = activeStartDate.getFullYear();
-
     const isCurrentMonth =
       date.getMonth() === currentMonth && date.getFullYear() === currentYear;
     const isSaturday = date.getDay() === 6;
@@ -56,14 +55,15 @@ const tileClassName = ({ date, view, activeStartDate }) => {
 const tileContent = ({ date, view, reviews }) => {
   if (view === "month") {
     const dateKey = formatDateForSave(date);
-    return (
-      <div className="calendar-date">
-        {reviews[dateKey] && (
+    if (reviews[dateKey] && reviews[dateKey].length > 0) {
+      return (
+        <div className="calendar-date">
           <img src={Bread} alt="Bread" className="bread-icon" />
-        )}
-        {!reviews[dateKey] && date.getDate()}
-      </div>
-    );
+        </div>
+      );
+    } else {
+      return <div className="calendar-date">{date.getDate()}</div>;
+    }
   }
   return null;
 };
@@ -139,8 +139,8 @@ const Diary = () => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
     setActiveStartDate(new Date(date.getFullYear(), date.getMonth(), 1));
-    fetchReviewsByDate(date); // 날짜가 변경될 때 기록을 가져옵니다.
-    console.log("선택된 날짜:", formatDate(date)); // 선택한 날짜를 로그에 찍음
+    fetchReviewsByDate(date);
+    console.log("선택된 날짜:", formatDate(date));
   };
 
   const handleTodayClick = () => {
@@ -164,9 +164,9 @@ const Diary = () => {
 
   const handleDeleteReview = (id) => {
     axios
-      .delete(`http://127.0.0.1:8000/reviews/${id}`, {
+      .delete(`http://127.0.0.1:8000/diary/${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Token ${token}`,
         },
       })
       .then((response) => {
