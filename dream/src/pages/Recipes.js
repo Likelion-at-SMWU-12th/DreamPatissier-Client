@@ -203,7 +203,7 @@ const Recipes = () => {
     axios
       .delete(`http://127.0.0.1:8000/recipes/${recipeId}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Token ${token}`,
         },
       })
       .then(() => {
