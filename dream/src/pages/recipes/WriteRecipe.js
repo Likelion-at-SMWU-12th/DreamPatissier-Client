@@ -5,30 +5,30 @@ import "../../styles/WriteRecipe.css";
 import representPicture from "./represent_picture.png";
 import init_image from "./init_recipe_image.png";
 
-const mockUser = {
-  id: "12345",
-};
-
 const WriteRecipe = () => {
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const [image, setImage] = useState(representPicture);
   const [imageFile, setImageFile] = useState(null);
   const [title, setTitle] = useState("");
-  const [tags, setTags] = useState([""]);
+  const [tags, setTags] = useState("");
   const [cookingTime, setCookingTime] = useState("");
-  const [equipment, setEquipment] = useState([""]);
-  const [ingredients, setIngredients] = useState([{ item: "", quantity: "" }]);
-  const [steps, setSteps] = useState([{ image: "", description: "" }]);
-  const [user, setUser] = useState(mockUser);
+  const [equipment, setEquipment] = useState("");
+  const [ingredients, setIngredients] = useState([{ name: "", amount: "" }]);
+  const [steps, setSteps] = useState(
+    Array(10).fill({ description: "", imageFile: null }) // 초기 상태에 imageFile 추가
+  );
 
   const fileInputRef = useRef(null);
   const stepFileInputRefs = useRef([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     return () => {
+      // Clean up URL.createObjectURL references for only blob URLs
       steps.forEach((step) => {
-        if (step.image && step.image.startsWith("blob:")) {
-          URL.revokeObjectURL(step.image);
+        if (step.imageFile && step.imageFile instanceof File) {
+          URL.revokeObjectURL(URL.createObjectURL(step.imageFile));
         }
       });
     };
@@ -47,45 +47,33 @@ const WriteRecipe = () => {
   };
 
   const addIngredient = () => {
-    setIngredients([...ingredients, { item: "", quantity: "" }]);
+    setIngredients([...ingredients, { name: "", amount: "" }]);
   };
 
-  const addStep = () => {
-    setSteps([...steps, { image: "", description: "" }]);
-  };
-
-  const handleChange = (index, field, value, array, setArray) => {
-    const newArray = [...array];
-    newArray[index][field] = value;
-    setArray(newArray);
+  const handleChange = (index, field, value) => {
+    const updatedSteps = [...steps];
+    updatedSteps[index] = { ...updatedSteps[index], [field]: value };
+    setSteps(updatedSteps);
   };
 
   const handleStepImageChange = (index, e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      const newImageUrl = URL.createObjectURL(file);
-      const newSteps = [...steps];
-      newSteps[index].image = newImageUrl;
-      setSteps(newSteps);
-      stepFileInputRefs.current[index].file = file;
+      const updatedSteps = [...steps];
+      updatedSteps[index] = { ...updatedSteps[index], imageFile: file };
+      setSteps(updatedSteps);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      !title ||
-      !tags.length ||
-      !cookingTime ||
-      !equipment.length ||
-      !imageFile
-    ) {
+
+    if (!title || !tags || !cookingTime || !equipment || !imageFile) {
       alert("모든 필드를 작성해 주세요.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("author", user.id);
     formData.append("image", imageFile);
     formData.append("title", title);
     formData.append("tags", tags);
@@ -93,25 +81,49 @@ const WriteRecipe = () => {
     formData.append("equipment", equipment);
     formData.append("ingredients", JSON.stringify(ingredients));
 
-    // Adding step images and descriptions
     steps.forEach((step, index) => {
-      if (stepFileInputRefs.current[index]?.file) {
-        formData.append(
-          `step${index + 1}_image`,
-          stepFileInputRefs.current[index].file
-        );
+      if (step.imageFile) {
+        formData.append(`step${index + 1}_image`, step.imageFile);
       }
       formData.append(`step${index + 1}_description`, step.description);
     });
 
+    // Assuming you have the author's username in local storage or you can get it from a user object
+    const authorUsername = localStorage.getItem("username"); // Adjust this to how you manage user data
+    formData.append("author", authorUsername);
+
     try {
-      await axios.post("http://127.0.0.1:8000/recipes", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.post(
+        "http://127.0.0.1:8000/recipes/",
+        formData,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("서버 응답 데이터:", response.data);
       alert("레시피가 등록되었습니다!");
       navigate("/recipes");
     } catch (error) {
-      console.error("레시피 등록에 실패했습니다:", error);
+      if (error.response) {
+        console.error("서버 응답 데이터:", error.response.data);
+        console.error("서버 응답 상태:", error.response.status);
+        console.error("서버 응답 헤더:", error.response.headers);
+        alert(
+          `서버 오류: ${
+            error.response.data.author || "알 수 없는 오류가 발생했습니다."
+          }`
+        );
+      } else if (error.request) {
+        console.error("서버에 요청을 보냈지만 응답이 없습니다:", error.request);
+        alert("서버에 요청을 보냈지만 응답이 없습니다.");
+      } else {
+        console.error("요청 설정 중 오류 발생:", error.message);
+        alert("요청 설정 중 오류가 발생했습니다.");
+      }
     }
   };
 
@@ -141,11 +153,9 @@ const WriteRecipe = () => {
         <input
           className="input-recipe-data"
           type="text"
-          value={tags.join(", ")}
+          value={tags}
           placeholder="#웰니스 키워드를 작성해 주세요."
-          onChange={(e) =>
-            setTags(e.target.value.split(",").map((tag) => tag.trim()))
-          }
+          onChange={(e) => setTags(e.target.value)}
         />
         <input
           className="input-recipe-data"
@@ -157,11 +167,9 @@ const WriteRecipe = () => {
         <input
           className="input-recipe-data"
           type="text"
-          value={equipment.join(", ")}
+          value={equipment}
           placeholder="조리기구를 하나만 작성해 주세요. (전자레인지/오븐/에어프라이어 등)"
-          onChange={(e) =>
-            setEquipment(e.target.value.split(",").map((eq) => eq.trim()))
-          }
+          onChange={(e) => setEquipment(e.target.value)}
         />
 
         <div className="style2">
@@ -174,12 +182,10 @@ const WriteRecipe = () => {
                   placeholder="재료명"
                   value={ingredient.item}
                   onChange={(e) =>
-                    handleChange(
-                      index,
-                      "item",
-                      e.target.value,
-                      ingredients,
-                      setIngredients
+                    setIngredients((prevIngredients) =>
+                      prevIngredients.map((ing, i) =>
+                        i === index ? { ...ing, item: e.target.value } : ing
+                      )
                     )
                   }
                 />
@@ -188,12 +194,10 @@ const WriteRecipe = () => {
                   placeholder="수량"
                   value={ingredient.quantity}
                   onChange={(e) =>
-                    handleChange(
-                      index,
-                      "quantity",
-                      e.target.value,
-                      ingredients,
-                      setIngredients
+                    setIngredients((prevIngredients) =>
+                      prevIngredients.map((ing, i) =>
+                        i === index ? { ...ing, quantity: e.target.value } : ing
+                      )
                     )
                   }
                 />
@@ -209,9 +213,6 @@ const WriteRecipe = () => {
           </div>
           <div className="recipe-step-header">
             <div className="writerecipe-title2">조리방법</div>
-            <button className="step-add-button" type="button" onClick={addStep}>
-              ➕ 단계 추가
-            </button>
           </div>
           <div className="recipe-step-container">
             {steps.map((step, index) => (
@@ -224,11 +225,15 @@ const WriteRecipe = () => {
                 />
                 <div
                   className="image-container"
-                  onClick={() => stepFileInputRefs.current[index].click()}
+                  onClick={() => stepFileInputRefs.current[index]?.click()}
                 >
                   <img
-                    src={step.image || init_image}
-                    alt="조리 단계 사진"
+                    src={
+                      step.imageFile
+                        ? URL.createObjectURL(step.imageFile)
+                        : init_image
+                    }
+                    alt={`조리 단계 ${index + 1} 사진`}
                     className="image-preview"
                   />
                 </div>
@@ -238,13 +243,7 @@ const WriteRecipe = () => {
                   placeholder="조리방법"
                   value={step.description}
                   onChange={(e) =>
-                    handleChange(
-                      index,
-                      "description",
-                      e.target.value,
-                      steps,
-                      setSteps
-                    )
+                    handleChange(index, "description", e.target.value)
                   }
                 />
               </div>
