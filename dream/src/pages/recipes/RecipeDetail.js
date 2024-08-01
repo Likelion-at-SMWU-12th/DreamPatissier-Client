@@ -55,7 +55,9 @@ const RecipeDetail = () => {
       <div className="header-container">
         <div className="left-content">
           <div className="show_title">{recipe.title}</div>
-          <div className="show_tag">{recipe.tags.join(", ")}</div>
+          <div className="show_tag">
+            {Array.isArray(recipe.tags) ? recipe.tags.join(", ") : ""}
+          </div>
         </div>
         <div className="right-content">
           {isAuthor ? (
@@ -78,14 +80,18 @@ const RecipeDetail = () => {
           <div className="cate_show">재료</div>
           <div className="li_show">
             <ul>
-              {recipe.ingredients.map((ingredient, index) => (
-                <li key={index} className="ingredient-item">
-                  <span className="ingredient-name">{ingredient.item}</span>
-                  <span className="ingredient-quantity">
-                    {ingredient.quantity}
-                  </span>
-                </li>
-              ))}
+              {Array.isArray(recipe.ingredients) ? (
+                recipe.ingredients.map((ingredient, index) => (
+                  <li key={index} className="ingredient-item">
+                    <span className="ingredient-name">{ingredient.item}</span>
+                    <span className="ingredient-quantity">
+                      {ingredient.quantity}
+                    </span>
+                  </li>
+                ))
+              ) : (
+                <li>재료 정보가 없습니다.</li>
+              )}
             </ul>
           </div>
         </div>
@@ -94,17 +100,17 @@ const RecipeDetail = () => {
         <div className="section-right">
           <div>
             <div className="cate_show">
-              <img className="time_img" src={timerIcon} />
+              <img className="time_img" src={timerIcon} alt="조리시간 아이콘" />
               조리시간
             </div>
             <div className="time_show">{recipe.cookingTime}</div>
           </div>
           <div>
             <div className="cate_show">
-              <img className="tool_img" src={toolIcon} />
+              <img className="tool_img" src={toolIcon} alt="조리도구 아이콘" />
               조리도구
             </div>
-            <div className="equi_show">{recipe.equipment.join(", ")}</div>
+            <div className="equi_show">{recipe.equipment}</div>
           </div>
         </div>
       </div>
@@ -112,16 +118,20 @@ const RecipeDetail = () => {
       {/* 조리 단계 */}
       <div className="steps-container">
         <h2>Steps</h2>
-        {recipe.steps.map((step, index) => (
-          <div key={index} className="step">
-            <img
-              src={step.image || init_image}
-              alt={`Step ${index + 1}`}
-              className="step-image"
-            />
-            <p>{step.description}</p>
-          </div>
-        ))}
+        {Array.isArray(recipe.steps) ? (
+          recipe.steps.map((step, index) => (
+            <div key={index} className="step">
+              <img
+                src={step.image || init_image}
+                alt={`Step ${index + 1}`}
+                className="step-image"
+              />
+              <p>{step.description}</p>
+            </div>
+          ))
+        ) : (
+          <p>조리 단계 정보가 없습니다.</p>
+        )}
       </div>
     </div>
   );
