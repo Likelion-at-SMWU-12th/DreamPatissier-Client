@@ -40,6 +40,16 @@ const RecipeDetail = () => {
 
   if (!recipe) return <div>Loading...</div>;
 
+  // 조리 단계 데이터를 배열로 변환
+  const steps = [];
+  for (let i = 1; i <= 10; i++) {
+    const image = recipe[`step${i}_image`];
+    const description = recipe[`step${i}_description`];
+    if (image || description) {
+      steps.push({ image, description });
+    }
+  }
+
   return (
     <div className="recipe-detail-container">
       {/* 사진 */}
@@ -55,9 +65,7 @@ const RecipeDetail = () => {
       <div className="header-container">
         <div className="left-content">
           <div className="show_title">{recipe.title}</div>
-          <div className="show_tag">
-            {Array.isArray(recipe.tags) ? recipe.tags.join(", ") : ""}
-          </div>
+          <div className="show_tag">{recipe.tags}</div>
         </div>
         <div className="right-content">
           {isAuthor ? (
@@ -118,8 +126,8 @@ const RecipeDetail = () => {
       {/* 조리 단계 */}
       <div className="steps-container">
         <h2>Steps</h2>
-        {Array.isArray(recipe.steps) ? (
-          recipe.steps.map((step, index) => (
+        {steps.length > 0 ? (
+          steps.map((step, index) => (
             <div key={index} className="step">
               <img
                 src={step.image || init_image}
