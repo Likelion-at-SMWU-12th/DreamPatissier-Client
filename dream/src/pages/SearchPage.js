@@ -12,7 +12,10 @@ const SearchPage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const encodedTags = encodeURIComponent(tags);
+    const encodedTags = tags
+      .split(",")
+      .map((tag) => encodeURIComponent(tag.trim()))
+      .join(",");
 
     axios
       .get(`http://127.0.0.1:8000/bakery/search/${encodedTags}/`, {
@@ -23,6 +26,8 @@ const SearchPage = () => {
       .then((response) => {
         setProducts(response.data);
         setStatus("success");
+        console.log(response);
+        console.log("Products Data:", response.data);
       })
       .catch((error) => {
         console.error("Failed to fetch products", error);
@@ -64,9 +69,9 @@ const SearchPage = () => {
         <StyledLink to={`/bakery/product/${product.id}`} key={product.id}>
           <Product
             key={product.id}
-            imgSrc={product.img_src} // imgSrc -> img_src
-            tags={product.tags}
-            name={product.name} // title -> name
+            imgSrc={product.img_src}
+            tags={product.tags} // JSON 문자열 형태로 넘어옴
+            name={product.name}
             price={product.price}
           />
         </StyledLink>

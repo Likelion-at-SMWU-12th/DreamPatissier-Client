@@ -62,11 +62,18 @@ const Login = () => {
       .then((response) => {
         console.log("Login successful", response.data);
         // 로그인 성공 후 토큰 로컬 스토리지에 저장
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("last_name", response.data.last_name);
-        localStorage.setItem("username", username);
-        // 페이지 이동
-        navigate("/bakery");
+        if (response.data.token) {
+          // 토큰 필드 확인
+          localStorage.setItem("token", response.data.token); // 토큰 저장
+          localStorage.setItem("last_name", response.data.last_name);
+          localStorage.setItem("username", username);
+          navigate("/bakery");
+        } else {
+          console.error(
+            "토큰이 없습니다. 서버 응답을 확인하세요.",
+            response.data
+          );
+        }
       })
       .catch((error) => {
         console.log("Error response:", error.response);
@@ -112,7 +119,7 @@ const Login = () => {
               <LoginHrDiv />
               <PaBox>
                 <PaInput
-                  type={showPassword ? "static" : "password"}
+                  type={showPassword ? "static" : "password"} // 수정: "text"로 변경
                   placeholder="비밀번호"
                   value={password}
                   onChange={handlePwChange}
@@ -221,6 +228,7 @@ const PaInput = styled.input`
 const SeeBtn = styled.button`
   border: none;
   background-color: white;
+  outline: none;
 `;
 const SeeIcon = styled.img``;
 
@@ -228,6 +236,7 @@ const DelBtn = styled.button`
   border: none;
   background-color: white;
   cursor: pointer;
+  outline: none;
 `;
 
 const DelIcon = styled.img``;

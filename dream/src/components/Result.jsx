@@ -5,29 +5,27 @@ import axios from "axios";
 import YellowBtn from "./YellowBtn";
 import LogoIcon from "../assets/logoIcon.svg";
 
-const Result = ({ resultsData }) => {
+const Result = () => {
   const { resultId } = useParams();
   const navigate = useNavigate();
-  const result = resultsData.find((r) => r.id.toString() === resultId);
+  const [result, setResult] = useState(null);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
 
   useEffect(() => {
-    if (result && result.recommend) {
+    if (resultId) {
       axios
-        .get("/product.json")
+        .get(`/test/result/${resultId}`)
         .then((response) => {
-          const recommended = response.data.filter((product) =>
-            result.recommend.includes(product.id)
-          );
+          setResult(response.data);
           setRecommendedProducts(
-            recommended.sort(() => 0.5 - Math.random()).slice(0, 2)
+            response.data.breads.sort(() => 0.5 - Math.random()).slice(0, 2)
           );
         })
         .catch((error) => {
-          console.error("데이터 가져오기 실패~!!! 왜?? :", error);
+          console.error("결과를 가져오는 중 오류 발생:", error);
         });
     }
-  }, [result]);
+  }, [resultId]);
 
   if (!result) {
     return <div>결과를 찾을 수 없습니다.</div>;
@@ -39,7 +37,7 @@ const Result = ({ resultsData }) => {
         <Styledh1>{result.title}</Styledh1>
       </TitleBox>
       <TypeImgBox>
-        <TypeImg src={result.img} alt="result" />
+        <TypeImg src={result.image} alt="result" />
       </TypeImgBox>
       <TypeTextBox>
         <Text>
@@ -56,16 +54,21 @@ const Result = ({ resultsData }) => {
         <BngImg src={LogoIcon} alt="logo" />
       </RecommendTitle>
       <TypeProductWrap>
-        {recommendedProducts.map((item, index) => (
+        {recommendedProducts.map((item) => (
           <StyledLink to={`/bakery/product/${item.id}`} key={item.id}>
             <ProductBox>
-              <ProductImg src={item.imgSrc} alt={item.title} />
+              <ProductImg src={item.img_src} alt={item.name} />
               <ProductText>
-                <Titles>{item.title}</Titles>
+                <Titles>{item.name}</Titles>
                 <Keywords>
-                  {item.tags.map((tag, idx) => (
-                    <Tag key={idx}>{tag}</Tag>
-                  ))}
+                  {item.tags.split(",").map(
+                    (
+                      tag,
+                      idx // item.tags를 split으로 변환
+                    ) => (
+                      <Tag key={idx}>{tag.trim()}</Tag> // 각 태그 앞뒤의 공백 제거
+                    )
+                  )}
                 </Keywords>
               </ProductText>
             </ProductBox>
