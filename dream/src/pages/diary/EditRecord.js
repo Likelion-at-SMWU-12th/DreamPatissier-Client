@@ -6,42 +6,40 @@ import "../../styles/RecordDetail.css";
 import Picture from "../../assets/picture_button.png";
 import axios from "axios";
 
-const ImageUploadComponent = ({ images, onAddImage, onRemoveImage }) => {
-  return (
-    <div className="image-upload-container">
-      <input
-        type="file"
-        accept="image/*"
-        id="file-input"
-        onChange={(e) => {
-          if (e.target.files.length) {
-            onAddImage(e.target.files[0]); // Use the File object directly
-          }
-        }}
-        style={{ display: "none" }}
-      />
-      <div className="image-upload-row">
-        <label htmlFor="file-input">
-          <img src={Picture} alt="Upload" className="upload-button" />
-        </label>
-        <div className="image-preview-scroll">
-          {images.map((file, index) => (
-            <div key={index} className="image-preview">
-              <img src={URL.createObjectURL(file)} alt={`preview-${index}`} />
-              <button
-                onClick={() => onRemoveImage(index)}
-                aria-label="Remove image"
-                className="remove-button"
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
+const ImageUploadComponent = ({ images, onAddImage, onRemoveImage }) => (
+  <div className="image-upload-container">
+    <input
+      type="file"
+      accept="image/*"
+      id="file-input"
+      onChange={(e) => {
+        if (e.target.files.length) {
+          onAddImage(e.target.files[0]);
+        }
+      }}
+      style={{ display: "none" }}
+    />
+    <div className="image-upload-row">
+      <label htmlFor="file-input">
+        <img src={Picture} alt="Upload" className="upload-button" />
+      </label>
+      <div className="image-preview-scroll">
+        {images.map((image, index) => (
+          <div key={index} className="image-preview">
+            <img src={URL.createObjectURL(image)} alt={`preview-${index}`} />
+            <button
+              onClick={() => onRemoveImage(index)}
+              aria-label="Remove image"
+              className="remove-button"
+            >
+              ×
+            </button>
+          </div>
+        ))}
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 const formatDate = (date) => {
   if (!date) return "";
@@ -85,9 +83,9 @@ const EditRecord = () => {
           setBreadName(record.bread_name || "");
           setBreadType((record.tags || []).join(", "));
           setRecordContent(record.review || "");
-          // Assuming the images are URLs or paths to the image files
-          // Convert image URLs to File objects if needed
-          setImages(record.images || []); // Adjust according to actual server response
+
+          // Initialize images array with existing image URLs
+          setImages(Array.isArray(record.img_src) ? record.img_src : []);
         })
         .catch((error) => console.error("Error fetching record:", error));
     }
@@ -137,15 +135,14 @@ const EditRecord = () => {
     );
     formData.append("review", recordContent);
 
-    images.forEach((file) => {
-      formData.append("img_src", file); // Append the actual file object
+    images.forEach((image, index) => {
+      formData.append(`img_src${index + 1}`, image);
     });
 
     axios
       .put(`http://127.0.0.1:8000/diary/${id}/`, formData, {
         headers: {
           Authorization: `Token ${token}`,
-          "Content-Type": "multipart/form-data",
         },
       })
       .then((response) => {
@@ -189,6 +186,25 @@ const EditRecord = () => {
         onAddImage={handleAddImage}
         onRemoveImage={handleRemoveImage}
       />
+      <div className="review-images">
+        {images.map((img_src, index) => (
+          <img
+            key={index}
+            src={
+              typeof img_src === "string"
+                ? img_src
+                : URL.createObjectURL(img_src)
+            }
+            alt={`review-${index}`}
+            className="review-show-image"
+            onLoad={() => {
+              if (typeof img_src !== "string") {
+                URL.revokeObjectURL(img_src);
+              }
+            }}
+          />
+        ))}
+      </div>
       <input
         className="input_data"
         type="text"
