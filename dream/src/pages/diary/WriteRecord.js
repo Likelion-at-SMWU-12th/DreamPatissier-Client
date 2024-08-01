@@ -128,12 +128,10 @@ const RecordDetail = () => {
     );
     formData.append("review", recordContent);
 
-    // 이미지 파일을 인덱스 없이 순서대로 추가
     images.forEach((image) => {
       formData.append("img_src", image);
     });
 
-    // 디버깅용으로 formData 내용 확인
     for (let pair of formData.entries()) {
       console.log(pair[0], pair[1]);
     }

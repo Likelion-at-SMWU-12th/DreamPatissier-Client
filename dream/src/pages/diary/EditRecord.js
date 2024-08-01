@@ -83,8 +83,6 @@ const EditRecord = () => {
           setBreadName(record.bread_name || "");
           setBreadType((record.tags || []).join(", "));
           setRecordContent(record.review || "");
-          // 이미지 처리는 서버에서 이미지를 어떻게 제공하는지에 따라 달라질 수 있음
-          // 서버가 이미지 URL을 제공한다면, 이를 처리하여 이미지 상태를 설정해야 합니다.
         })
         .catch((error) => console.error("Error fetching record:", error));
     }

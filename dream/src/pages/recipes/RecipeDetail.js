@@ -11,11 +11,20 @@ const RecipeDetail = () => {
   const [recipe, setRecipe] = useState(null);
   const [isAuthor, setIsAuthor] = useState(false);
   const { id } = useParams();
+  const [token, setToken] = useState("");
 
   useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
     const fetchRecipe = () => {
       axios
-        .get(`/recipes/${id}`)
+        .get(`http://127.0.0.1:8000/recipes/${id}`, {
+          headers: {
+            Authorization: `Token ${storedToken}`,
+          },
+        })
         .then((response) => {
           setRecipe(response.data);
           // 로그인된 사용자 ID를 적절히 교체해야 합니다.
