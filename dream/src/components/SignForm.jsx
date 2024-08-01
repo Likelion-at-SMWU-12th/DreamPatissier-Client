@@ -15,7 +15,7 @@ const SignForm = () => {
     username: "",
     password: "",
     confirmPassword: "",
-    nickname: "",
+    last_name: "",
     phone: "",
   });
   const [errors, setErrors] = useState({});
@@ -144,8 +144,8 @@ const SignForm = () => {
       isErrorPresent = true;
     }
 
-    if (!formData.nickname) {
-      newErrors.nickname = "ⓘ 이름을 입력해 주세요.";
+    if (!formData.last_name) {
+      newErrors.last_name = "ⓘ 이름을 입력해 주세요.";
       isErrorPresent = true;
     }
 
@@ -181,7 +181,7 @@ const SignForm = () => {
       username: formData.username,
       password: formData.password,
       password2: formData.confirmPassword,
-      last_name: formData.nickname,
+      last_name: formData.last_name,
       phone: formData.phone,
     };
 
@@ -195,7 +195,7 @@ const SignForm = () => {
           })
           .then((loginResponse) => {
             localStorage.setItem("token", loginResponse.data.token);
-            localStorage.setItem("nickname", loginResponse.data.nickname);
+            localStorage.setItem("last_name", loginResponse.data.last_name);
             localStorage.setItem("username", formData.username);
             navigate("/accounts/signup-clear");
           })
@@ -304,19 +304,19 @@ const SignForm = () => {
               )}
             </SignBox>
             <SignBox>
-              <LabelBox htmlFor="nickname">
+              <LabelBox htmlFor="last_name">
                 이름 <RequiredEnter>* 필수 입력 항목입니다.</RequiredEnter>
               </LabelBox>
               <SignInput
-                id="nickname"
+                id="last_name"
                 placeholder="김사자"
-                value={formData.nickname}
+                value={formData.last_name}
                 onChange={handleChange}
               />
               {/* 인풋 필드 별 에러메세지 */}
 
-              {errors.nickname && (
-                <ErrorMessage>{errors.nickname}</ErrorMessage>
+              {errors.last_name && (
+                <ErrorMessage>{errors.last_name}</ErrorMessage>
               )}
             </SignBox>
             <SignBox>
