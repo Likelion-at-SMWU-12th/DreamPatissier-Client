@@ -7,6 +7,7 @@ import deleteIcon from "../assets/delete-icon.png";
 import savedIcon from "../assets/saved-icon.png";
 import unsavedIcon from "../assets/unsaved-icon.png";
 import altIcon from "../assets/alt.png";
+import toolIcon from "../assets/tool2.png";
 
 // 에러 핸들링 함수
 const handleError = (error) => {
@@ -42,54 +43,57 @@ const RecipeItem = ({
   onToggleSave,
   isSaved,
   onDelete,
+  onDetailRecipe,
+  onEditRecipe,
 }) => {
   const isAuthor = recipe.author === currentUser;
-  const navigate = useNavigate();
-
-  const handleEditRecipe = (e) => {
-    e.stopPropagation();
-    navigate(`/recipes/edit/${recipe.id}`);
-  };
-
-  const handleDetailRecipe = () => {
-    navigate(`/recipes/${recipe.id}`);
-  };
-
-  const handleDeleteRecipe = (e) => {
-    e.stopPropagation();
-    onDelete(recipe.id);
-  };
-
-  const handleToggleSave = (e) => {
-    e.stopPropagation();
-    onToggleSave(recipe.id);
-  };
 
   return (
-    <div className="recipe-item" onClick={handleDetailRecipe}>
+    <div className="recipe-item" onClick={() => onDetailRecipe(recipe.id)}>
       <img
-        src={recipe.represent_img}
+        src={recipe.image || altIcon}
         alt={recipe.title}
         className="recipe-image"
       />
       <div className="recipe-header">
         <h3 className="recipe-title">{recipe.title}</h3>
-        <p className="recipe-equipment">사용 조리기구: {recipe.equipment}</p>
+        <div className="recipe-container">
+          <img src={toolIcon} alt="수정하기" className="tool-icon" />
+          <p className="recipe-equipment">{recipe.equipment}</p>
+        </div>
       </div>
       <div className="recipe-footer">
-        <p className="recipe-tags">태그: {recipe.tags}</p>
+        <p className="recipe-tags">{recipe.tags}</p>
         <div className="recipe-buttons">
           {isAuthor ? (
             <>
-              <button className="edit-btn" onClick={handleEditRecipe}>
+              <button
+                className="edit-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEditRecipe(recipe.id);
+                }}
+              >
                 <img src={editIcon} alt="수정하기" />
               </button>
-              <button className="delete-btn" onClick={handleDeleteRecipe}>
+              <button
+                className="delete-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(recipe.id);
+                }}
+              >
                 <img src={deleteIcon} alt="삭제하기" />
               </button>
             </>
           ) : (
-            <button className="save-btn" onClick={handleToggleSave}>
+            <button
+              className="save-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleSave(recipe.id);
+              }}
+            >
               <img
                 src={isSaved ? savedIcon : unsavedIcon}
                 alt={isSaved ? "저장됨" : "저장되지 않음"}
@@ -102,7 +106,7 @@ const RecipeItem = ({
   );
 };
 
-// 레시피 목록 컴포넌트
+// 레시피 목록 및 레시피 항목을 포함하는 컴포넌트
 const Recipes = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [savedRecipes, setSavedRecipes] = useState([]);
@@ -116,13 +120,11 @@ const Recipes = () => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken || "");
 
-    // 로컬 저장소에서 저장된 레시피 ID 목록을 가져옴
     const loadSavedRecipes = () => {
       const saved = JSON.parse(localStorage.getItem("savedRecipes")) || [];
       setSavedRecipes(saved);
     };
 
-    // 서버에서 레시피를 가져옴
     const fetchRecipes = () => {
       if (!storedToken) return;
 
@@ -139,10 +141,10 @@ const Recipes = () => {
               setRecipes(
                 data.map((recipe) => ({
                   ...recipe,
-                  equipment: Array.isArray(recipe.equipment)
-                    ? recipe.equipment
+                  tags: recipe.tags ? recipe.tags.split(",") : [],
+                  equipment: recipe.equipment
+                    ? recipe.equipment.split(",")
                     : [],
-                  tags: Array.isArray(recipe.tags) ? recipe.tags : [],
                 }))
               );
             } else {
@@ -213,6 +215,14 @@ const Recipes = () => {
     navigate("/recipes/write");
   };
 
+  const handleDetailRecipe = (recipeId) => {
+    navigate(`/recipes/${recipeId}`);
+  };
+
+  const handleEditRecipe = (recipeId) => {
+    navigate(`/recipes/edit/${recipeId}`);
+  };
+
   return (
     <div className="container">
       <div className="search-container">
@@ -227,6 +237,8 @@ const Recipes = () => {
             onToggleSave={handleToggleSave}
             isSaved={savedRecipes.includes(recipe.id)}
             onDelete={handleDeleteRecipe}
+            onDetailRecipe={handleDetailRecipe}
+            onEditRecipe={handleEditRecipe}
           />
         ))
       ) : (

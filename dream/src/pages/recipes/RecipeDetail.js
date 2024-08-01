@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "../../styles/RecipeDetail.css";
 import init_image from "./init_recipe_image.png";
 
 import timerIcon from "../../assets/timer.png";
 import toolIcon from "../../assets/tool.png";
+import savedIcon from "../../assets/saved-icon.png";
+import unsavedIcon from "../../assets/unsaved-icon.png";
+import editIcon from "../../assets/edit-icon.png";
+import deleteIcon from "../../assets/delete-icon.png";
 
 const RecipeDetail = () => {
   const [recipe, setRecipe] = useState(null);
   const [isAuthor, setIsAuthor] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const { id } = useParams();
+  const navigate = useNavigate();
   const [token, setToken] = useState("");
 
   useEffect(() => {
@@ -27,8 +33,8 @@ const RecipeDetail = () => {
         })
         .then((response) => {
           setRecipe(response.data);
-          // 로그인된 사용자 ID를 적절히 교체해야 합니다.
           setIsAuthor(response.data.authorId === /* 로그인된 사용자 ID */ 1);
+          setIsSaved(response.data.isSaved); // Assuming `isSaved` is returned from API
         })
         .catch((error) => {
           console.error("레시피 불러오기에 실패했습니다:", error);
@@ -38,14 +44,66 @@ const RecipeDetail = () => {
     fetchRecipe();
   }, [id]);
 
+  const onEditRecipe = (recipeId) => {
+    navigate(`/edit/recipe/${recipeId}`);
+  };
+
+  const onDelete = (recipeId) => {
+    if (window.confirm("이 레시피를 정말 삭제하시겠습니까?")) {
+      axios
+        .delete(`http://127.0.0.1:8000/recipes/${recipeId}`, {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        })
+        .then(() => {
+          alert("레시피가 삭제되었습니다.");
+          navigate("/"); // 홈 페이지로 리다이렉트
+        })
+        .catch((error) => {
+          console.error("레시피 삭제에 실패했습니다:", error);
+          alert("레시피 삭제에 실패했습니다.");
+        });
+    }
+  };
+
+  const onToggleSave = (recipeId) => {
+    axios
+      .post(
+        `http://127.0.0.1:8000/recipes/${recipeId}/toggle-save`,
+        {},
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        setIsSaved(response.data.isSaved);
+      })
+      .catch((error) => {
+        console.error("레시피 저장 상태 변경에 실패했습니다:", error);
+      });
+  };
+
   if (!recipe) return <div>Loading...</div>;
+
+  // 조리 단계 데이터를 배열로 변환
+  const steps = [];
+  for (let i = 1; i <= 10; i++) {
+    const image = recipe[`step${i}_image`];
+    const description = recipe[`step${i}_description`];
+    if (image || description) {
+      steps.push({ image, description });
+    }
+  }
 
   return (
     <div className="recipe-detail-container">
       {/* 사진 */}
       <div className="recipe-image-container">
         <img
-          src={recipe.represent_img || init_image}
+          src={recipe.image || init_image}
           alt="대표사진"
           className="recipe-re-image"
         />
@@ -55,16 +113,43 @@ const RecipeDetail = () => {
       <div className="header-container">
         <div className="left-content">
           <div className="show_title">{recipe.title}</div>
-          <div className="show_tag">{recipe.tags.join(", ")}</div>
+          <div className="show_tag">{recipe.tags}</div>
         </div>
         <div className="right-content">
           {isAuthor ? (
             <>
-              <button className="edit-button">수정하기</button>
-              <button className="delete-button">삭제하기</button>
+              <button
+                className="edit-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEditRecipe(recipe.id);
+                }}
+              >
+                <img src={editIcon} alt="수정하기" />
+              </button>
+              <button
+                className="delete-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(recipe.id);
+                }}
+              >
+                <img src={deleteIcon} alt="삭제하기" />
+              </button>
             </>
           ) : (
-            <button className="scrap-button">스크랩</button>
+            <button
+              className="save-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleSave(recipe.id);
+              }}
+            >
+              <img
+                src={isSaved ? savedIcon : unsavedIcon}
+                alt={isSaved ? "저장됨" : "저장되지 않음"}
+              />
+            </button>
           )}
         </div>
       </div>
@@ -78,14 +163,18 @@ const RecipeDetail = () => {
           <div className="cate_show">재료</div>
           <div className="li_show">
             <ul>
-              {recipe.ingredients.map((ingredient, index) => (
-                <li key={index} className="ingredient-item">
-                  <span className="ingredient-name">{ingredient.item}</span>
-                  <span className="ingredient-quantity">
-                    {ingredient.quantity}
-                  </span>
-                </li>
-              ))}
+              {Array.isArray(recipe.ingredients) ? (
+                recipe.ingredients.map((ingredient, index) => (
+                  <li key={index} className="ingredient-item">
+                    <span className="ingredient-name">{ingredient.item}</span>
+                    <span className="ingredient-quantity">
+                      {ingredient.quantity}
+                    </span>
+                  </li>
+                ))
+              ) : (
+                <li>재료 정보가 없습니다.</li>
+              )}
             </ul>
           </div>
         </div>
@@ -94,17 +183,17 @@ const RecipeDetail = () => {
         <div className="section-right">
           <div>
             <div className="cate_show">
-              <img className="time_img" src={timerIcon} />
+              <img className="time_img" src={timerIcon} alt="조리시간 아이콘" />
               조리시간
             </div>
             <div className="time_show">{recipe.cookingTime}</div>
           </div>
           <div>
             <div className="cate_show">
-              <img className="tool_img" src={toolIcon} />
+              <img className="tool_img" src={toolIcon} alt="조리도구 아이콘" />
               조리도구
             </div>
-            <div className="equi_show">{recipe.equipment.join(", ")}</div>
+            <div className="equi_show">{recipe.equipment}</div>
           </div>
         </div>
       </div>
@@ -112,16 +201,20 @@ const RecipeDetail = () => {
       {/* 조리 단계 */}
       <div className="steps-container">
         <h2>Steps</h2>
-        {recipe.steps.map((step, index) => (
-          <div key={index} className="step">
-            <img
-              src={step.image || init_image}
-              alt={`Step ${index + 1}`}
-              className="step-image"
-            />
-            <p>{step.description}</p>
-          </div>
-        ))}
+        {steps.length > 0 ? (
+          steps.map((step, index) => (
+            <div key={index} className="step">
+              <img
+                src={step.image || init_image}
+                alt={`Step ${index + 1}`}
+                className="step-image"
+              />
+              <p>{step.description}</p>
+            </div>
+          ))
+        ) : (
+          <p>조리 단계 정보가 없습니다.</p>
+        )}
       </div>
     </div>
   );
