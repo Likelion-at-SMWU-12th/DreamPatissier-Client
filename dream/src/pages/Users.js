@@ -8,6 +8,7 @@ const Users = () => {
   const navigate = useNavigate();
   const username = localStorage.getItem("username");
   const last_name = localStorage.getItem("last_name");
+  const resultId = localStorage.getItem("result_id"); // 로그인 후 결과 ID를 로컬 스토리지에 저장
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -16,6 +17,7 @@ const Users = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("last_name");
       localStorage.removeItem("username");
+      localStorage.removeItem("result_id"); // 로그아웃 시 result_id 삭제
       navigate("/accounts/login/");
     }
   };
@@ -49,7 +51,7 @@ const Users = () => {
         <Link to="/users/my-recipes" className="option-link">
           My 레시피 &gt;
         </Link>
-        <Link to="/test/result/1" className="option-link">
+        <Link to={`/test/result/${resultId || 1}`} className="option-link">
           빵 유형 테스트 &gt;
         </Link>
         <Link to="/of-use" className="option-link">
