@@ -269,19 +269,21 @@ const Diary = () => {
                         </div>
                         <div className="review-tag">{tagsString}</div>
                         <div className="review-text">{review.review}</div>
-                        <div className="show-">
-                          <img
-                            src={review.img_src1}
-                            className="review-show-image"
-                          />
-                          <img
-                            src={review.img_src2}
-                            className="review-show-image"
-                          />
-                          <img
-                            src={review.img_src3}
-                            className="review-show-image"
-                          />
+                        <div className="show-images">
+                          {[
+                            review.img_src1,
+                            review.img_src2,
+                            review.img_src3,
+                          ].map((src, index) =>
+                            src ? (
+                              <img
+                                key={index}
+                                src={src}
+                                className="review-show-image"
+                                alt={`Review image ${index + 1}`}
+                              />
+                            ) : null
+                          )}
                         </div>
                       </div>
                       {/* 버튼 관련 */}
