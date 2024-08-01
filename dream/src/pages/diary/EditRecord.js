@@ -6,40 +6,42 @@ import "../../styles/RecordDetail.css";
 import Picture from "../../assets/picture_button.png";
 import axios from "axios";
 
-const ImageUploadComponent = ({ images, onAddImage, onRemoveImage }) => (
-  <div className="image-upload-container">
-    <input
-      type="file"
-      accept="image/*"
-      id="file-input"
-      onChange={(e) => {
-        if (e.target.files.length) {
-          onAddImage(URL.createObjectURL(e.target.files[0]));
-        }
-      }}
-      style={{ display: "none" }}
-    />
-    <div className="image-upload-row">
-      <label htmlFor="file-input">
-        <img src={Picture} alt="Upload" className="upload-button" />
-      </label>
-      <div className="image-preview-scroll">
-        {images.map((image, index) => (
-          <div key={index} className="image-preview">
-            <img src={image} alt={`preview-${index}`} />
-            <button
-              onClick={() => onRemoveImage(index)}
-              aria-label="Remove image"
-              className="remove-button"
-            >
-              ×
-            </button>
-          </div>
-        ))}
+const ImageUploadComponent = ({ images, onAddImage, onRemoveImage }) => {
+  return (
+    <div className="image-upload-container">
+      <input
+        type="file"
+        accept="image/*"
+        id="file-input"
+        onChange={(e) => {
+          if (e.target.files.length) {
+            onAddImage(e.target.files[0]); // Use the File object directly
+          }
+        }}
+        style={{ display: "none" }}
+      />
+      <div className="image-upload-row">
+        <label htmlFor="file-input">
+          <img src={Picture} alt="Upload" className="upload-button" />
+        </label>
+        <div className="image-preview-scroll">
+          {images.map((file, index) => (
+            <div key={index} className="image-preview">
+              <img src={URL.createObjectURL(file)} alt={`preview-${index}`} />
+              <button
+                onClick={() => onRemoveImage(index)}
+                aria-label="Remove image"
+                className="remove-button"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const formatDate = (date) => {
   if (!date) return "";
@@ -83,6 +85,9 @@ const EditRecord = () => {
           setBreadName(record.bread_name || "");
           setBreadType((record.tags || []).join(", "));
           setRecordContent(record.review || "");
+          // Assuming the images are URLs or paths to the image files
+          // Convert image URLs to File objects if needed
+          setImages(record.images || []); // Adjust according to actual server response
         })
         .catch((error) => console.error("Error fetching record:", error));
     }
@@ -108,9 +113,9 @@ const EditRecord = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleAddImage = (newImage) => {
+  const handleAddImage = (file) => {
     if (images.length < 3) {
-      setImages([...images, newImage]);
+      setImages([...images, file]);
     } else {
       alert("최대 3장까지만 등록할 수 있습니다.");
     }
@@ -122,23 +127,29 @@ const EditRecord = () => {
 
   const handleSave = () => {
     const recordDateString = recordDate.toISOString().split("T")[0];
-    const record = {
-      date: recordDateString,
-      bread_name: breadName,
-      bakery_name: storeName,
-      tags: breadType.split(",").map((tag) => tag.trim()),
-      review: recordContent,
-    };
+    const formData = new FormData();
+    formData.append("date", recordDateString);
+    formData.append("bread_name", breadName);
+    formData.append("bakery_name", storeName);
+    formData.append(
+      "tags",
+      JSON.stringify(breadType.split(",").map((tag) => tag.trim()))
+    );
+    formData.append("review", recordContent);
+
+    images.forEach((file) => {
+      formData.append("img_src", file); // Append the actual file object
+    });
 
     axios
-      .put(`http://127.0.0.1:8000/diary/${id}/`, record, {
+      .put(`http://127.0.0.1:8000/diary/${id}/`, formData, {
         headers: {
           Authorization: `Token ${token}`,
+          "Content-Type": "multipart/form-data",
         },
       })
       .then((response) => {
         if (response.status === 200) {
-          console.log("저장할 데이터:", record);
           navigate("/diary");
         } else {
           console.error("Failed to save record. Status code:", response.status);
