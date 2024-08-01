@@ -52,6 +52,9 @@ const Detail = () => {
 
   // Ensure reviews is an array
   const reviews = product.reviews || [];
+  const tagsArray = product.tags
+    ? product.tags.split(",").map((tag) => tag.trim())
+    : []; // 문자열을 배열로 변환
 
   return (
     <>
@@ -65,9 +68,14 @@ const Detail = () => {
       <Section>
         <SectionTitle>웰니스정보</SectionTitle>
         <Tags>
-          {product.tags.map((tag, index) => (
-            <Tag key={index}>{tag}</Tag>
-          ))}
+          {tagsArray.map(
+            (
+              tag,
+              index // tagsArray 사용
+            ) => (
+              <Tag key={index}>{tag}</Tag>
+            )
+          )}
         </Tags>
         <WellnessInfo>{product.description1 || "정보 없음"}</WellnessInfo>
       </Section>

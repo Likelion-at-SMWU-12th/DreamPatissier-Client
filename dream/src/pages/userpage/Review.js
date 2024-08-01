@@ -27,7 +27,7 @@ const Review = () => {
   }, []);
 
   const handleDelete = (id) => {
-    const token = localStorage.getItem("token"); // token을 함수 내에서 다시 가져옴
+    const token = localStorage.getItem("token");
     console.log("삭제하려는 리뷰 ID:", id);
     const confirmed = window.confirm("정말로 이 리뷰를 삭제하시겠습니까?");
 
@@ -74,7 +74,10 @@ const Review = () => {
                 <div className="product-info2">
                   <h3 className="product-name">{review.product.name}</h3>
                   <div className="product-tags2">
-                    {review.product.tags.join(" ")}
+                    {Array.isArray(review.product.tags)
+                      ? review.product.tags.join(", ") // Join tags with comma
+                      : review.product.tags}{" "}
+                    {/* If already a string, display directly */}
                   </div>
                 </div>
                 <button

@@ -12,7 +12,10 @@ const SearchPage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const encodedTags = encodeURIComponent(tags);
+    const encodedTags = tags
+      .split(",")
+      .map((tag) => encodeURIComponent(tag.trim()))
+      .join(",");
 
     axios
       .get(`http://127.0.0.1:8000/bakery/search/${encodedTags}/`, {
