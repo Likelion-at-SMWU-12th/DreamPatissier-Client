@@ -269,11 +269,24 @@ const Diary = () => {
                         </div>
                         <div className="review-tag">{tagsString}</div>
                         <div className="review-text">{review.review}</div>
-                        <img
-                          src={review.img_src}
-                          className="review-show-image"
-                        />
+                        <div className="show-images">
+                          {[
+                            review.img_src1,
+                            review.img_src2,
+                            review.img_src3,
+                          ].map((src, index) =>
+                            src ? (
+                              <img
+                                key={index}
+                                src={src}
+                                className="review-show-image"
+                                alt={`Review image ${index + 1}`}
+                              />
+                            ) : null
+                          )}
+                        </div>
                       </div>
+                      {/* 버튼 관련 */}
                       <div className="button-div">
                         <button
                           onClick={() => handleEditReview(review.id)}

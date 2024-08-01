@@ -98,13 +98,9 @@ const RecordDetail = () => {
 
   const handleAddImage = (newImage) => {
     if (images.length < 3) {
-      setImages((prevImages) => {
-        const updatedImages = [...prevImages, newImage];
-        console.log("이미지 추가됨:", newImage);
-        return updatedImages;
-      });
+      setImages((prevImages) => [...prevImages, newImage]);
     } else {
-      alert("최대 3장까지만 등록할 수 있습니다.");
+      alert("You can only upload up to 3 images.");
     }
   };
 
@@ -117,9 +113,8 @@ const RecordDetail = () => {
   };
 
   const handleSave = () => {
-    const recordDateString = recordDate.toISOString().split("T")[0];
     const formData = new FormData();
-    formData.append("date", recordDateString);
+    formData.append("date", recordDate.toISOString().split("T")[0]);
     formData.append("bread_name", breadName);
     formData.append("bakery_name", storeName);
     formData.append(
@@ -128,15 +123,9 @@ const RecordDetail = () => {
     );
     formData.append("review", recordContent);
 
-    // 이미지 파일을 인덱스 없이 순서대로 추가
-    images.forEach((image) => {
-      formData.append("img_src", image);
+    images.forEach((image, index) => {
+      formData.append(`img_src${index + 1}`, image);
     });
-
-    // 디버깅용으로 formData 내용 확인
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
 
     axios
       .post("http://127.0.0.1:8000/diary/", formData, {
@@ -146,19 +135,18 @@ const RecordDetail = () => {
       })
       .then((response) => {
         if (response.status === 201) {
-          console.log("기록이 성공적으로 저장되었습니다!");
-          console.log("서버 응답 데이터:", response.data);
+          console.log("Record saved successfully!");
           navigate("/diary");
         } else {
           console.error(
-            "기록 저장에 실패했습니다. 상태 코드:",
+            "Failed to save the record. Status code:",
             response.status
           );
-          console.error("오류 세부 사항:", response.data);
+          console.error("Error details:", response.data);
         }
       })
       .catch((error) => {
-        console.error("기록 저장 중 오류 발생:", error);
+        console.error("Error saving record:", error);
       });
   };
 

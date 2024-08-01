@@ -8,6 +8,22 @@ import savedIcon from "../assets/saved-icon.png";
 import unsavedIcon from "../assets/unsaved-icon.png";
 import altIcon from "../assets/alt.png";
 
+// 에러 핸들링 함수
+const handleError = (error) => {
+  if (error.response) {
+    console.error(
+      "Error:",
+      error.response.data,
+      "Status:",
+      error.response.status
+    );
+  } else if (error.request) {
+    console.error("Error: No response received");
+  } else {
+    console.error("Error:", error.message);
+  }
+};
+
 // 검색 바 컴포넌트
 const SearchBar = ({ searchTerm, setSearchTerm }) => (
   <input
@@ -49,9 +65,6 @@ const RecipeItem = ({
     onToggleSave(recipe.id);
   };
 
-  const equipmentList = Array.isArray(recipe.equipment) ? recipe.equipment : [];
-  const tagsList = Array.isArray(recipe.tags) ? recipe.tags : [];
-
   return (
     <div className="recipe-item" onClick={handleDetailRecipe}>
       <img
@@ -61,12 +74,10 @@ const RecipeItem = ({
       />
       <div className="recipe-header">
         <h3 className="recipe-title">{recipe.title}</h3>
-        <p className="recipe-equipment">
-          사용 조리기구: {equipmentList.join(", ")}
-        </p>
+        <p className="recipe-equipment">사용 조리기구: {recipe.equipment}</p>
       </div>
       <div className="recipe-footer">
-        <p className="recipe-tags">태그: {tagsList.join(", ")}</p>
+        <p className="recipe-tags">태그: {recipe.tags}</p>
         <div className="recipe-buttons">
           {isAuthor ? (
             <>
@@ -103,9 +114,7 @@ const Recipes = () => {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      setToken(storedToken);
-    }
+    setToken(storedToken || "");
 
     // 로컬 저장소에서 저장된 레시피 ID 목록을 가져옴
     const loadSavedRecipes = () => {
@@ -149,21 +158,6 @@ const Recipes = () => {
     loadSavedRecipes();
     fetchRecipes();
   }, []);
-
-  const handleError = (error) => {
-    if (error.response) {
-      console.error(
-        "Error:",
-        error.response.data,
-        "Status:",
-        error.response.status
-      );
-    } else if (error.request) {
-      console.error("Error: No response received");
-    } else {
-      console.error("Error:", error.message);
-    }
-  };
 
   const filteredRecipes = recipes.filter(
     (recipe) =>

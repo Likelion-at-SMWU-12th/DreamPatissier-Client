@@ -11,6 +11,7 @@ const mockUser = {
 
 const WriteRecipe = () => {
   const [image, setImage] = useState(representPicture);
+  const [imageFile, setImageFile] = useState(null);
   const [title, setTitle] = useState("");
   const [tags, setTags] = useState([""]);
   const [cookingTime, setCookingTime] = useState("");
@@ -35,7 +36,9 @@ const WriteRecipe = () => {
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setImage(URL.createObjectURL(e.target.files[0]));
+      const file = e.target.files[0];
+      setImageFile(file);
+      setImage(URL.createObjectURL(file));
     }
   };
 
@@ -59,33 +62,52 @@ const WriteRecipe = () => {
 
   const handleStepImageChange = (index, e) => {
     if (e.target.files && e.target.files[0]) {
-      const newImageUrl = URL.createObjectURL(e.target.files[0]);
+      const file = e.target.files[0];
+      const newImageUrl = URL.createObjectURL(file);
       const newSteps = [...steps];
       newSteps[index].image = newImageUrl;
       setSteps(newSteps);
+      stepFileInputRefs.current[index].file = file;
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title || !tags.length || !cookingTime || !equipment.length || !image) {
+    if (
+      !title ||
+      !tags.length ||
+      !cookingTime ||
+      !equipment.length ||
+      !imageFile
+    ) {
       alert("모든 필드를 작성해 주세요.");
       return;
     }
 
-    const recipeData = {
-      author: user.id,
-      represent_img: image,
-      title,
-      tags,
-      cookingTime,
-      equipment,
-      ingredients,
-      steps,
-    };
+    const formData = new FormData();
+    formData.append("author", user.id);
+    formData.append("image", imageFile);
+    formData.append("title", title);
+    formData.append("tags", tags);
+    formData.append("cookingTime", cookingTime);
+    formData.append("equipment", equipment);
+    formData.append("ingredients", JSON.stringify(ingredients));
+
+    // Adding step images and descriptions
+    steps.forEach((step, index) => {
+      if (stepFileInputRefs.current[index]?.file) {
+        formData.append(
+          `step${index + 1}_image`,
+          stepFileInputRefs.current[index].file
+        );
+      }
+      formData.append(`step${index + 1}_description`, step.description);
+    });
 
     try {
-      await axios.post("http://127.0.0.1:8000/recipes/", recipeData);
+      await axios.post("http://127.0.0.1:8000/recipes", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       alert("레시피가 등록되었습니다!");
       navigate("/recipes");
     } catch (error) {
