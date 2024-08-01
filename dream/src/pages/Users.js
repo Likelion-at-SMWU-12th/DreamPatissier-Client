@@ -22,6 +22,15 @@ const Users = () => {
     }
   };
 
+  const handleTestStart = () => {
+    const startTest = window.confirm(
+      "빵 유형 테스트를 해주세요\n\n'하러가기'를 클릭하면 시작합니다."
+    );
+    if (startTest) {
+      navigate("/test/questions/1");
+    }
+  };
+
   return (
     <div className="user-page">
       <div className="profile-section">
@@ -51,9 +60,18 @@ const Users = () => {
         <Link to="/users/my-recipes" className="option-link">
           My 레시피 &gt;
         </Link>
-        <Link to={`/test/result/${resultId || 1}`} className="option-link">
-          빵 유형 테스트 &gt;
-        </Link>
+
+        {/* 결과 ID가 존재할 경우 링크를 제공, 그렇지 않으면 테스트 시작을 요청 */}
+        {resultId ? (
+          <Link to={`/test/result/${resultId}`} className="option-link">
+            빵 유형 테스트 결과 보기 &gt;
+          </Link>
+        ) : (
+          <p className="option-link" onClick={handleTestStart}>
+            빵 유형 테스트를 시작하세요 &gt;
+          </p>
+        )}
+
         <Link to="/of-use" className="option-link">
           서비스 이용약관 &gt;
         </Link>
