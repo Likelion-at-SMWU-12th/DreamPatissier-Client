@@ -56,7 +56,7 @@ const Detail = () => {
   return (
     <>
       <ImgBox>
-        <img src={product.img_src} alt={product.name} />
+        <BreadImg src={product.img_src} alt={product.name} />
       </ImgBox>
       <TitleInfo>
         <Title>{product.name}</Title>
@@ -146,6 +146,12 @@ const ShopText = styled.div`
 `;
 
 // 이미지 섹션
+
+const BreadImg = styled.img`
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+`;
+
 const ImgBox = styled.div`
   display: flex;
   justify-content: center;
