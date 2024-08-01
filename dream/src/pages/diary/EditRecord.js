@@ -6,7 +6,14 @@ import "../../styles/RecordDetail.css";
 import Picture from "../../assets/picture_button.png";
 import axios from "axios";
 
-const ImageUploadComponent = ({ images, onAddImage, onRemoveImage }) => (
+// 이미지 업로드 및 미리보기 컴포넌트
+const ImageComponent = ({
+  images,
+  onAddImage,
+  onRemoveImage,
+  serverImages,
+  onDeleteServerImage,
+}) => (
   <div className="image-upload-container">
     <input
       type="file"
@@ -24,18 +31,43 @@ const ImageUploadComponent = ({ images, onAddImage, onRemoveImage }) => (
         <img src={Picture} alt="Upload" className="upload-button" />
       </label>
       <div className="image-preview-scroll">
-        {images.map((image, index) => (
-          <div key={index} className="image-preview">
-            <img src={URL.createObjectURL(image)} alt={`preview-${index}`} />
-            <button
-              onClick={() => onRemoveImage(index)}
-              aria-label="Remove image"
-              className="remove-button"
-            >
-              ×
-            </button>
+        {/* 서버 이미지 표시 */}
+        {serverImages.length > 0 && (
+          <div className="server-images">
+            {serverImages.map((image, index) => (
+              <div key={index} className="image-preview">
+                <img src={image.url} alt={`server-preview-${index}`} />
+                <button
+                  onClick={() => onDeleteServerImage(index)}
+                  aria-label="Remove image"
+                  className="remove-button"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
+        {/* 사용자 업로드 이미지 표시 */}
+        {images.length > 0 && (
+          <div className="user-images">
+            {images.map((image, index) => (
+              <div key={index} className="image-preview">
+                <img
+                  src={URL.createObjectURL(image)}
+                  alt={`preview-${index}`}
+                />
+                <button
+                  onClick={() => onRemoveImage(index)}
+                  aria-label="Remove image"
+                  className="remove-button"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   </div>
@@ -60,6 +92,8 @@ const EditRecord = () => {
   const navigate = useNavigate();
   const [recordDate, setRecordDate] = useState(new Date());
   const [images, setImages] = useState([]);
+  const [serverImages, setServerImages] = useState([]);
+  const [deletedImageFields, setDeletedImageFields] = useState([]);
   const [storeName, setStoreName] = useState("");
   const [breadName, setBreadName] = useState("");
   const [breadType, setBreadType] = useState("");
@@ -72,9 +106,7 @@ const EditRecord = () => {
     if (id) {
       axios
         .get(`http://127.0.0.1:8000/diary/${id}/`, {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
+          headers: { Authorization: `Token ${token}` },
         })
         .then((response) => {
           const record = response.data;
@@ -84,17 +116,21 @@ const EditRecord = () => {
           setBreadType((record.tags || []).join(", "));
           setRecordContent(record.review || "");
 
-          // Initialize images array with existing image URLs
-          setImages(Array.isArray(record.img_src) ? record.img_src : []);
+          // 서버 이미지 URL 초기화
+          setServerImages(
+            [
+              { url: record.img_src1, field: "img_src1" },
+              { url: record.img_src2, field: "img_src2" },
+              { url: record.img_src3, field: "img_src3" },
+            ].filter((img) => img.url)
+          );
         })
         .catch((error) => console.error("Error fetching record:", error));
     }
   }, [id, token]);
 
   const handleDateChange = (date) => {
-    if (date) {
-      setRecordDate(date);
-    }
+    if (date) setRecordDate(date);
     setIsDatePickerOpen(false);
   };
 
@@ -123,6 +159,12 @@ const EditRecord = () => {
     setImages(images.filter((_, i) => i !== index));
   };
 
+  const handleDeleteServerImage = (index) => {
+    const field = serverImages[index].field;
+    setDeletedImageFields([...deletedImageFields, field]);
+    setServerImages(serverImages.filter((_, i) => i !== index));
+  };
+
   const handleSave = () => {
     const recordDateString = recordDate.toISOString().split("T")[0];
     const formData = new FormData();
@@ -135,15 +177,19 @@ const EditRecord = () => {
     );
     formData.append("review", recordContent);
 
+    // 서버 이미지 상태에서 제거된 이미지를 서버에 반영
+    deletedImageFields.forEach((field) => {
+      formData.append(field, "");
+    });
+
+    // 새로운 이미지 추가
     images.forEach((image, index) => {
       formData.append(`img_src${index + 1}`, image);
     });
 
     axios
       .put(`http://127.0.0.1:8000/diary/${id}/`, formData, {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
+        headers: { Authorization: `Token ${token}` },
       })
       .then((response) => {
         if (response.status === 200) {
@@ -181,30 +227,14 @@ const EditRecord = () => {
         </div>
       </label>
       <hr />
-      <ImageUploadComponent
+      {/* 이미지 업로드 및 미리보기 컴포넌트 */}
+      <ImageComponent
         images={images}
         onAddImage={handleAddImage}
         onRemoveImage={handleRemoveImage}
+        serverImages={serverImages}
+        onDeleteServerImage={handleDeleteServerImage}
       />
-      <div className="review-images">
-        {images.map((img_src, index) => (
-          <img
-            key={index}
-            src={
-              typeof img_src === "string"
-                ? img_src
-                : URL.createObjectURL(img_src)
-            }
-            alt={`review-${index}`}
-            className="review-show-image"
-            onLoad={() => {
-              if (typeof img_src !== "string") {
-                URL.revokeObjectURL(img_src);
-              }
-            }}
-          />
-        ))}
-      </div>
       <input
         className="input_data"
         type="text"

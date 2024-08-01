@@ -49,17 +49,15 @@ label {
   padding: 10px;
 }
 
-/* 이미지 업로드 버튼과 이미지 프리뷰를 포함하는 행 스타일 */
 .image-upload-row {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: flex-start;
 }
 
 /* 업로드 버튼 스타일 */
 .upload-button {
   margin-top: 10px !important;
-  margin: 0 10px;
+  margin-left: 14px;
   width: 70px;
   height: 70px;
   cursor: pointer;
@@ -67,13 +65,18 @@ label {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-/* 수평 스크롤이 가능한 이미지 프리뷰 컨테이너 스타일 */
+/* 서버 및 사용자 이미지 컨테이너 스타일 */
 .image-preview-scroll {
   display: flex;
-  gap: 17px;
   overflow-x: auto;
   max-width: 100%;
   white-space: nowrap;
+}
+
+/* 서버 이미지와 사용자 업로드 이미지 컨테이너 스타일 */
+.server-images,
+.user-images {
+  display: flex;
 }
 
 /* 이미지 프리뷰 스타일 */
@@ -83,12 +86,14 @@ label {
 }
 
 .image-preview img {
-  width: 60px;
+  margin-top: 10px !important;
+  width: 60px; /* 이미지 크기 조정 */
   height: 60px;
   object-fit: cover;
   border: 1px solid #ddd;
   border-radius: 5px;
-  padding: 8px;
+  padding: 5px;
+  margin-left: 20px;
 }
 
 /* 제거 버튼 스타일 */
