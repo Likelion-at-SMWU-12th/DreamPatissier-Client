@@ -91,8 +91,8 @@ const EditRecord = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [recordDate, setRecordDate] = useState(new Date());
-  const [images, setImages] = useState([]);
-  const [serverImages, setServerImages] = useState([]);
+  const [images, setImages] = useState([]); // 클라이언트에서 추가한 이미지
+  const [serverImages, setServerImages] = useState([]); // 서버에서 불러온 이미지
   const [deletedImageFields, setDeletedImageFields] = useState([]);
   const [storeName, setStoreName] = useState("");
   const [breadName, setBreadName] = useState("");
@@ -117,13 +117,13 @@ const EditRecord = () => {
           setRecordContent(record.review || "");
 
           // 서버 이미지 URL 초기화
-          setServerImages(
-            [
-              { url: record.img_src1, field: "img_src1" },
-              { url: record.img_src2, field: "img_src2" },
-              { url: record.img_src3, field: "img_src3" },
-            ].filter((img) => img.url)
-          );
+          const initialServerImages = [
+            { url: record.img_src1, field: "img_src1" },
+            { url: record.img_src2, field: "img_src2" },
+            { url: record.img_src3, field: "img_src3" },
+          ].filter((img) => img.url);
+
+          setServerImages(initialServerImages);
         })
         .catch((error) => console.error("Error fetching record:", error));
     }
@@ -148,43 +148,72 @@ const EditRecord = () => {
   }, []);
 
   const handleAddImage = (file) => {
-    if (images.length < 3) {
-      setImages([...images, file]);
+    // 현재 서버 이미지와 클라이언트에서 추가한 이미지의 총합 계산
+    const totalImages = images.length + serverImages.length;
+
+    if (totalImages < 3) {
+      setImages((prevImages) => {
+        const newImages = [...prevImages, file];
+        return newImages;
+      });
     } else {
       alert("최대 3장까지만 등록할 수 있습니다.");
     }
   };
 
   const handleRemoveImage = (index) => {
-    setImages(images.filter((_, i) => i !== index));
+    setImages((prevImages) => {
+      const newImages = prevImages.filter((_, i) => i !== index);
+      return newImages;
+    });
   };
 
   const handleDeleteServerImage = (index) => {
     const field = serverImages[index].field;
-    setDeletedImageFields([...deletedImageFields, field]);
-    setServerImages(serverImages.filter((_, i) => i !== index));
+    setDeletedImageFields((prevFields) => [...prevFields, field]);
+    setServerImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
   const handleSave = () => {
     const recordDateString = recordDate.toISOString().split("T")[0];
     const formData = new FormData();
+
+    // 빈 필드에만 값을 추가
+    if (storeName) formData.append("bakery_name", storeName);
+    if (breadName) formData.append("bread_name", breadName);
+    if (breadType)
+      formData.append(
+        "tags",
+        JSON.stringify(breadType.split(",").map((tag) => tag.trim()))
+      );
+    if (recordContent) formData.append("review", recordContent);
     formData.append("date", recordDateString);
-    formData.append("bread_name", breadName);
-    formData.append("bakery_name", storeName);
-    formData.append(
-      "tags",
-      JSON.stringify(breadType.split(",").map((tag) => tag.trim()))
-    );
-    formData.append("review", recordContent);
 
     // 서버 이미지 상태에서 제거된 이미지를 서버에 반영
     deletedImageFields.forEach((field) => {
       formData.append(field, "");
     });
 
-    // 새로운 이미지 추가
-    images.forEach((image, index) => {
-      formData.append(`img_src${index + 1}`, image);
+    // 현재 서버 이미지 필드를 추적
+    const imageFields = ["img_src1", "img_src2", "img_src3"];
+    const currentServerImages = imageFields.map(
+      (field) => serverImages.find((img) => img.field === field)?.url || ""
+    );
+
+    // 빈 필드를 찾기
+    const emptyImageFields = imageFields.filter(
+      (field, index) => !currentServerImages[index]
+    );
+
+    // 새 이미지를 빈 필드에 추가
+    let imageFieldIndex = 0;
+    images.forEach((image) => {
+      if (imageFieldIndex < emptyImageFields.length) {
+        formData.append(emptyImageFields[imageFieldIndex], image);
+        imageFieldIndex++;
+      } else {
+        console.error("No more empty fields available for new images.");
+      }
     });
 
     axios
