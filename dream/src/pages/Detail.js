@@ -90,7 +90,7 @@ const Detail = () => {
                 {review.satisfaction === "S" ? "만족해요" : "별로예요"}
               </GoodBad>
               <WriterInfo>
-                <Writer>{review.user.username}</Writer>|
+                <Writer>{`${review.user.username.slice(0, 3)}****`}</Writer>{" "}
                 <ReviewDate>
                   {new Date(review.created_at).toLocaleDateString()}
                 </ReviewDate>
