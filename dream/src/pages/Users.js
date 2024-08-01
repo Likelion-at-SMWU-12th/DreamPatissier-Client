@@ -8,6 +8,7 @@ const Users = () => {
   const navigate = useNavigate();
   const username = localStorage.getItem("username");
   const last_name = localStorage.getItem("last_name");
+  const resultId = localStorage.getItem("result_id"); // 로그인 후 결과 ID를 로컬 스토리지에 저장
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -16,7 +17,17 @@ const Users = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("last_name");
       localStorage.removeItem("username");
+      localStorage.removeItem("result_id"); // 로그아웃 시 result_id 삭제
       navigate("/accounts/login/");
+    }
+  };
+
+  const handleTestStart = () => {
+    const startTest = window.confirm(
+      "빵 유형 테스트를 해주세요\n\n'하러가기'를 클릭하면 시작합니다."
+    );
+    if (startTest) {
+      navigate("/test/questions/1");
     }
   };
 
@@ -49,9 +60,18 @@ const Users = () => {
         <Link to="/users/my-recipes" className="option-link">
           My 레시피 &gt;
         </Link>
-        <Link to="/test/result/1" className="option-link">
-          빵 유형 테스트 &gt;
-        </Link>
+
+        {/* 결과 ID가 존재할 경우 링크를 제공, 그렇지 않으면 테스트 시작을 요청 */}
+        {resultId ? (
+          <Link to={`/test/result/${resultId}`} className="option-link">
+            빵 유형 테스트 결과 보기 &gt;
+          </Link>
+        ) : (
+          <p className="option-link" onClick={handleTestStart}>
+            빵 유형 테스트를 시작하세요 &gt;
+          </p>
+        )}
+
         <Link to="/of-use" className="option-link">
           서비스 이용약관 &gt;
         </Link>

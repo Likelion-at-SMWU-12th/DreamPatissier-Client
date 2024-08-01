@@ -16,18 +16,19 @@ const Cart = () => {
   const [anyChecked, setAnyChecked] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
     axios
-      .get("/product.json")
+      .get("http://127.0.0.1:8000/cart-items/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
       .then((response) => {
-        const initialCartItems = response.data.slice(0, 2).map((product) => ({
-          ...product,
-          quantity: 1,
-          selected: false,
-        }));
-        setCartItems(initialCartItems);
+        setCartItems(response.data);
       })
       .catch((error) => {
-        console.error("Failed to fetch products", error);
+        console.error("Failed to fetch cart items", error);
       });
   }, []);
 
@@ -58,8 +59,25 @@ const Cart = () => {
   };
 
   const handleDeleteSelected = () => {
-    setCartItems(cartItems.filter((item) => !item.selected));
-    setSelectAll(false);
+    const selectedItems = cartItems.filter((item) => item.selected);
+    const token = localStorage.getItem("token");
+
+    axios
+      .delete("http://127.0.0.1:8000/cart/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+        data: {
+          items: selectedItems.map((item) => item.id),
+        },
+      })
+      .then(() => {
+        setCartItems(cartItems.filter((item) => !item.selected));
+        setSelectAll(false);
+      })
+      .catch((error) => {
+        console.error("Failed to delete selected items", error);
+      });
   };
 
   return (
@@ -79,61 +97,66 @@ const Cart = () => {
       </CartHeader>
       <HrDiv />
       <CartItems>
-        {cartItems.map((item) => (
-          <React.Fragment key={item.id}>
-            <CartItem>
-              <SelectItem>
-                <StyledCheck
-                  type="checkbox"
-                  checked={item.selected}
-                  onChange={() => handleSelectItem(item.id)}
-                />
-              </SelectItem>
-              <ProductBox>
-                <ProductImgBox>
-                  <ProductImg src={item.imgSrc} alt={item.title} />
-                </ProductImgBox>
-                <ProductDetails>
-                  <ProductText>
-                    <Titles>{item.title}</Titles>
-                    <Keywords>
-                      {item.tags.map((tag, index) => (
-                        <Tag key={index}>{tag}</Tag>
-                      ))}
-                    </Keywords>
-                    <QuantityPriceWrapper>
-                      <QuantityControl>
-                        <button
-                          onClick={() => handleQuantityChange(item.id, -1)}
-                          disabled={item.quantity <= 1}
-                        >
-                          <strong>-</strong>
-                        </button>
-                        <span>{item.quantity}</span>
-                        <button
-                          onClick={() => handleQuantityChange(item.id, 1)}
-                        >
-                          +
-                        </button>
-                      </QuantityControl>
-                      <ItemPrice>
-                        {formatPrice(item.price * item.quantity)}원
-                      </ItemPrice>
-                    </QuantityPriceWrapper>
-                  </ProductText>
-                </ProductDetails>
-              </ProductBox>
-            </CartItem>
-            <HrDiv />
-          </React.Fragment>
-        ))}
+        {cartItems.length === 0 ? (
+          <div>장바구니에 상품이 없습니다.</div>
+        ) : (
+          cartItems.map((item) => (
+            <React.Fragment key={item.id}>
+              <CartItem>
+                <SelectItem>
+                  <StyledCheck
+                    type="checkbox"
+                    checked={item.selected}
+                    onChange={() => handleSelectItem(item.id)}
+                  />
+                </SelectItem>
+                <ProductBox>
+                  <ProductImgBox>
+                    <ProductImg
+                      src={item.bread.img_src}
+                      alt={item.bread.name}
+                    />
+                  </ProductImgBox>
+                  <ProductDetails>
+                    <ProductText>
+                      <Titles>{item.bread.name}</Titles>
+                      <Keywords>
+                        {item.bread.tags.join(", ")} {/* 수정된 부분 */}
+                      </Keywords>
+                      <QuantityPriceWrapper>
+                        <QuantityControl>
+                          <button
+                            onClick={() => handleQuantityChange(item.id, -1)}
+                            disabled={item.quantity <= 1}
+                          >
+                            <strong>-</strong>
+                          </button>
+                          <span>{item.quantity}</span>
+                          <button
+                            onClick={() => handleQuantityChange(item.id, 1)}
+                          >
+                            +
+                          </button>
+                        </QuantityControl>
+                        <ItemPrice>
+                          {formatPrice(item.bread.price * item.quantity)}원
+                        </ItemPrice>
+                      </QuantityPriceWrapper>
+                    </ProductText>
+                  </ProductDetails>
+                </ProductBox>
+              </CartItem>
+              <HrDiv />
+            </React.Fragment>
+          ))
+        )}
       </CartItems>
       <YellowBtn
-        onBtnClick={() => navigate("/cart/order")}
+        onBtnClick={() => navigate("/cart/order/")}
         type={"submit"}
         width={"90%"}
         fontWeight={"800"}
-        txt={"주문하기"}
+        txt={"결제하기"}
         position={"fixed"}
         right={"auto"}
         bottom={"5%"}

@@ -14,7 +14,7 @@ const Detail = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    // 제품 정보와 리뷰를 함께 가져오기
+    // 제품 정보와 리뷰를 가져오기
     axios
       .get(`http://127.0.0.1:8000/bakery/product/${id}/`, {
         headers: {
@@ -35,11 +35,29 @@ const Detail = () => {
     return new Intl.NumberFormat("en-US").format(price);
   };
 
+  // 장바구니에 상품을 추가하는 함수
   const handleAddToCart = () => {
-    setShowPopup(true);
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 4000);
+    const token = localStorage.getItem("token");
+
+    axios
+      .post(
+        `http://127.0.0.1:8000/bakery/${id}/add-to-cart/`,
+        {}, // 필요한 데이터가 있으면 여기에 추가
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      )
+      .then(() => {
+        setShowPopup(true);
+        setTimeout(() => {
+          setShowPopup(false);
+        }, 4000);
+      })
+      .catch((error) => {
+        console.error("Failed to add product to cart", error);
+      });
   };
 
   if (productStatus === "loading") {
@@ -50,11 +68,10 @@ const Detail = () => {
     return <div>제품 정보를 불러오지 못했습니다.</div>;
   }
 
-  // Ensure reviews is an array
   const reviews = product.reviews || [];
   const tagsArray = product.tags
     ? product.tags.split(",").map((tag) => tag.trim())
-    : []; // 문자열을 배열로 변환
+    : [];
 
   return (
     <>
@@ -68,14 +85,9 @@ const Detail = () => {
       <Section>
         <SectionTitle>웰니스정보</SectionTitle>
         <Tags>
-          {tagsArray.map(
-            (
-              tag,
-              index // tagsArray 사용
-            ) => (
-              <Tag key={index}>{tag}</Tag>
-            )
-          )}
+          {tagsArray.map((tag, index) => (
+            <Tag key={index}>{tag}</Tag>
+          ))}
         </Tags>
         <WellnessInfo>{product.description1 || "정보 없음"}</WellnessInfo>
       </Section>
