@@ -64,9 +64,10 @@ const Login = () => {
         // 로그인 성공 후 토큰 로컬 스토리지에 저장
         if (response.data.token) {
           // 토큰 필드 확인
-          localStorage.setItem("token", response.data.token); // 토큰 저장
-          localStorage.setItem("last_name", response.data.last_name);
-          localStorage.setItem("username", username);
+          localStorage.setItem("token", response.data.token); // 토큰
+          localStorage.setItem("last_name", response.data.last_name); // 닉네임
+          localStorage.setItem("username", username); // 아이디
+          localStorage.setItem("result_id", response.data.result_id); // 유형테스트 결과
           navigate("/bakery");
         } else {
           console.error(

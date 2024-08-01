@@ -16,10 +16,13 @@ const Result = () => {
       axios
         .get(`/test/result/${resultId}`)
         .then((response) => {
+          console.log("API 응답 데이터:", response.data);
           setResult(response.data);
-          setRecommendedProducts(
-            response.data.breads.sort(() => 0.5 - Math.random()).slice(0, 2)
-          );
+          const products = response.data.breads
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 2);
+          console.log("추천 빵 데이터:", products);
+          setRecommendedProducts(products);
         })
         .catch((error) => {
           console.error("결과를 가져오는 중 오류 발생:", error);
@@ -54,26 +57,27 @@ const Result = () => {
         <BngImg src={LogoIcon} alt="logo" />
       </RecommendTitle>
       <TypeProductWrap>
-        {recommendedProducts.map((item) => (
-          <StyledLink to={`/bakery/product/${item.id}`} key={item.id}>
-            <ProductBox>
-              <ProductImg src={item.img_src} alt={item.name} />
-              <ProductText>
-                <Titles>{item.name}</Titles>
-                <Keywords>
-                  {item.tags.split(",").map(
-                    (
-                      tag,
-                      idx // item.tags를 split으로 변환
-                    ) => (
-                      <Tag key={idx}>{tag.trim()}</Tag> // 각 태그 앞뒤의 공백 제거
-                    )
-                  )}
-                </Keywords>
-              </ProductText>
-            </ProductBox>
-          </StyledLink>
-        ))}
+        {recommendedProducts.map((item) => {
+          console.log("추천 빵 아이템:", item); // 각 추천 빵 아이템 확인
+          if (!item.id) {
+            console.error("추천 빵 아이템에 ID가 없습니다:", item); // ID가 없는 경우 로그 출력
+          }
+          return (
+            <StyledLink to={`/bakery/product/${item.id}`} key={item.id}>
+              <ProductBox>
+                <ProductImg src={item.img_src} alt={item.name} />
+                <ProductText>
+                  <Titles>{item.name}</Titles>
+                  <Keywords>
+                    {item.tags.split(",").map((tag, idx) => (
+                      <Tag key={idx}>{tag.trim()}</Tag>
+                    ))}
+                  </Keywords>
+                </ProductText>
+              </ProductBox>
+            </StyledLink>
+          );
+        })}
       </TypeProductWrap>
       <ButtonWrap>
         <YellowBtn
@@ -95,7 +99,7 @@ const Result = () => {
 
 export default Result;
 
-// 스타일 정의
+// 스타일 정의 (변경 없음)
 const ResultWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -156,6 +160,7 @@ const Text = styled.div`
   margin: auto;
   color: #311505;
 `;
+
 const RecommendTitle = styled.div`
   font-size: 19px;
   letter-spacing: 1px;

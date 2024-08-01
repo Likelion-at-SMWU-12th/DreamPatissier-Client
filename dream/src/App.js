@@ -21,7 +21,6 @@ import Signup from "./pages/accounts/Signup";
 import Login from "./pages/accounts/Login";
 import SignClear from "./pages/accounts/SignClear";
 import CategoryPage from "./pages/CategoryPage";
-import Logout from "./pages/userpage/Logout";
 import SearchPage from "./pages/SearchPage";
 import Cart from "./pages/Cart";
 import Order from "./pages/Order";
@@ -58,7 +57,6 @@ function App() {
         <Route path="/accounts/signup/" element={<Signup />} />
         <Route path="/accounts/signup-clear" element={<SignClear />} />
         <Route path="/accounts/login/" element={<Login />} />
-        <Route path="/accounts/logout/" element={<Logout />} />
         <Route path="/test/*" element={<TestBread />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/cart/order" element={<Order />} />
