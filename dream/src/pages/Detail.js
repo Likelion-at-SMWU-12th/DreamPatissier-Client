@@ -1,31 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Footer from "../components/Footer";
 import styled, { keyframes, css } from "styled-components";
 import ShopIcon from "../assets/shoppingcart.svg";
-// import Review from "./userpage/Review";
 
 const Detail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [status, setStatus] = useState("loading");
+  const [reviews, setReviews] = useState([]);
+  const [productStatus, setProductStatus] = useState("loading");
+  const [reviewStatus, setReviewStatus] = useState("loading");
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    // 제품 정보 가져오기
     axios
-      .get("/product.json")
+      .get(`http://127.0.0.1:8000/bakery/product/${id}/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
       .then((response) => {
-        const foundProduct = response.data.find(
-          (product) => product.id === parseInt(id)
-        );
-        setProduct(foundProduct);
-        setStatus("success");
+        setProduct(response.data);
+        setProductStatus("success");
       })
       .catch((error) => {
         console.error("Failed to fetch product details", error);
-        setStatus("error");
+        setProductStatus("error");
+      });
+
+    // 리뷰 가져오기
+    axios
+      .get(`http://127.0.0.1:8000/users/product/${id}/reviews/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((response) => {
+        setReviews(response.data);
+        setReviewStatus("success");
+      })
+      .catch((error) => {
+        console.error("Failed to fetch reviews", error);
+        setReviewStatus("error");
       });
   }, [id]);
 
@@ -40,22 +60,22 @@ const Detail = () => {
     }, 4000);
   };
 
-  if (status === "loading") {
+  if (productStatus === "loading" || reviewStatus === "loading") {
     return <div>Loading...</div>;
   }
 
-  if (status === "error" || !product) {
+  if (productStatus === "error" || !product) {
     return <div>제품 정보를 불러오지 못했습니다.</div>;
   }
 
   return (
     <>
       <ImgBox>
-        <img src={product.imgSrc} alt={product.title} />
+        <img src={product.img_src} alt={product.name} />
       </ImgBox>
       <TitleInfo>
-        <Title>{product.title}</Title>
-        <Price> {formatPrice(product.price)}원</Price>
+        <Title>{product.name}</Title>
+        <Price>{formatPrice(product.price)}원</Price>
       </TitleInfo>
       <Section>
         <SectionTitle>웰니스정보</SectionTitle>
@@ -64,43 +84,37 @@ const Detail = () => {
             <Tag key={index}>{tag}</Tag>
           ))}
         </Tags>
-        <WellnessInfo>
-          아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.
-        </WellnessInfo>
+        <WellnessInfo>{product.description1 || "정보 없음"}</WellnessInfo>
       </Section>
       <Section>
         <SectionTitle>상품정보</SectionTitle>
-        <Info>아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.</Info>
+        <Info>{product.description2 || "정보 없음"}</Info>
       </Section>
       <Section>
         <SectionTitle>상품구성</SectionTitle>
-        <Info>아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.</Info>
+        <Info>{product.description3 || "정보 없음"}</Info>
       </Section>
       <Section>
         <SectionTitle>리뷰</SectionTitle>
-        <ReviewBox>
-          <GoodBad>만족해요</GoodBad>
-          <WriterInfo>
-            <Writer>빵**</Writer>|<Date>2024.07.19</Date>
-          </WriterInfo>
-          <ReviewText>
-            아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.
-          </ReviewText>
-        </ReviewBox>
-        <HrDiv />
-        <ReviewBox>
-          <GoodBad>만족해요</GoodBad>
-          <WriterInfo>
-            <Writer>빵**</Writer>|<Date>2024.07.19</Date>
-          </WriterInfo>
-          <ReviewText>
-            아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이
-            안됐슴니다. 왜냐면 아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면
-            아직 못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직
-            못했으니까요.아직 연동이 안됐슴니다. 왜냐면 아직 못했으니까요.아직
-            연동이 안됐슴니다. 왜냐면 아직 못했으니까요.
-          </ReviewText>
-        </ReviewBox>
+        {reviewStatus === "error" ? (
+          <div>서버에서 데이터를 못받아왔어요..</div>
+        ) : reviews.length === 0 ? (
+          <div>리뷰가 없습니다..</div>
+        ) : (
+          reviews.map((review, index) => (
+            <ReviewBox key={index}>
+              <GoodBad>
+                {review.satisfaction === "S" ? "만족해요" : "별로예요"}
+              </GoodBad>
+              <WriterInfo>
+                <Writer>{review.user.username}</Writer>|
+                <Date>{new Date(review.created_at).toLocaleDateString()}</Date>
+              </WriterInfo>
+              <ReviewText>{review.content}</ReviewText>
+              {index < reviews.length - 1 && <HrDiv />}
+            </ReviewBox>
+          ))
+        )}
       </Section>
       <CartButton onClick={handleAddToCart}>
         <Icon src={ShopIcon} alt="장바구니 아이콘" />
@@ -114,10 +128,10 @@ const Detail = () => {
           </CartPop>
         </PopWrap>
       )}
-      <Footer />
     </>
   );
 };
+
 // 스타일
 // 장바구니 버튼
 const CartButton = styled.button`

@@ -6,30 +6,42 @@ import { FaTrash } from "react-icons/fa";
 import altIcon from "../../assets/alt.png";
 
 const Review = () => {
-  const [products, setProducts] = useState([]);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
     axios
-      .get("http://127.0.0.1:8000/reviews")
-      .then((response) => setProducts(response.data))
+      .get("http://127.0.0.1:8000/reviews", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Fetched reviews:", response.data);
+        setReviews(response.data);
+      })
       .catch((error) =>
         console.error("데이터를 가져오는 중 오류 발생:", error)
       );
   }, []);
 
-  const reviewedProducts = products.filter((product) => product.reviewed);
-
   const handleDelete = (id) => {
+    const token = localStorage.getItem("token"); // token을 함수 내에서 다시 가져옴
     console.log("삭제하려는 리뷰 ID:", id);
     const confirmed = window.confirm("정말로 이 리뷰를 삭제하시겠습니까?");
 
     if (confirmed) {
       axios
-        .delete(`http://127.0.0.1:8000/reviews/${id}/`)
+        .delete(`http://127.0.0.1:8000/reviews/${id}/`, {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        })
         .then((response) => {
           console.log("리뷰가 성공적으로 삭제되었습니다");
-          setProducts((prevProducts) =>
-            prevProducts.filter((product) => product.id !== id)
+          setReviews((prevReviews) =>
+            prevReviews.filter((review) => review.id !== id)
           );
         })
         .catch((error) => {
@@ -46,36 +58,44 @@ const Review = () => {
   return (
     <div className="order-list">
       <div className="orderlist-title2">MY리뷰</div>
-      {reviewedProducts.length > 0 ? (
-        reviewedProducts.map((product, index) => (
-          <div key={product.id}>
+      {reviews.length > 0 ? (
+        reviews.map((review, index) => (
+          <div key={review.id}>
             <div className="product-card2">
-              <div className="product-date2">{product.date}</div>
+              <div className="product-date2">
+                {new Date(review.created_at).toLocaleDateString()}
+              </div>
               <div className="product-show2">
                 <img
-                  src={product.image || profile}
-                  alt={product.name}
+                  src={review.product.img_src || profile}
+                  alt={review.product.name}
                   className="product-image2"
                 />
                 <div className="product-info2">
-                  <h3 className="product-name">{product.name}</h3>
-                  <div className="product-tags2">{product.tags.join(" ")}</div>
+                  <h3 className="product-name">{review.product.name}</h3>
+                  <div className="product-tags2">
+                    {review.product.tags.join(" ")}
+                  </div>
                 </div>
                 <button
                   className="delete-button2"
-                  onClick={() => handleDelete(product.id)}
+                  onClick={() => handleDelete(review.id)}
                   aria-label="Delete review"
                 >
                   <FaTrash />
                 </button>
               </div>
               <div className="info-container">
-                <div className="product-like-show">{product.like}</div>
-                <div className="product-date-show">{product.writedate}</div>
+                <div className="product-like-show">
+                  {review.satisfaction === "S" ? "만족해요" : "별로예요"}
+                </div>
+                <div className="product-date-show">
+                  {new Date(review.created_at).toLocaleDateString()}
+                </div>
               </div>
-              <div className="show_review_text">{product.description}</div>
+              <div className="show_review_text">{review.content}</div>
             </div>
-            {index < reviewedProducts.length - 1 && <hr className="divider" />}
+            {index < reviews.length - 1 && <hr className="divider" />}
           </div>
         ))
       ) : (
