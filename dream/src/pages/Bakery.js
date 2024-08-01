@@ -117,7 +117,6 @@ function Bakery() {
       <Routes>
         <Route path="category/:categoryName" element={<CategoryPage />} />
         <Route path="search/:tags" element={<SearchPage />} />
-        <Route path="product/:id" element={<Detail />} />
       </Routes>
       <Footer />
     </div>

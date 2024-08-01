@@ -10,8 +10,8 @@ const Question = ({ q, a, onOptionClick }) => (
       {a.map((option, index) => (
         <Button
           key={index}
-          onClick={() => onOptionClick(option.type)}
-          dangerouslySetInnerHTML={{ __html: option.text }}
+          onClick={() => onOptionClick(option.type, index)} // 클릭 시 type과 index 전달
+          dangerouslySetInnerHTML={{ __html: option }}
         />
       ))}
     </ButtonBox>

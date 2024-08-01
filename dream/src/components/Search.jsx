@@ -12,7 +12,7 @@ const Search = ({ onSearch }) => {
   const handleSearchClick = () => {
     const tagsArray = keywords
       .split(",")
-      .map((tag) => tag.trim().toLowerCase().replace("#", ""))
+      .map((tag) => tag.trim().toLowerCase().replace("#", "")) // 여기서 # 제거
       .filter((tag) => tag.length > 0);
     onSearch(tagsArray);
   };
@@ -43,7 +43,7 @@ const Search = ({ onSearch }) => {
 
 export default Search;
 
-/// 스타일
+// 스타일
 
 const SearchWrap = styled.div`
   justify-content: center;

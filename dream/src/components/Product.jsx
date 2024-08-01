@@ -10,6 +10,9 @@ const Product = ({ id, imgSrc, tags, name, price, description }) => {
     return new Intl.NumberFormat("en-US").format(price);
   };
 
+  // tags 문자열을 배열로 변환 (쉼표로 구분된 경우)
+  const tagsArray = tags ? tags.split(",").map((tag) => tag.trim()) : [];
+
   return (
     <ProductBox>
       <ProductImgBox>
@@ -17,7 +20,7 @@ const Product = ({ id, imgSrc, tags, name, price, description }) => {
       </ProductImgBox>
       <ProductText>
         <Keywords>
-          {tags.map((tag, index) => (
+          {tagsArray.map((tag, index) => (
             <Tag key={index}>{tag}</Tag>
           ))}
         </Keywords>
