@@ -8,15 +8,13 @@ const Detail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [reviews, setReviews] = useState([]);
   const [productStatus, setProductStatus] = useState("loading");
-  const [reviewStatus, setReviewStatus] = useState("loading");
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    // 제품 정보 가져오기
+    // 제품 정보와 리뷰를 함께 가져오기
     axios
       .get(`http://127.0.0.1:8000/bakery/product/${id}/`, {
         headers: {
@@ -31,22 +29,6 @@ const Detail = () => {
         console.error("Failed to fetch product details", error);
         setProductStatus("error");
       });
-
-    // 리뷰 가져오기
-    axios
-      .get(`http://127.0.0.1:8000/users/product/${id}/reviews/`, {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      })
-      .then((response) => {
-        setReviews(response.data);
-        setReviewStatus("success");
-      })
-      .catch((error) => {
-        console.error("Failed to fetch reviews", error);
-        setReviewStatus("error");
-      });
   }, [id]);
 
   const formatPrice = (price) => {
@@ -60,13 +42,16 @@ const Detail = () => {
     }, 4000);
   };
 
-  if (productStatus === "loading" || reviewStatus === "loading") {
+  if (productStatus === "loading") {
     return <div>Loading...</div>;
   }
 
   if (productStatus === "error" || !product) {
     return <div>제품 정보를 불러오지 못했습니다.</div>;
   }
+
+  // Ensure reviews is an array
+  const reviews = product.reviews || [];
 
   return (
     <>
@@ -96,9 +81,7 @@ const Detail = () => {
       </Section>
       <Section>
         <SectionTitle>리뷰</SectionTitle>
-        {reviewStatus === "error" ? (
-          <div>서버에서 데이터를 못받아왔어요..</div>
-        ) : reviews.length === 0 ? (
+        {reviews.length === 0 ? (
           <div>리뷰가 없습니다..</div>
         ) : (
           reviews.map((review, index) => (
@@ -108,7 +91,9 @@ const Detail = () => {
               </GoodBad>
               <WriterInfo>
                 <Writer>{review.user.username}</Writer>|
-                <Date>{new Date(review.created_at).toLocaleDateString()}</Date>
+                <ReviewDate>
+                  {new Date(review.created_at).toLocaleDateString()}
+                </ReviewDate>
               </WriterInfo>
               <ReviewText>{review.content}</ReviewText>
               {index < reviews.length - 1 && <HrDiv />}
@@ -263,7 +248,7 @@ const Writer = styled.div`
   margin-right: 5px;
 `;
 
-const Date = styled.div`
+const ReviewDate = styled.div`
   display: inline-block;
   margin-left: 5px;
 `;
