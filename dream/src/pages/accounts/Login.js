@@ -63,7 +63,7 @@ const Login = () => {
         console.log("Login successful", response.data);
         // 로그인 성공 후 토큰 로컬 스토리지에 저장
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("nickname", response.data.nickname);
+        localStorage.setItem("last_name", response.data.last_name);
         localStorage.setItem("username", username);
         // 페이지 이동
         navigate("/bakery");

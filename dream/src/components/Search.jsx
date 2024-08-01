@@ -55,7 +55,8 @@ const SearchWrap = styled.div`
 
 const SearchImg = styled.img`
   width: 20px;
-  margin-left: -20px;
+  height: 20px;
+  margin-left: -45px;
 `;
 
 const SearchBox = styled.div`
@@ -74,8 +75,8 @@ const InputBox = styled.input`
   border: none;
   width: 80%;
   background-color: #f8f8f8;
-  padding: 15px;
   font-size: 13px;
+  height: 35px;
 `;
 
 const SearchButton = styled.button`

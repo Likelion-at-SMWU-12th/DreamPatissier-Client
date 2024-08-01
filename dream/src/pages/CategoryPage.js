@@ -6,30 +6,31 @@ import Product from "../components/Product";
 import Warning from "../assets/warning.png";
 
 const CategoryPage = () => {
-  const { categoryName } = useParams(); // URL에서 categoryName을 가져옴
-  const [products, setProducts] = useState([]); // 제품 목록을 저장할 상태
-  const [status, setStatus] = useState("loading"); // 데이터 로딩 및 오류 상태
+  const { categoryName } = useParams();
+  const [products, setProducts] = useState([]);
+  const [status, setStatus] = useState("loading");
 
   useEffect(() => {
-    // 카테고리별 제품 목록을 API에서 가져옴
+    console.log(`Fetching products for category: ${categoryName}`);
+    const token = localStorage.getItem("token");
+
     axios
-      .get("/product.json")
-      // .get(`http://127.0.0.1:8000/bakery/${categoryName}/`)
+      .get(`http://127.0.0.1:8000/bakery/category/${categoryName}/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
       .then((response) => {
-        // 카테고리별로 제품을 필터링함
-        const filteredProducts = response.data.filter(
-          (product) => product.categoryName === categoryName
-        );
-        setProducts(filteredProducts); // 필터링된 제품 목록을 상태에 저장
-        setStatus("success"); // 데이터 로딩 성공
+        console.log("Fetched products:", response.data);
+        setProducts(response.data);
+        setStatus("success");
       })
       .catch((error) => {
         console.error("Failed to fetch products", error);
-        setStatus("error"); // 데이터 로딩 오류
+        setStatus("error");
       });
-  }, [categoryName]); // categoryName이 변경될 때마다 useEffect 호출
+  }, [categoryName]);
 
-  // 로딩 중인 경우
   if (status === "loading") {
     return (
       <MsgBox>
@@ -38,7 +39,6 @@ const CategoryPage = () => {
     );
   }
 
-  // 오류가 발생한 경우
   if (status === "error") {
     return (
       <MsgBox>
@@ -47,26 +47,26 @@ const CategoryPage = () => {
     );
   }
 
-  // 제품 목록이 비어있는 경우
   if (products.length === 0) {
     return (
       <MsgBox>
         <WarningImg src={Warning} />
         <Message>
-          검색하신 키워드의 빵이 없습니다. <br />
-          다른 웰니스 키워드를 검색해 주세요.
+          해당 카테고리의 빵이 없습니다. <br />
+          다른 카테고리를 눌러보세요.
         </Message>
       </MsgBox>
     );
   }
+
   return (
     <ProductWrap>
       {products.map((product) => (
         <StyledLink to={`/bakery/product/${product.id}`} key={product.id}>
           <Product
-            imgSrc={product.imgSrc}
+            imgSrc={product.img_src} // imgSrc -> img_src
             tags={product.tags}
-            title={product.title}
+            name={product.name} // title -> name
             price={product.price}
           />
         </StyledLink>

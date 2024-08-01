@@ -4,7 +4,16 @@ import Footer from "../components/Footer";
 import styled from "styled-components";
 import Search from "../components/Search";
 import Category from "../components/Category";
-import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
+import CategoryPage from "./CategoryPage";
+import SearchPage from "./SearchPage";
+import Detail from "./Detail";
+import {
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+  Link,
+} from "react-router-dom";
 import axios from "axios";
 
 // 이미지
@@ -26,9 +35,14 @@ function Bakery() {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
-    // 백엔드 API 호출로 데이터 로드
+    const token = localStorage.getItem("token");
+
     axios
-      .get("/bakery/") // 백엔드의 메인 페이지 API 호출
+      .get("/bakery/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
       .then((response) => {
         const shuffledProducts = response.data.sort(() => 0.5 - Math.random());
         setRandomProducts(shuffledProducts);
@@ -49,7 +63,6 @@ function Bakery() {
     navigate(`/bakery/search/${tagsArray.join(",")}`);
   };
 
-  // 로딩 중인 경우
   if (status === "loading") {
     return (
       <MsgBox>
@@ -58,7 +71,6 @@ function Bakery() {
     );
   }
 
-  // 오류가 발생한 경우
   if (status === "error") {
     return (
       <MsgBox>
@@ -93,16 +105,20 @@ function Bakery() {
             <StyledLink to={`/bakery/product/${product.id}`} key={product.id}>
               <Product
                 key={product.id}
-                imgSrc={product.imgSrc}
+                imgSrc={product.img_src} // imgSrc -> img_src
                 tags={product.tags}
-                title={product.title}
+                name={product.name} // title -> name
                 price={product.price}
               />
             </StyledLink>
           ))}
         </ProductBox>
       )}
-      <Outlet />
+      <Routes>
+        <Route path="category/:categoryName" element={<CategoryPage />} />
+        <Route path="search/:tags" element={<SearchPage />} />
+        <Route path="product/:id" element={<Detail />} />
+      </Routes>
       <Footer />
     </div>
   );
@@ -110,14 +126,14 @@ function Bakery() {
 
 // 카테고리 데이터
 const categories = [
-  { name: "plainbread", uiName: "식빵/모닝빵", imgSrc: Morning },
-  { name: "baguette", uiName: "바게트/치아바타", imgSrc: Baguette },
-  { name: "bagle", uiName: "베이글", imgSrc: Bagle },
+  { name: "bread", uiName: "식빵", imgSrc: Morning },
+  { name: "baguette", uiName: "바게트", imgSrc: Baguette },
+  { name: "bagel", uiName: "베이글", imgSrc: Bagle },
   { name: "cake", uiName: "케이크", imgSrc: Cake },
-  { name: "donut", uiName: "도넛/스콘", imgSrc: Donut },
+  { name: "donut", uiName: "도넛", imgSrc: Donut },
   { name: "cream", uiName: "크림빵", imgSrc: Cream },
-  { name: "harverst", uiName: "구황작물빵", imgSrc: Harverst },
-  { name: "event", uiName: "기획전", imgSrc: Event },
+  { name: "root_vegetable", uiName: "구황작물빵", imgSrc: Harverst }, // harverst가 아니라 올바른 imgSrc를 사용해야 합니다.
+  { name: "special", uiName: "기획전", imgSrc: Event },
 ];
 
 // CSS
