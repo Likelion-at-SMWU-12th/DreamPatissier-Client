@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../styles/Recipes.css";
-import editIcon from "../assets/edit-icon.png";
-import deleteIcon from "../assets/delete-icon.png";
-import savedIcon from "../assets/saved-icon.png";
-import unsavedIcon from "../assets/unsaved-icon.png";
-import altIcon from "../assets/alt.png";
-import toolIcon from "../assets/tool2.png";
+import "../../styles/Recipes.css";
+import editIcon from "../../assets/edit-icon.png";
+import deleteIcon from "../../assets/delete-icon.png";
+import altIcon from "../../assets/alt.png";
+import toolIcon from "../../assets/tool2.png";
 
 // 에러 핸들링 함수
 const handleError = (error) => {
@@ -31,7 +29,7 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => (
     type="text"
     className="search"
     value={searchTerm}
-    placeholder="조리도구 및 웰니스 키워드를 검색해주세요."
+    placeholder="레시피 제목 또는 태그를 검색하세요."
     onChange={(e) => setSearchTerm(e.target.value)}
   />
 );
@@ -39,15 +37,10 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => (
 // 레시피 항목 컴포넌트
 const RecipeItem = ({
   recipe,
-  currentUser,
-  onToggleSave,
-  isSaved,
-  onDelete,
-  onDetailRecipe,
   onEditRecipe,
+  onDeleteRecipe,
+  onDetailRecipe,
 }) => {
-  const isAuthor = recipe.is_owner;
-
   return (
     <div className="recipe-item" onClick={() => onDetailRecipe(recipe.id)}>
       <img
@@ -58,48 +51,31 @@ const RecipeItem = ({
       <div className="recipe-header">
         <h3 className="recipe-title">{recipe.title}</h3>
         <div className="recipe-container">
-          <img src={toolIcon} alt="수정하기" className="tool-icon" />
-          <p className="recipe-equipment">{recipe.equipment}</p>
+          <img src={toolIcon} alt="Equipment" className="tool-icon" />
+          <p className="recipe-equipment">{recipe.equipment.join(", ")}</p>
         </div>
       </div>
       <div className="recipe-footer">
         <p className="recipe-tags">{recipe.tags.join(", ")}</p>
         <div className="recipe-buttons">
-          {isAuthor ? (
-            <>
-              <button
-                className="edit-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEditRecipe(recipe.id);
-                }}
-              >
-                <img src={editIcon} alt="수정하기" />
-              </button>
-              <button
-                className="delete-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(recipe.id);
-                }}
-              >
-                <img src={deleteIcon} alt="삭제하기" />
-              </button>
-            </>
-          ) : (
-            <button
-              className="save-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleSave(recipe.id);
-              }}
-            >
-              <img
-                src={isSaved ? savedIcon : unsavedIcon}
-                alt={isSaved ? "저장됨" : "저장되지 않음"}
-              />
-            </button>
-          )}
+          <button
+            className="edit-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEditRecipe(recipe.id);
+            }}
+          >
+            <img src={editIcon} alt="Edit" />
+          </button>
+          <button
+            className="delete-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDeleteRecipe(recipe.id);
+            }}
+          >
+            <img src={deleteIcon} alt="Delete" />
+          </button>
         </div>
       </div>
     </div>
@@ -107,29 +83,22 @@ const RecipeItem = ({
 };
 
 // 레시피 목록 및 레시피 항목을 포함하는 컴포넌트
-const Recipes = () => {
+const MyRecipes = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [savedRecipes, setSavedRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [token, setToken] = useState("");
 
-  const currentUser = localStorage.getItem("nickname");
   const navigate = useNavigate();
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken || "");
 
-    const loadSavedRecipes = () => {
-      const saved = JSON.parse(localStorage.getItem("savedRecipes")) || [];
-      setSavedRecipes(saved);
-    };
-
     const fetchRecipes = () => {
       if (!storedToken) return;
 
       axios
-        .get("http://127.0.0.1:8000/recipes/", {
+        .get("http://127.0.0.1:8000/users/my-recipes", {
           headers: {
             Authorization: `Token ${storedToken}`,
           },
@@ -157,9 +126,8 @@ const Recipes = () => {
         .catch(handleError);
     };
 
-    loadSavedRecipes();
     fetchRecipes();
-  }, []);
+  }, [token]);
 
   const filteredRecipes = recipes.filter(
     (recipe) =>
@@ -171,37 +139,6 @@ const Recipes = () => {
         equip.toLowerCase().includes(searchTerm.toLowerCase())
       )
   );
-
-  const handleToggleSave = (recipeId) => {
-    axios
-      .post(
-        `http://127.0.0.1:8000/users/saved-recipes/${recipeId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        }
-      )
-      .then(() => {
-        setSavedRecipes((prevSaved) => {
-          const updatedSaved = prevSaved.includes(recipeId)
-            ? prevSaved.filter((id) => id !== recipeId)
-            : [...prevSaved, recipeId];
-
-          localStorage.setItem("savedRecipes", JSON.stringify(updatedSaved));
-
-          console.log(
-            `레시피 ${recipeId}의 스크랩이 ${
-              prevSaved.includes(recipeId) ? "취소되었습니다" : "되었습니다"
-            }.`
-          );
-
-          return updatedSaved;
-        });
-      })
-      .catch(handleError);
-  };
 
   const handleDeleteRecipe = (recipeId) => {
     if (!token) {
@@ -219,13 +156,9 @@ const Recipes = () => {
         setRecipes((prevRecipes) =>
           prevRecipes.filter((recipe) => recipe.id !== recipeId)
         );
-        console.log(`레시피 ${recipeId}이(가) 삭제되었습니다.`);
+        console.log(`Recipe ${recipeId} deleted.`);
       })
       .catch(handleError);
-  };
-
-  const handleAddRecipe = () => {
-    navigate("/recipes/write");
   };
 
   const handleDetailRecipe = (recipeId) => {
@@ -246,25 +179,19 @@ const Recipes = () => {
           <RecipeItem
             key={recipe.id}
             recipe={recipe}
-            currentUser={currentUser}
-            onToggleSave={handleToggleSave}
-            isSaved={savedRecipes.includes(recipe.id)}
-            onDelete={handleDeleteRecipe}
-            onDetailRecipe={handleDetailRecipe}
             onEditRecipe={handleEditRecipe}
+            onDeleteRecipe={handleDeleteRecipe}
+            onDetailRecipe={handleDetailRecipe}
           />
         ))
       ) : (
         <div className="no-recipes-message">
           <img src={altIcon} alt="No Recipes" />
-          <p>레시피가 없습니다. 검색어를 변경해 보세요.</p>
+          <p>No recipes found. Try changing your search terms.</p>
         </div>
       )}
-      <button className="add-recipe-btn" onClick={handleAddRecipe}>
-        ✏️ 등록하기
-      </button>
     </div>
   );
 };
 
-export default Recipes;
+export default MyRecipes;

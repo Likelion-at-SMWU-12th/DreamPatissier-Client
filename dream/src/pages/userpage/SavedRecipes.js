@@ -1,66 +1,68 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import timerIcon2 from "../../assets/timer2.png";
 import toolIcon2 from "../../assets/tool2.png";
 import "../../styles/SavedRecipes.css";
 import savedIcon from "../../assets/saved-icon.png";
 import unsavedIcon from "../../assets/unsaved-icon.png";
-import re_image from "./bread.png";
+import re_image from "./bread.png"; // 필요 없으면 삭제할 수 있음
 
 const SavedRecipes = () => {
-  const dummyData = [
-    {
-      id: 1,
-      title: "감바스 알 아히요",
-      tags: ["해산물", "스페인 요리", "간편 요리"],
-      represent_img: re_image,
-      date: "2023-07-01",
-      cookingTime: "30분",
-      equipment: "전자레인지",
-      description: "맛있는 감바스 알 아히요입니다.",
-      isSaved: true,
-    },
-    {
-      id: 2,
-      title: "마르게리타 피자",
-      tags: ["이탈리아 요리", "피자", "베지테리언"],
-      represent_img: re_image,
-      date: "2023-07-02",
-      cookingTime: "30분",
-      equipment: "전자레인지",
-      description: "클래식한 마르게리타 피자.",
-      isSaved: true,
-    },
-    {
-      id: 3,
-      title: "감바스 알 아히요",
-      tags: ["해산물", "스페인 요리", "간편 요리"],
-      represent_img: re_image,
-      date: "2023-07-01",
-      cookingTime: "30분",
-      equipment: "전자레인지",
-      description: "맛있는 감바스 알 아히요입니다.",
-      isSaved: true,
-    },
-    {
-      id: 4,
-      title: "마르게리타 피자",
-      tags: ["이탈리아 요리", "피자", "베지테리언"],
-      represent_img: re_image,
-      date: "2023-07-02",
-      cookingTime: "30분",
-      equipment: "전자레인지",
-      description: "클래식한 마르게리타 피자.",
-      isSaved: true,
-    },
-  ];
-
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [token, setToken] = useState("");
 
   useEffect(() => {
-    setProducts(dummyData);
-  }, []);
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken || "");
+
+    if (!storedToken) {
+      console.error("No token found in localStorage.");
+      return;
+    }
+
+    axios
+      .get("http://127.0.0.1:8000/users/saved-recipes", {
+        headers: {
+          Authorization: `Token ${storedToken}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          const data = response.data;
+          if (Array.isArray(data)) {
+            setProducts(
+              data.map((product) => ({
+                ...product,
+                tags: product.tags ? product.tags.split(",") : [],
+                equipment: product.equipment
+                  ? product.equipment.split(",")
+                  : [],
+              }))
+            );
+          } else {
+            console.error("Data is not an array", data);
+          }
+        } else {
+          console.error("Unexpected response status:", response.status);
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error(
+            "Error:",
+            error.response.data,
+            "Status:",
+            error.response.status
+          );
+        } else if (error.request) {
+          console.error("Error: No response received");
+        } else {
+          console.error("Error:", error.message);
+        }
+      });
+  }, [token]);
 
   const handleDetailRecipe = (id) => {
     navigate(`/recipes/${id}`);
@@ -76,7 +78,7 @@ const SavedRecipes = () => {
 
   return (
     <div className="order-list">
-      <div className="orderlist-title2">MY리뷰</div>
+      <div className="orderlist-title2">저장한 레시피</div>
       {products
         .filter((product) => product.isSaved)
         .map((product) => (
@@ -84,7 +86,7 @@ const SavedRecipes = () => {
             <div className="product-card2">
               <div className="product-show3">
                 <img
-                  src={product.represent_img}
+                  src={product.represent_img || re_image}
                   alt={product.title}
                   className="product-image3"
                 />
@@ -98,7 +100,7 @@ const SavedRecipes = () => {
                       alt="Equipment"
                     />
                     <div className="saved-recipe-sub-show">
-                      {product.equipment}
+                      {product.equipment.join(", ")}
                     </div>
                     <img
                       className="time_img_saved"
