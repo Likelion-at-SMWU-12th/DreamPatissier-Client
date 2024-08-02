@@ -161,10 +161,6 @@ const MyRecipes = () => {
       .catch(handleError);
   };
 
-  const handleAddRecipe = () => {
-    navigate("/recipes/write");
-  };
-
   const handleDetailRecipe = (recipeId) => {
     navigate(`/recipes/${recipeId}`);
   };
@@ -194,9 +190,6 @@ const MyRecipes = () => {
           <p>No recipes found. Try changing your search terms.</p>
         </div>
       )}
-      <button className="add-recipe-btn" onClick={handleAddRecipe}>
-        ✏️ Add Recipe
-      </button>
     </div>
   );
 };
