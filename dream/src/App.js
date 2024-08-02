@@ -6,6 +6,7 @@ import Recipes from "./pages/Recipes";
 import RecipeDetail from "./pages/recipes/RecipeDetail";
 import EditRecipe from "./pages/recipes/EditRecipe";
 import WriteRecipe from "./pages/recipes/WriteRecipe";
+import MyRecipe from "./pages/userpage/MyRecipe";
 import Diary from "./pages/Diary";
 import WriteRecord from "./pages/diary/WriteRecord";
 import EditRecord from "./pages/diary/EditRecord";
@@ -46,6 +47,7 @@ function App() {
         <Route path="/recipes/write" element={<WriteRecipe />} />
         <Route path="/diary" element={<Diary />} />
         <Route path="/record/write/:date" element={<WriteRecord />} />
+        <Route path="/users/my-recipes" element={<MyRecipe />} />
         <Route path="edit/:id" element={<EditRecord />} />
         <Route path="/users" element={<Users />} />
         <Route path="/users/orders" element={<OrderList />} />
