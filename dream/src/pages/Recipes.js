@@ -46,7 +46,7 @@ const RecipeItem = ({
   onDetailRecipe,
   onEditRecipe,
 }) => {
-  const isAuthor = recipe.author === currentUser;
+  const isAuthor = recipe.is_owner;
 
   return (
     <div className="recipe-item" onClick={() => onDetailRecipe(recipe.id)}>
@@ -63,7 +63,7 @@ const RecipeItem = ({
         </div>
       </div>
       <div className="recipe-footer">
-        <p className="recipe-tags">{recipe.tags}</p>
+        <p className="recipe-tags">{recipe.tags.join(", ")}</p>
         <div className="recipe-buttons">
           {isAuthor ? (
             <>
@@ -173,21 +173,34 @@ const Recipes = () => {
   );
 
   const handleToggleSave = (recipeId) => {
-    setSavedRecipes((prevSaved) => {
-      const updatedSaved = prevSaved.includes(recipeId)
-        ? prevSaved.filter((id) => id !== recipeId)
-        : [...prevSaved, recipeId];
+    axios
+      .post(
+        `http://127.0.0.1:8000/users/saved-recipes/${recipeId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      )
+      .then(() => {
+        setSavedRecipes((prevSaved) => {
+          const updatedSaved = prevSaved.includes(recipeId)
+            ? prevSaved.filter((id) => id !== recipeId)
+            : [...prevSaved, recipeId];
 
-      localStorage.setItem("savedRecipes", JSON.stringify(updatedSaved));
+          localStorage.setItem("savedRecipes", JSON.stringify(updatedSaved));
 
-      console.log(
-        `레시피 ${recipeId}의 스크랩이 ${
-          prevSaved.includes(recipeId) ? "취소되었습니다" : "되었습니다"
-        }.`
-      );
+          console.log(
+            `레시피 ${recipeId}의 스크랩이 ${
+              prevSaved.includes(recipeId) ? "취소되었습니다" : "되었습니다"
+            }.`
+          );
 
-      return updatedSaved;
-    });
+          return updatedSaved;
+        });
+      })
+      .catch(handleError);
   };
 
   const handleDeleteRecipe = (recipeId) => {
