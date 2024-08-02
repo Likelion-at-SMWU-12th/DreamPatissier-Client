@@ -93,7 +93,7 @@ const WriteRecipe = () => {
           setImageFile(null);
           setTitle(recipeData.title || "");
           setTags(recipeData.tags.join(", ") || "");
-          setCookingTime(recipeData.cookingTime || "");
+          setCookingTime(recipeData.cooking_time || "");
           setEquipment(recipeData.equipment || "");
           setIngredients(recipeData.ingredients || [{ name: "", amount: "" }]);
           setSteps(
