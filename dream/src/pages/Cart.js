@@ -15,12 +15,10 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [anyChecked, setAnyChecked] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
-    console.log("Fetching cart items with token:", token); // 디버깅 로그 추가
-
     axios
       .get("http://127.0.0.1:8000/cart-items/", {
         headers: {
@@ -28,7 +26,6 @@ const Cart = () => {
         },
       })
       .then((response) => {
-        console.log("API response:", response); // 디버깅 로그 추가
         setCartItems(response.data);
       })
       .catch((error) => {
@@ -37,13 +34,16 @@ const Cart = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Cart items updated:", cartItems); // 디버깅 로그 추가
     const checkedItems = cartItems.some((item) => item.selected);
     setAnyChecked(checkedItems);
+
+    const total = cartItems.reduce((acc, item) => {
+      return acc + item.bread.price * item.quantity;
+    }, 0);
+    setTotalPrice(total);
   }, [cartItems]);
 
   const handleQuantityChange = (id, delta) => {
-    console.log("Changing quantity for item id:", id, "Delta:", delta); // 디버깅 로그 추가
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id ? { ...item, quantity: item.quantity + delta } : item
@@ -52,13 +52,11 @@ const Cart = () => {
   };
 
   const handleSelectAll = () => {
-    console.log("Toggling select all:", !selectAll); // 디버깅 로그 추가
     setSelectAll(!selectAll);
     setCartItems(cartItems.map((item) => ({ ...item, selected: !selectAll })));
   };
 
   const handleSelectItem = (id) => {
-    console.log("Toggling selection for item id:", id); // 디버깅 로그 추가
     setCartItems(
       cartItems.map((item) =>
         item.id === id ? { ...item, selected: !item.selected } : item
@@ -68,7 +66,6 @@ const Cart = () => {
 
   const handleDeleteSelected = () => {
     const selectedItems = cartItems.filter((item) => item.selected);
-    console.log("Deleting selected items:", selectedItems); // 디버깅 로그 추가
     const token = localStorage.getItem("token");
 
     axios
@@ -81,7 +78,6 @@ const Cart = () => {
         },
       })
       .then(() => {
-        console.log("Successfully deleted selected items"); // 디버깅 로그 추가
         setCartItems(cartItems.filter((item) => !item.selected));
         setSelectAll(false);
       })
@@ -173,6 +169,10 @@ const Cart = () => {
           })
         )}
       </CartItems>
+      <TotalWrap>
+        <TotalText>총 결제 예상 금액</TotalText>
+        <TotalPrice>{formatPrice(totalPrice)}원</TotalPrice>
+      </TotalWrap>
       <YellowBtn
         onBtnClick={() => navigate("/cart/order/")}
         type={"submit"}
@@ -395,4 +395,23 @@ const WarningImg = styled.img`
   width: 54px;
   height: auto;
   margin-bottom: 15px;
+`;
+
+const TotalWrap = styled.div`
+  padding: 20px 0px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px 0 rgba(217, 217, 217, 0.5);
+  border-bottom: 1px solid #d9d9d9;
+  color: var(--brown);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+`;
+const TotalText = styled.div`
+  margin-left: 20px;
+`;
+const TotalPrice = styled.div`
+  margin-right: 20px;
 `;
