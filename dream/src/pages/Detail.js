@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styled, { keyframes, css } from "styled-components";
 import ShopIcon from "../assets/shoppingcart.svg";
+import Footer from "../components/Footer";
 
 const Detail = () => {
   const navigate = useNavigate();
@@ -133,6 +134,7 @@ const Detail = () => {
           </CartPop>
         </PopWrap>
       )}
+      <Footer />
     </>
   );
 };
