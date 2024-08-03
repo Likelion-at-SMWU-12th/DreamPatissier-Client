@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import YellowBtn from "../components/YellowBtn";
+import Warning from "../assets/warning.png";
 
 const Cart = () => {
   const formatPrice = (price) => {
@@ -14,12 +15,10 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [anyChecked, setAnyChecked] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
-    console.log("Fetching cart items with token:", token); // 디버깅 로그 추가
-
     axios
       .get("http://127.0.0.1:8000/cart-items/", {
         headers: {
@@ -27,7 +26,6 @@ const Cart = () => {
         },
       })
       .then((response) => {
-        console.log("API response:", response); // 디버깅 로그 추가
         setCartItems(response.data);
       })
       .catch((error) => {
@@ -36,28 +34,49 @@ const Cart = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Cart items updated:", cartItems); // 디버깅 로그 추가
     const checkedItems = cartItems.some((item) => item.selected);
     setAnyChecked(checkedItems);
+
+    const total = cartItems.reduce((acc, item) => {
+      return acc + item.bread.price * item.quantity;
+    }, 0);
+    setTotalPrice(total);
   }, [cartItems]);
 
   const handleQuantityChange = (id, delta) => {
-    console.log("Changing quantity for item id:", id, "Delta:", delta); // 디버깅 로그 추가
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + delta } : item
-      )
+    const updatedItems = cartItems.map((item) =>
+      item.id === id ? { ...item, quantity: item.quantity + delta } : item
     );
+    setCartItems(updatedItems);
+
+    const updatedItem = updatedItems.find((item) => item.id === id);
+
+    // 서버에 PUT 요청을 통해 수량 업데이트
+    const token = localStorage.getItem("token");
+    axios
+      .put(
+        "http://127.0.0.1:8000/cart/",
+        { id: updatedItem.id, quantity: updatedItem.quantity }, // API 명세에 맞는 데이터 형식
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Quantity updated successfully", response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to update quantity", error);
+      });
   };
 
   const handleSelectAll = () => {
-    console.log("Toggling select all:", !selectAll); // 디버깅 로그 추가
     setSelectAll(!selectAll);
     setCartItems(cartItems.map((item) => ({ ...item, selected: !selectAll })));
   };
 
   const handleSelectItem = (id) => {
-    console.log("Toggling selection for item id:", id); // 디버깅 로그 추가
     setCartItems(
       cartItems.map((item) =>
         item.id === id ? { ...item, selected: !item.selected } : item
@@ -67,7 +86,6 @@ const Cart = () => {
 
   const handleDeleteSelected = () => {
     const selectedItems = cartItems.filter((item) => item.selected);
-    console.log("Deleting selected items:", selectedItems); // 디버깅 로그 추가
     const token = localStorage.getItem("token");
 
     axios
@@ -80,7 +98,6 @@ const Cart = () => {
         },
       })
       .then(() => {
-        console.log("Successfully deleted selected items"); // 디버깅 로그 추가
         setCartItems(cartItems.filter((item) => !item.selected));
         setSelectAll(false);
       })
@@ -107,10 +124,12 @@ const Cart = () => {
       <HrDiv />
       <CartItems>
         {cartItems.length === 0 ? (
-          <div>장바구니에 상품이 없습니다.</div>
+          <MsgBox>
+            <WarningImg src={Warning} />
+            <Message>장바구니에 상품이 없습니다.</Message>
+          </MsgBox>
         ) : (
           cartItems.map((item) => {
-            console.log("Rendering item:", item); // 디버깅 로그 추가
             const tags =
               typeof item.bread.tags === "string"
                 ? item.bread.tags.split(",").map((tag) => tag.trim())
@@ -170,6 +189,10 @@ const Cart = () => {
           })
         )}
       </CartItems>
+      <TotalWrap>
+        <TotalText>총 결제 예상 금액</TotalText>
+        <TotalPrice>{formatPrice(totalPrice)}원</TotalPrice>
+      </TotalWrap>
       <YellowBtn
         onBtnClick={() => navigate("/cart/order/")}
         type={"submit"}
@@ -285,6 +308,8 @@ const ProductImgBox = styled.div`
 const ProductImg = styled.img`
   width: 100px;
   height: 100px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px 0 rgba(217, 217, 217, 0.25);
 `;
 
 const ProductDetails = styled.div`
@@ -371,4 +396,44 @@ const HrDiv = styled.div`
   width: 100%;
   border-bottom: 1px solid #d9d9d9;
   box-shadow: 0 2px 4px 0 rgba(217, 217, 217, 0.5);
+`;
+
+const MsgBox = styled.div`
+  width: 100%;
+  text-align: center;
+  margin: 100px 0px;
+`;
+
+const Message = styled.div`
+  text-align: center;
+  font-size: 14px;
+  color: #979797;
+  font-family: "Noto Sans KR";
+  font-weight: medium;
+  padding-bottom: 10px;
+`;
+
+const WarningImg = styled.img`
+  width: 54px;
+  height: auto;
+  margin-bottom: 15px;
+`;
+
+const TotalWrap = styled.div`
+  padding: 20px 0px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px 0 rgba(217, 217, 217, 0.5);
+  border-bottom: 1px solid #d9d9d9;
+  color: var(--brown);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+`;
+const TotalText = styled.div`
+  margin-left: 20px;
+`;
+const TotalPrice = styled.div`
+  margin-right: 20px;
 `;

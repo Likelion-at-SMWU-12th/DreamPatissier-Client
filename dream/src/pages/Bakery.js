@@ -6,7 +6,6 @@ import Search from "../components/Search";
 import Category from "../components/Category";
 import CategoryPage from "./CategoryPage";
 import SearchPage from "./SearchPage";
-import Detail from "./Detail";
 import {
   Routes,
   Route,
@@ -126,7 +125,7 @@ function Bakery() {
 // 카테고리 데이터
 const categories = [
   { name: "bread", uiName: "식빵", imgSrc: Morning },
-  { name: "baguette", uiName: "바게트", imgSrc: Baguette },
+  { name: "baguette", uiName: "바게트/치아바타", imgSrc: Baguette },
   { name: "bagel", uiName: "베이글", imgSrc: Bagle },
   { name: "cake", uiName: "케이크", imgSrc: Cake },
   { name: "donut", uiName: "도넛", imgSrc: Donut },
