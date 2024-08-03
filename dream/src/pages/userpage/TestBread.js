@@ -17,12 +17,15 @@ const TestBread = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
+  // 함수 내 디버깅 로그 추가
   const loadQuestions = (page) => {
     const token = localStorage.getItem("token");
     if (!token) {
       console.error("토큰이 존재하지 않습니다.");
       return;
     }
+
+    console.log(`Fetching questions for page: ${page}`); // 요청 페이지 로그
 
     axios
       .get(`http://127.0.0.1:8000/test/questions/${page}`, {
@@ -31,7 +34,7 @@ const TestBread = () => {
         },
       })
       .then((response) => {
-        console.log("서버로부터 받은 데이터:", response.data);
+        console.log("서버로부터 받은 데이터:", response.data); // 서버 응답 로그
         setQuestions((prevQuestions) => [
           ...prevQuestions,
           {
@@ -49,6 +52,7 @@ const TestBread = () => {
   };
 
   useEffect(() => {
+    console.log(`Current page: ${currentPage}`); // 현재 페이지 로그
     loadQuestions(currentPage); // 첫 번째 질문 로드
   }, [currentPage]);
 
@@ -91,6 +95,7 @@ const TestBread = () => {
         }
       )
       .then((response) => {
+        console.log("테스트 결과 전송 완료:", response.data); // 결과 전송 응답 로그
         navigate(`/test/result/${response.data.result_id}`);
       })
       .catch((error) => {
@@ -125,6 +130,7 @@ const QuestionPage = ({ questions, handleOptionClick }) => {
 
   useEffect(() => {
     if (isNaN(pageIndex) || pageIndex < 0 || pageIndex >= questions.length) {
+      console.warn(`Invalid pageIndex: ${pageIndex}`); // 페이지 인덱스 오류 로그
       navigate("/test/questions/1");
     }
   }, [pageIndex, navigate, questions.length]);

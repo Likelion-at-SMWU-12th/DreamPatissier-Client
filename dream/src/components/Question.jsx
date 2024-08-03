@@ -11,7 +11,7 @@ const Question = ({ q, a, onOptionClick }) => (
         <Button
           key={index}
           onClick={() => onOptionClick(option.type, index)} // 클릭 시 type과 index 전달
-          dangerouslySetInnerHTML={{ __html: option }}
+          dangerouslySetInnerHTML={{ __html: option.text }} // 선택지 텍스트를 HTML로 삽입
         />
       ))}
     </ButtonBox>
