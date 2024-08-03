@@ -21,8 +21,6 @@ import Detail from "./pages/Detail";
 import Signup from "./pages/accounts/Signup";
 import Login from "./pages/accounts/Login";
 import SignClear from "./pages/accounts/SignClear";
-import CategoryPage from "./pages/CategoryPage";
-import SearchPage from "./pages/SearchPage";
 import Cart from "./pages/Cart";
 import Order from "./pages/Order";
 import OrderClear from "./pages/OrderClear";

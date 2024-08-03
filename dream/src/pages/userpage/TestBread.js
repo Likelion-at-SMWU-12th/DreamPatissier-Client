@@ -14,7 +14,7 @@ import axios from "axios";
 const TestBread = () => {
   // 점수, 질문, 현재 페이지 관리
   const [scores, setScores] = useState({ F: 0, T: 0, P: 0, J: 0 });
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
@@ -36,14 +36,14 @@ const TestBread = () => {
       })
       .then((response) => {
         console.log("서버로부터 받은 데이터:", response.data);
-        // 기존 질문 상태를 업데이트하여 새 질문을 추가
-        setQuestions((prevQuestions) => [
+        // 질문 상태를 현재 페이지 번호에 맞게 업데이트
+        setQuestions((prevQuestions) => ({
           ...prevQuestions,
-          {
+          [page]: {
             q: response.data.question,
             a: response.data.choices,
           },
-        ]);
+        }));
       })
       .catch((error) => {
         console.error(
@@ -75,7 +75,7 @@ const TestBread = () => {
 
     setScores((prevScores) => {
       const updatedScores = { ...prevScores, [type]: prevScores[type] + 1 };
-      const nextPage = parseInt(page) + 1; // 다음 페이지 번호 계산
+      const nextPage = page + 1; // 다음 페이지 번호 계산
 
       console.log("Updated Scores:", updatedScores);
       console.log("Total Scores:");
@@ -84,12 +84,11 @@ const TestBread = () => {
       console.log(`P: ${updatedScores.P}`);
       console.log(`J: ${updatedScores.J}`);
 
-      // 다음 페이지가 6 이하이면 페이지를 이동시키고 질문을 로드합니다.
       if (nextPage <= 6) {
         setCurrentPage(nextPage);
         navigate(`/test/questions/${nextPage}`);
       } else {
-        // 결과 페이지로 이동하기 전에 결과를 제출합니다.
+        // 결과 페이지로 이동하기 전에 결과를 제출
         const resultString = getResultString(updatedScores);
         submitResult(resultString);
       }
@@ -130,7 +129,6 @@ const TestBread = () => {
   };
 
   return (
-    // React Router의 Routes를 사용하여 페이지를 설정합니다.
     <Routes>
       <Route
         path="questions/:page"
@@ -152,31 +150,30 @@ const TestBread = () => {
 
 // QuestionPage 컴포넌트 정의
 const QuestionPage = ({ questions, handleOptionClick }) => {
-  const { page } = useParams(); // 현재 페이지를 URL 파라미터에서 가져옵니다.
-  const navigate = useNavigate(); // 페이지 이동을 위한 hook
-  const pageIndex = parseInt(page, 10) - 1; // 페이지 인덱스를 0부터 시작하도록 조정
+  const { page } = useParams();
+  const navigate = useNavigate();
+  const pageNumber = parseInt(page, 10);
 
   useEffect(() => {
-    // 페이지 인덱스가 유효한지 확인하고, 유효하지 않으면 첫 페이지로 이동합니다.
-    if (isNaN(pageIndex) || pageIndex < 0 || pageIndex >= questions.length) {
-      console.warn(`Invalid pageIndex: ${pageIndex}`);
+    if (isNaN(pageNumber) || pageNumber < 1 || pageNumber > 6) {
+      console.warn(`Invalid pageNumber: ${pageNumber}`);
       navigate("/test/questions/1");
     }
-  }, [pageIndex, navigate, questions.length]);
+  }, [pageNumber, navigate]);
 
-  // 현재 페이지의 질문이 로드되지 않은 경우 경고 메시지를 출력하고 아무 것도 렌더링하지 않습니다.
-  if (!questions[pageIndex]) {
+  const currentQuestion = questions[pageNumber];
+  if (!currentQuestion) {
     console.warn("질문 데이터가 비어 있습니다.");
     return null;
   }
 
   return (
     <div>
-      <ProgressBar current={pageIndex} total={6} />
+      <ProgressBar current={pageNumber} total={6} />
       <Question
-        q={questions[pageIndex].q}
-        a={questions[pageIndex].a}
-        onOptionClick={(type) => handleOptionClick(type, page)}
+        q={currentQuestion.q}
+        a={currentQuestion.a}
+        onOptionClick={(type) => handleOptionClick(type, pageNumber)}
       />
     </div>
   );

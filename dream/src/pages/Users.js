@@ -17,11 +17,14 @@ const Users = () => {
         const token = localStorage.getItem("token");
         if (!token) return;
 
-        const response = await axios.get(`/test/result/${resultId}`, {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "http://127.0.0.1:8000/test/result_id",
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
 
         if (response.data && response.data.result_id) {
           setResultId(response.data.result_id);
