@@ -12,7 +12,6 @@ const Result = ({ resetTest }) => {
   const [recommendedProducts, setRecommendedProducts] = useState([]);
 
   useEffect(() => {
-    // fetchResultData 함수 정의
     const fetchResultData = () => {
       axios
         .get(`/test/result/${resultId}`)
@@ -24,18 +23,108 @@ const Result = ({ resetTest }) => {
             localStorage.setItem("result_id", resultId);
           }
 
-          const products = response.data.breads
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 2);
-          console.log("추천 빵 데이터:", products);
-          setRecommendedProducts(products);
+          const breads = response.data.breads;
+
+          let firstRecommendation = null;
+          let secondRecommendation = null;
+
+          if (resultId === "1") {
+            const randomBreads = breads
+              .sort(() => 0.5 - Math.random())
+              .slice(0, 2);
+            firstRecommendation = randomBreads[0];
+            secondRecommendation = randomBreads[1];
+          } else if (resultId === "2") {
+            const mandatoryBread = breads.find((bread) =>
+              bread.name.includes("바게트")
+            );
+
+            if (mandatoryBread) {
+              const otherBreads = breads.filter(
+                (bread) => bread.name !== mandatoryBread.name
+              );
+
+              const randomBread =
+                otherBreads[Math.floor(Math.random() * otherBreads.length)];
+
+              firstRecommendation = mandatoryBread;
+              secondRecommendation = randomBread;
+            }
+          } else if (resultId === "3") {
+            const mandatoryBreads = breads.filter(
+              (bread) =>
+                bread.name.includes("초콜렛") || bread.name.includes("케이크")
+            );
+
+            if (mandatoryBreads.length > 0) {
+              firstRecommendation =
+                mandatoryBreads[
+                  Math.floor(Math.random() * mandatoryBreads.length)
+                ];
+
+              const remainingMandatoryBread = mandatoryBreads.find(
+                (bread) => bread.name !== firstRecommendation.name
+              );
+
+              const otherBreads = breads.filter(
+                (bread) =>
+                  !(
+                    bread.name.includes("초콜렛") ||
+                    bread.name.includes("케이크")
+                  )
+              );
+
+              const candidates = [
+                ...otherBreads,
+                remainingMandatoryBread,
+              ].filter(Boolean); // Filter out undefined
+
+              if (candidates.length > 0) {
+                secondRecommendation =
+                  candidates[Math.floor(Math.random() * candidates.length)];
+              }
+            }
+          } else if (resultId === "4") {
+            const mandatoryBreads = breads.filter((bread) =>
+              bread.name.includes("베이글")
+            );
+
+            if (mandatoryBreads.length > 0) {
+              firstRecommendation =
+                mandatoryBreads[
+                  Math.floor(Math.random() * mandatoryBreads.length)
+                ];
+
+              const remainingMandatoryBread = mandatoryBreads.find(
+                (bread) => bread.name !== firstRecommendation.name
+              );
+
+              const otherBreads = breads.filter(
+                (bread) => !bread.name.includes("베이글")
+              );
+
+              const candidates = [
+                ...otherBreads,
+                remainingMandatoryBread,
+              ].filter(Boolean); // Filter out undefined
+
+              if (candidates.length > 0) {
+                secondRecommendation =
+                  candidates[Math.floor(Math.random() * candidates.length)];
+              }
+            }
+          }
+
+          // Set recommendations only if both are defined
+          if (firstRecommendation && secondRecommendation) {
+            setRecommendedProducts([firstRecommendation, secondRecommendation]);
+          }
         })
         .catch((error) => {
           console.error("결과를 가져오는 중 오류 발생:", error);
         });
     };
 
-    // fetchResultData 함수 호출
     fetchResultData();
   }, [resultId]);
 
@@ -66,21 +155,23 @@ const Result = ({ resetTest }) => {
         <BngImg src={LogoIcon} alt="logo" />
       </RecommendTitle>
       <TypeProductWrap>
-        {recommendedProducts.map((item) => {
+        {recommendedProducts.map((item, index) => {
           return (
-            <StyledLink to={`/bakery/product/${item.id}`} key={item.id}>
-              <ProductBox>
-                <ProductImg src={item.img_src} alt={item.name} />
-                <ProductText>
-                  <Titles>{item.name}</Titles>
-                  <Keywords>
-                    {item.tags.split(",").map((tag, idx) => (
-                      <Tag key={idx}>{tag.trim()}</Tag>
-                    ))}
-                  </Keywords>
-                </ProductText>
-              </ProductBox>
-            </StyledLink>
+            item && (
+              <StyledLink to={`/bakery/product/${item.id}`} key={index}>
+                <ProductBox>
+                  <ProductImg src={item.img_src} alt={item.name} />
+                  <ProductText>
+                    <Titles>{item.name}</Titles>
+                    <Keywords>
+                      {item.tags.split(",").map((tag, idx) => (
+                        <Tag key={idx}>{tag.trim()}</Tag>
+                      ))}
+                    </Keywords>
+                  </ProductText>
+                </ProductBox>
+              </StyledLink>
+            )
           );
         })}
       </TypeProductWrap>
@@ -103,6 +194,8 @@ const Result = ({ resetTest }) => {
 };
 
 export default Result;
+
+// 스타일 정의
 
 // 스타일 정의
 const ResultWrap = styled.div`
