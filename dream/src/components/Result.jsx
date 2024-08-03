@@ -202,6 +202,8 @@ const ProductImg = styled.img`
   width: 96px;
   height: auto;
   margin-right: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.25);
 `;
 
 const ProductText = styled.div`
