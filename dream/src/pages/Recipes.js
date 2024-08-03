@@ -112,6 +112,8 @@ const Recipes = () => {
   const [savedRecipes, setSavedRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(true); // 로딩 상태
+  const [error, setError] = useState(null); // 에러 상태
 
   const currentUser = localStorage.getItem("nickname");
   const navigate = useNavigate();
@@ -119,47 +121,60 @@ const Recipes = () => {
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken || "");
-
-    const loadSavedRecipes = () => {
-      const saved = JSON.parse(localStorage.getItem("savedRecipes")) || [];
-      setSavedRecipes(saved);
-    };
-
-    const fetchRecipes = () => {
-      if (!storedToken) return;
-
-      axios
-        .get("http://127.0.0.1:8000/recipes/", {
-          headers: {
-            Authorization: `Token ${storedToken}`,
-          },
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            const data = response.data;
-            if (Array.isArray(data)) {
-              setRecipes(
-                data.map((recipe) => ({
-                  ...recipe,
-                  tags: recipe.tags ? recipe.tags.split(",") : [],
-                  equipment: recipe.equipment
-                    ? recipe.equipment.split(",")
-                    : [],
-                }))
-              );
-            } else {
-              console.error("Data is not an array", data);
-            }
-          } else {
-            console.error("Unexpected response status:", response.status);
-          }
-        })
-        .catch(handleError);
-    };
-
-    loadSavedRecipes();
-    fetchRecipes();
   }, []);
+
+  useEffect(() => {
+    if (!token) return;
+
+    // Load saved recipes
+    axios
+      .get("http://127.0.0.1:8000/users/saved-recipes/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setSavedRecipes(response.data);
+          localStorage.setItem("savedRecipes", JSON.stringify(response.data));
+        }
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+
+    // Fetch recipes
+    axios
+      .get("http://127.0.0.1:8000/recipes/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          const data = response.data;
+          if (Array.isArray(data)) {
+            setRecipes(
+              data.map((recipe) => ({
+                ...recipe,
+                tags: recipe.tags ? recipe.tags.split(",") : [],
+                equipment: recipe.equipment ? recipe.equipment.split(",") : [],
+              }))
+            );
+          } else {
+            console.error("Data is not an array", data);
+          }
+        } else {
+          console.error("Unexpected response status:", response.status);
+        }
+      })
+      .catch((error) => {
+        setError(error); // 에러 상태 업데이트
+      })
+      .finally(() => {
+        setLoading(false); // 로딩 상태 종료
+      });
+  }, [token]); // 의존성 배열에 token 추가
 
   const filteredRecipes = recipes.filter(
     (recipe) =>
@@ -200,7 +215,9 @@ const Recipes = () => {
           return updatedSaved;
         });
       })
-      .catch(handleError);
+      .catch((error) => {
+        handleError(error);
+      });
   };
 
   const handleDeleteRecipe = (recipeId) => {
@@ -221,7 +238,9 @@ const Recipes = () => {
         );
         console.log(`레시피 ${recipeId}이(가) 삭제되었습니다.`);
       })
-      .catch(handleError);
+      .catch((error) => {
+        handleError(error);
+      });
   };
 
   const handleAddRecipe = () => {
@@ -241,7 +260,13 @@ const Recipes = () => {
       <div className="search-container">
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
-      {filteredRecipes.length > 0 ? (
+      {loading ? (
+        <div className="loading-message">Loading...</div> // 로딩 상태 표시
+      ) : error ? (
+        <div className="error-message">
+          Error loading recipes: {error.message}
+        </div> // 에러 상태 표시
+      ) : filteredRecipes.length > 0 ? (
         filteredRecipes.map((recipe) => (
           <RecipeItem
             key={recipe.id}

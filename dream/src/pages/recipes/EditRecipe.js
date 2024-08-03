@@ -23,6 +23,7 @@ const ImageComponent = ({ image, onImageChange }) => {
         ref={fileInputRef}
         style={{ display: "none" }}
         onChange={onImageChange}
+        id="recipe-image-upload"
       />
       <img src={image} alt="대표사진" className="image-preview" />
     </div>
@@ -43,11 +44,14 @@ const StepComponent = ({ step, index, onStepChange, onStepImageChange }) => {
         ref={fileInputRef}
         style={{ display: "none" }}
         onChange={(e) => onStepImageChange(index, e)}
+        id={`step${index + 1}-image-upload`}
       />
       <div className="image-container" onClick={handleImageClick}>
         <img
           src={
-            step.imageFile ? URL.createObjectURL(step.imageFile) : init_image
+            step.imageFile
+              ? URL.createObjectURL(step.imageFile)
+              : step.imageUrl || init_image
           }
           alt={`조리 단계 ${index + 1} 사진`}
           className="image-preview"
@@ -59,13 +63,14 @@ const StepComponent = ({ step, index, onStepChange, onStepImageChange }) => {
         placeholder="조리방법"
         value={step.description}
         onChange={(e) => onStepChange(index, "description", e.target.value)}
+        id={`step${index + 1}-description`}
       />
     </div>
   );
 };
 
-const WriteRecipe = () => {
-  const { recipeId } = useParams(); // URL에서 recipeId를 가져옵니다
+const EditRecipe = () => {
+  const { id } = useParams();
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [image, setImage] = useState(representPicture);
   const [imageFile, setImageFile] = useState(null);
@@ -73,34 +78,36 @@ const WriteRecipe = () => {
   const [tags, setTags] = useState("");
   const [cookingTime, setCookingTime] = useState("");
   const [equipment, setEquipment] = useState("");
-  const [ingredients, setIngredients] = useState([{ name: "", amount: "" }]);
+  const [ingredients, setIngredients] = useState([{ item: "", quantity: "" }]);
   const [steps, setSteps] = useState(
-    Array(10).fill({ description: "", imageFile: null })
+    Array(10).fill({ description: "", imageFile: null, imageUrl: "" })
   );
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (recipeId) {
+    if (id) {
       axios
-        .get(`http://127.0.0.1:8000/recipes/${recipeId}/`, {
+        .get(`http://127.0.0.1:8000/recipes/${id}/`, {
           headers: {
             Authorization: `Token ${token}`,
           },
         })
         .then((response) => {
           const recipeData = response.data;
-          setImage(recipeData.represent_img || representPicture);
+
+          setImage(recipeData.image || representPicture);
           setImageFile(null);
           setTitle(recipeData.title || "");
-          setTags(recipeData.tags.join(", ") || "");
-          setCookingTime(recipeData.cooking_time || "");
+          setTags(recipeData.tags || "");
+          setCookingTime(recipeData.cookingTime || "");
           setEquipment(recipeData.equipment || "");
           setIngredients(recipeData.ingredients || [{ name: "", amount: "" }]);
           setSteps(
-            recipeData.steps.map((step) => ({
-              description: step.description,
+            Array.from({ length: 10 }).map((_, index) => ({
+              description: recipeData[`step${index + 1}_description`] || "",
               imageFile: null,
-            })) || Array(10).fill({ description: "", imageFile: null })
+              imageUrl: recipeData[`step${index + 1}_image`] || "",
+            }))
           );
         })
         .catch((error) => {
@@ -108,7 +115,7 @@ const WriteRecipe = () => {
           alert("레시피 정보를 불러오는 데 실패했습니다.");
         });
     }
-  }, [recipeId, token]);
+  }, [id, token]);
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -128,7 +135,11 @@ const WriteRecipe = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const updatedSteps = [...steps];
-      updatedSteps[index] = { ...updatedSteps[index], imageFile: file };
+      updatedSteps[index] = {
+        ...updatedSteps[index],
+        imageFile: file,
+        imageUrl: "",
+      };
       setSteps(updatedSteps);
     }
   };
@@ -146,12 +157,12 @@ const WriteRecipe = () => {
     }
 
     const formData = new FormData();
-    if (image) formData.append("image", imageFile);
+    if (imageFile) formData.append("image", imageFile);
     if (title) formData.append("title", title);
     if (tags) formData.append("tags", tags);
-    if (cookingTime) formData.append("cookingTime", cookingTime);
+    if (cookingTime) formData.append("cooking_time", cookingTime);
     if (equipment) formData.append("equipment", equipment);
-    if (ingredients)
+    if (ingredients.length > 0)
       formData.append("ingredients", JSON.stringify(ingredients));
 
     steps.forEach((step, index) => {
@@ -161,11 +172,11 @@ const WriteRecipe = () => {
       formData.append(`step${index + 1}_description`, step.description);
     });
 
-    const authorUsername = localStorage.getItem("username"); // 사용자 이름을 로컬 스토리지에서 가져옵니다
+    const authorUsername = localStorage.getItem("username");
     formData.append("author", authorUsername);
 
     axios
-      .put(`http://127.0.0.1:8000/recipes/${recipeId}/`, formData, {
+      .put(`http://127.0.0.1:8000/recipes/${id}/`, formData, {
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "multipart/form-data",
@@ -209,6 +220,8 @@ const WriteRecipe = () => {
           value={title}
           placeholder="레시피명을 작성해 주세요."
           onChange={(e) => setTitle(e.target.value)}
+          id="recipe-title"
+          name="title"
         />
         <input
           className="input-recipe-data"
@@ -216,6 +229,8 @@ const WriteRecipe = () => {
           value={tags}
           placeholder="#웰니스 키워드를 작성해 주세요."
           onChange={(e) => setTags(e.target.value)}
+          id="recipe-tags"
+          name="tags"
         />
         <input
           className="input-recipe-data"
@@ -223,6 +238,8 @@ const WriteRecipe = () => {
           value={cookingTime}
           placeholder="조리시간을 작성해 주세요."
           onChange={(e) => setCookingTime(e.target.value)}
+          id="recipe-cooking-time"
+          name="cooking_time"
         />
         <input
           className="input-recipe-data"
@@ -230,6 +247,8 @@ const WriteRecipe = () => {
           value={equipment}
           placeholder="조리기구를 하나만 작성해 주세요. (전자레인지/오븐/에어프라이어 등)"
           onChange={(e) => setEquipment(e.target.value)}
+          id="recipe-equipment"
+          name="equipment"
         />
 
         <div className="style2">
@@ -240,26 +259,30 @@ const WriteRecipe = () => {
                 <input
                   type="text"
                   placeholder="재료명"
-                  value={ingredient.name}
+                  value={ingredient.item}
                   onChange={(e) =>
                     setIngredients((prevIngredients) =>
                       prevIngredients.map((ing, i) =>
-                        i === index ? { ...ing, name: e.target.value } : ing
+                        i === index ? { ...ing, item: e.target.value } : ing
                       )
                     )
                   }
+                  id={`ingredient-${index}-item`}
+                  name={`ingredient-${index}-item`}
                 />
                 <input
                   type="text"
                   placeholder="수량"
-                  value={ingredient.amount}
+                  value={ingredient.quantity}
                   onChange={(e) =>
                     setIngredients((prevIngredients) =>
                       prevIngredients.map((ing, i) =>
-                        i === index ? { ...ing, amount: e.target.value } : ing
+                        i === index ? { ...ing, quantity: e.target.value } : ing
                       )
                     )
                   }
+                  id={`ingredient-${index}-quantity`}
+                  name={`ingredient-${index}-quantity`}
                 />
               </div>
             ))}
@@ -294,4 +317,4 @@ const WriteRecipe = () => {
   );
 };
 
-export default WriteRecipe;
+export default EditRecipe;
