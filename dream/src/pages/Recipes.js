@@ -126,32 +126,31 @@ const Recipes = () => {
   useEffect(() => {
     if (!token) return;
 
-    const loadSavedRecipes = async () => {
-      try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/users/saved-recipes/",
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          }
-        );
+    // Load saved recipes
+    axios
+      .get("http://127.0.0.1:8000/users/saved-recipes/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((response) => {
         if (response.status === 200) {
           setSavedRecipes(response.data);
           localStorage.setItem("savedRecipes", JSON.stringify(response.data));
         }
-      } catch (error) {
+      })
+      .catch((error) => {
         handleError(error);
-      }
-    };
+      });
 
-    const fetchRecipes = async () => {
-      try {
-        const response = await axios.get("http://127.0.0.1:8000/recipes/", {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
+    // Fetch recipes
+    axios
+      .get("http://127.0.0.1:8000/recipes/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((response) => {
         if (response.status === 200) {
           const data = response.data;
           if (Array.isArray(data)) {
@@ -168,15 +167,13 @@ const Recipes = () => {
         } else {
           console.error("Unexpected response status:", response.status);
         }
-      } catch (error) {
+      })
+      .catch((error) => {
         setError(error); // 에러 상태 업데이트
-      } finally {
+      })
+      .finally(() => {
         setLoading(false); // 로딩 상태 종료
-      }
-    };
-
-    loadSavedRecipes();
-    fetchRecipes();
+      });
   }, [token]); // 의존성 배열에 token 추가
 
   const filteredRecipes = recipes.filter(
@@ -190,9 +187,9 @@ const Recipes = () => {
       )
   );
 
-  const handleToggleSave = async (recipeId) => {
-    try {
-      await axios.post(
+  const handleToggleSave = (recipeId) => {
+    axios
+      .post(
         `http://127.0.0.1:8000/users/saved-recipes/${recipeId}`,
         {},
         {
@@ -200,46 +197,50 @@ const Recipes = () => {
             Authorization: `Token ${token}`,
           },
         }
-      );
-      setSavedRecipes((prevSaved) => {
-        const updatedSaved = prevSaved.includes(recipeId)
-          ? prevSaved.filter((id) => id !== recipeId)
-          : [...prevSaved, recipeId];
+      )
+      .then(() => {
+        setSavedRecipes((prevSaved) => {
+          const updatedSaved = prevSaved.includes(recipeId)
+            ? prevSaved.filter((id) => id !== recipeId)
+            : [...prevSaved, recipeId];
 
-        localStorage.setItem("savedRecipes", JSON.stringify(updatedSaved));
+          localStorage.setItem("savedRecipes", JSON.stringify(updatedSaved));
 
-        console.log(
-          `레시피 ${recipeId}의 스크랩이 ${
-            prevSaved.includes(recipeId) ? "취소되었습니다" : "되었습니다"
-          }.`
-        );
+          console.log(
+            `레시피 ${recipeId}의 스크랩이 ${
+              prevSaved.includes(recipeId) ? "취소되었습니다" : "되었습니다"
+            }.`
+          );
 
-        return updatedSaved;
+          return updatedSaved;
+        });
+      })
+      .catch((error) => {
+        handleError(error);
       });
-    } catch (error) {
-      handleError(error);
-    }
   };
 
-  const handleDeleteRecipe = async (recipeId) => {
+  const handleDeleteRecipe = (recipeId) => {
     if (!token) {
       console.error("No token found in localStorage.");
       return;
     }
 
-    try {
-      await axios.delete(`http://127.0.0.1:8000/recipes/${recipeId}`, {
+    axios
+      .delete(`http://127.0.0.1:8000/recipes/${recipeId}`, {
         headers: {
           Authorization: `Token ${token}`,
         },
+      })
+      .then(() => {
+        setRecipes((prevRecipes) =>
+          prevRecipes.filter((recipe) => recipe.id !== recipeId)
+        );
+        console.log(`레시피 ${recipeId}이(가) 삭제되었습니다.`);
+      })
+      .catch((error) => {
+        handleError(error);
       });
-      setRecipes((prevRecipes) =>
-        prevRecipes.filter((recipe) => recipe.id !== recipeId)
-      );
-      console.log(`레시피 ${recipeId}이(가) 삭제되었습니다.`);
-    } catch (error) {
-      handleError(error);
-    }
   };
 
   const handleAddRecipe = () => {
