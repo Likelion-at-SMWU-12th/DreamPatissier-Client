@@ -288,6 +288,8 @@ const ProductImgBox = styled.div`
 const ProductImg = styled.img`
   width: 100px;
   height: 100px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px 0 rgba(217, 217, 217, 0.25);
 `;
 
 const ProductDetails = styled.div`
@@ -379,7 +381,7 @@ const HrDiv = styled.div`
 const MsgBox = styled.div`
   width: 100%;
   text-align: center;
-  margin-top: 150px;
+  margin: 100px 0px;
 `;
 
 const Message = styled.div`
