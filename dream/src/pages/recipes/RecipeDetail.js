@@ -11,6 +11,7 @@ import unsavedIcon from "../../assets/unsaved-icon.png";
 import editIcon from "../../assets/edit-icon.png";
 import deleteIcon from "../../assets/delete-icon.png";
 
+// 레시피 상세 컴포넌트
 const RecipeDetail = () => {
   const [recipe, setRecipe] = useState(null);
   const [isAuthor, setIsAuthor] = useState(false);
@@ -19,6 +20,8 @@ const RecipeDetail = () => {
   const navigate = useNavigate();
   const [token, setToken] = useState("");
   const [username, setUsername] = useState(""); // 현재 사용자 이름 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태
+  const [error, setError] = useState(null); // 에러 상태
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -47,9 +50,12 @@ const RecipeDetail = () => {
           // 로그 출력
           console.log("Recipe Author:", recipeData.author);
           console.log("Current Username:", storedUsername);
+          setLoading(false);
         })
         .catch((error) => {
           console.error("레시피 불러오기에 실패했습니다:", error);
+          setError(error);
+          setLoading(false);
         });
     };
 
@@ -98,7 +104,17 @@ const RecipeDetail = () => {
       });
   };
 
-  if (!recipe) return <div>Loading...</div>;
+  if (loading) {
+    return <div>Loading...</div>; // 로딩 중일 때 표시
+  }
+
+  if (error) {
+    return <div>Error loading recipe detail: {error.message}</div>; // 에러 발생 시 표시
+  }
+
+  if (!recipe) {
+    return <div>Recipe not found</div>; // 레시피가 없는 경우 표시
+  }
 
   // 조리 단계 데이터를 배열로 변환
   const steps = [];
@@ -109,6 +125,14 @@ const RecipeDetail = () => {
       steps.push({ image, description });
     }
   }
+
+  // recipe.tags와 recipe.equipment이 배열이 아닐 경우를 대비해 기본값 처리
+  const tags = Array.isArray(recipe.tags)
+    ? recipe.tags.join(", ")
+    : "태그 정보 없음";
+  const equipment = Array.isArray(recipe.equipment)
+    ? recipe.equipment.join(", ")
+    : "조리도구 정보 없음";
 
   return (
     <div className="recipe-detail-container">
@@ -125,7 +149,7 @@ const RecipeDetail = () => {
       <div className="header-container">
         <div className="left-content">
           <div className="show_title">{recipe.title}</div>
-          <div className="show_tag">{recipe.tags}</div>
+          <div className="show_tag">{tags}</div>
         </div>
         <div className="recipe-buttons">
           {isAuthor ? (
@@ -198,14 +222,14 @@ const RecipeDetail = () => {
               <img className="time_img" src={timerIcon} alt="조리시간 아이콘" />
               조리시간
             </div>
-            <div className="time_show">{recipe.cookingTime}</div>
+            <div className="time_show">{recipe.cookingTime || "시간 미정"}</div>
           </div>
           <div>
             <div className="cate_show">
               <img className="tool_img" src={toolIcon} alt="조리도구 아이콘" />
               조리도구
             </div>
-            <div className="equi_show">{recipe.equipment}</div>
+            <div className="equi_show">{equipment}</div>
           </div>
         </div>
       </div>

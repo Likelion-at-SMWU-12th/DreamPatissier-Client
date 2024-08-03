@@ -8,14 +8,16 @@ import savedIcon from "../../assets/saved-icon.png";
 import unsavedIcon from "../../assets/unsaved-icon.png";
 import altIcon from "../../assets/alt.png";
 
+// SavedRecipes 컴포넌트
 const SavedRecipes = () => {
-  const navigate = useNavigate();
-  const [recipes, setRecipes] = useState([]);
-  const [token, setToken] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const navigate = useNavigate(); // 페이지 이동을 위한 hook
+  const [recipes, setRecipes] = useState([]); // 레시피 데이터 상태
+  const [token, setToken] = useState(""); // 인증 토큰 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태
+  const [error, setError] = useState(null); // 에러 상태
 
   useEffect(() => {
+    // 로컬 스토리지에서 토큰 가져오기
     const storedToken = localStorage.getItem("token");
     setToken(storedToken || "");
 
@@ -25,6 +27,7 @@ const SavedRecipes = () => {
       return;
     }
 
+    // 저장된 레시피를 가져오는 API 요청
     axios
       .get("http://127.0.0.1:8000/users/saved-recipes", {
         headers: {
@@ -52,13 +55,13 @@ const SavedRecipes = () => {
         setLoading(false);
       })
       .catch((error) => {
-        setError(error);
-        setLoading(false);
+        setError(error); // 에러 상태 업데이트
+        setLoading(false); // 로딩 상태 종료
       });
-  }, [token]);
+  }, [token]); // token이 변경될 때마다 실행
 
   const handleDetailRecipe = (id) => {
-    navigate(`/recipes/${id}`);
+    navigate(`/recipes/${id}`); // 레시피 세부 페이지로 이동
   };
 
   const onToggleSave = (id) => {
@@ -85,11 +88,11 @@ const SavedRecipes = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>; // 로딩 중일 때 표시
   }
 
   if (error) {
-    return <div>Error loading saved recipes: {error.message}</div>;
+    return <div>Error loading saved recipes: {error.message}</div>; // 에러 발생 시 표시
   }
 
   return (
@@ -115,7 +118,7 @@ const SavedRecipes = () => {
                       alt="Equipment"
                     />
                     <div className="saved-recipe-sub-show">
-                      {recipe.equipment}
+                      {recipe.equipment.join(", ")}
                     </div>
                     <img
                       className="time_img_saved"

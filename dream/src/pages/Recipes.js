@@ -112,6 +112,8 @@ const Recipes = () => {
   const [savedRecipes, setSavedRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(true); // 로딩 상태
+  const [error, setError] = useState(null); // 에러 상태
 
   const currentUser = localStorage.getItem("nickname");
   const navigate = useNavigate();
@@ -119,47 +121,63 @@ const Recipes = () => {
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken || "");
+  }, []);
 
-    const loadSavedRecipes = () => {
-      const saved = JSON.parse(localStorage.getItem("savedRecipes")) || [];
-      setSavedRecipes(saved);
+  useEffect(() => {
+    if (!token) return;
+
+    const loadSavedRecipes = async () => {
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8000/users/saved-recipes/",
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          setSavedRecipes(response.data);
+          localStorage.setItem("savedRecipes", JSON.stringify(response.data));
+        }
+      } catch (error) {
+        handleError(error);
+      }
     };
 
-    const fetchRecipes = () => {
-      if (!storedToken) return;
-
-      axios
-        .get("http://127.0.0.1:8000/recipes/", {
+    const fetchRecipes = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/recipes/", {
           headers: {
-            Authorization: `Token ${storedToken}`,
+            Authorization: `Token ${token}`,
           },
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            const data = response.data;
-            if (Array.isArray(data)) {
-              setRecipes(
-                data.map((recipe) => ({
-                  ...recipe,
-                  tags: recipe.tags ? recipe.tags.split(",") : [],
-                  equipment: recipe.equipment
-                    ? recipe.equipment.split(",")
-                    : [],
-                }))
-              );
-            } else {
-              console.error("Data is not an array", data);
-            }
+        });
+        if (response.status === 200) {
+          const data = response.data;
+          if (Array.isArray(data)) {
+            setRecipes(
+              data.map((recipe) => ({
+                ...recipe,
+                tags: recipe.tags ? recipe.tags.split(",") : [],
+                equipment: recipe.equipment ? recipe.equipment.split(",") : [],
+              }))
+            );
           } else {
-            console.error("Unexpected response status:", response.status);
+            console.error("Data is not an array", data);
           }
-        })
-        .catch(handleError);
+        } else {
+          console.error("Unexpected response status:", response.status);
+        }
+      } catch (error) {
+        setError(error); // 에러 상태 업데이트
+      } finally {
+        setLoading(false); // 로딩 상태 종료
+      }
     };
 
     loadSavedRecipes();
     fetchRecipes();
-  }, []);
+  }, [token]); // 의존성 배열에 token 추가
 
   const filteredRecipes = recipes.filter(
     (recipe) =>
@@ -172,9 +190,9 @@ const Recipes = () => {
       )
   );
 
-  const handleToggleSave = (recipeId) => {
-    axios
-      .post(
+  const handleToggleSave = async (recipeId) => {
+    try {
+      await axios.post(
         `http://127.0.0.1:8000/users/saved-recipes/${recipeId}`,
         {},
         {
@@ -182,46 +200,46 @@ const Recipes = () => {
             Authorization: `Token ${token}`,
           },
         }
-      )
-      .then(() => {
-        setSavedRecipes((prevSaved) => {
-          const updatedSaved = prevSaved.includes(recipeId)
-            ? prevSaved.filter((id) => id !== recipeId)
-            : [...prevSaved, recipeId];
+      );
+      setSavedRecipes((prevSaved) => {
+        const updatedSaved = prevSaved.includes(recipeId)
+          ? prevSaved.filter((id) => id !== recipeId)
+          : [...prevSaved, recipeId];
 
-          localStorage.setItem("savedRecipes", JSON.stringify(updatedSaved));
+        localStorage.setItem("savedRecipes", JSON.stringify(updatedSaved));
 
-          console.log(
-            `레시피 ${recipeId}의 스크랩이 ${
-              prevSaved.includes(recipeId) ? "취소되었습니다" : "되었습니다"
-            }.`
-          );
+        console.log(
+          `레시피 ${recipeId}의 스크랩이 ${
+            prevSaved.includes(recipeId) ? "취소되었습니다" : "되었습니다"
+          }.`
+        );
 
-          return updatedSaved;
-        });
-      })
-      .catch(handleError);
+        return updatedSaved;
+      });
+    } catch (error) {
+      handleError(error);
+    }
   };
 
-  const handleDeleteRecipe = (recipeId) => {
+  const handleDeleteRecipe = async (recipeId) => {
     if (!token) {
       console.error("No token found in localStorage.");
       return;
     }
 
-    axios
-      .delete(`http://127.0.0.1:8000/recipes/${recipeId}`, {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/recipes/${recipeId}`, {
         headers: {
           Authorization: `Token ${token}`,
         },
-      })
-      .then(() => {
-        setRecipes((prevRecipes) =>
-          prevRecipes.filter((recipe) => recipe.id !== recipeId)
-        );
-        console.log(`레시피 ${recipeId}이(가) 삭제되었습니다.`);
-      })
-      .catch(handleError);
+      });
+      setRecipes((prevRecipes) =>
+        prevRecipes.filter((recipe) => recipe.id !== recipeId)
+      );
+      console.log(`레시피 ${recipeId}이(가) 삭제되었습니다.`);
+    } catch (error) {
+      handleError(error);
+    }
   };
 
   const handleAddRecipe = () => {
@@ -241,7 +259,13 @@ const Recipes = () => {
       <div className="search-container">
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
-      {filteredRecipes.length > 0 ? (
+      {loading ? (
+        <div className="loading-message">Loading...</div> // 로딩 상태 표시
+      ) : error ? (
+        <div className="error-message">
+          Error loading recipes: {error.message}
+        </div> // 에러 상태 표시
+      ) : filteredRecipes.length > 0 ? (
         filteredRecipes.map((recipe) => (
           <RecipeItem
             key={recipe.id}
