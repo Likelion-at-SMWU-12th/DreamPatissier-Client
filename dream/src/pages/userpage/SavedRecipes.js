@@ -6,12 +6,14 @@ import toolIcon2 from "../../assets/tool2.png";
 import "../../styles/SavedRecipes.css";
 import savedIcon from "../../assets/saved-icon.png";
 import unsavedIcon from "../../assets/unsaved-icon.png";
-import re_image from "./bread.png"; // 필요 없으면 삭제할 수 있음
+import altIcon from "../../assets/alt.png";
 
 const SavedRecipes = () => {
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
+  const [recipes, setRecipes] = useState([]);
   const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -19,6 +21,7 @@ const SavedRecipes = () => {
 
     if (!storedToken) {
       console.error("No token found in localStorage.");
+      setLoading(false);
       return;
     }
 
@@ -32,13 +35,12 @@ const SavedRecipes = () => {
         if (response.status === 200) {
           const data = response.data;
           if (Array.isArray(data)) {
-            setProducts(
-              data.map((product) => ({
-                ...product,
-                tags: product.tags ? product.tags.split(",") : [],
-                equipment: product.equipment
-                  ? product.equipment.split(",")
-                  : [],
+            setRecipes(
+              data.map((recipe) => ({
+                ...recipe,
+                tags: recipe.tags ? recipe.tags.split(",") : [],
+                equipment: recipe.equipment ? recipe.equipment.split(",") : [],
+                isSaved: true, // 서버에서 가져온 데이터로 isSaved 상태를 설정합니다.
               }))
             );
           } else {
@@ -47,20 +49,11 @@ const SavedRecipes = () => {
         } else {
           console.error("Unexpected response status:", response.status);
         }
+        setLoading(false);
       })
       .catch((error) => {
-        if (error.response) {
-          console.error(
-            "Error:",
-            error.response.data,
-            "Status:",
-            error.response.status
-          );
-        } else if (error.request) {
-          console.error("Error: No response received");
-        } else {
-          console.error("Error:", error.message);
-        }
+        setError(error);
+        setLoading(false);
       });
   }, [token]);
 
@@ -69,30 +62,52 @@ const SavedRecipes = () => {
   };
 
   const onToggleSave = (id) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === id ? { ...product, isSaved: !product.isSaved } : product
+    axios
+      .post(
+        `http://127.0.0.1:8000/users/saved-recipes/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
       )
-    );
+      .then(() => {
+        setRecipes((prevRecipes) =>
+          prevRecipes.map((recipe) =>
+            recipe.id === id ? { ...recipe, isSaved: !recipe.isSaved } : recipe
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Failed to toggle save status:", error);
+      });
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading saved recipes: {error.message}</div>;
+  }
 
   return (
     <div className="order-list">
       <div className="orderlist-title2">저장한 레시피</div>
-      {products
-        .filter((product) => product.isSaved)
-        .map((product) => (
-          <div key={product.id} onClick={() => handleDetailRecipe(product.id)}>
+      {recipes.length > 0 ? (
+        recipes.map((recipe) => (
+          <div key={recipe.id} onClick={() => handleDetailRecipe(recipe.id)}>
             <div className="product-card2">
               <div className="product-show3">
                 <img
-                  src={product.represent_img || re_image}
-                  alt={product.title}
+                  src={recipe.image}
+                  alt={recipe.title}
                   className="product-image3"
                 />
                 <div className="product-info2">
-                  <h3 className="product-name">{product.title}</h3>
-                  <div className="product-tags2">{product.tags.join(", ")}</div>
+                  <h3 className="product-name">{recipe.title}</h3>
+                  <div className="product-tags2">{recipe.tags.join(", ")}</div>
                   <div className="info-container2">
                     <img
                       className="tool_img_saved"
@@ -100,7 +115,7 @@ const SavedRecipes = () => {
                       alt="Equipment"
                     />
                     <div className="saved-recipe-sub-show">
-                      {product.equipment.join(", ")}
+                      {recipe.equipment}
                     </div>
                     <img
                       className="time_img_saved"
@@ -108,7 +123,7 @@ const SavedRecipes = () => {
                       alt="Cooking Time"
                     />
                     <div className="saved-recipe-sub-show">
-                      {product.cookingTime}
+                      {recipe.cookingTime || "시간 미정"}
                     </div>
                   </div>
                 </div>
@@ -116,11 +131,11 @@ const SavedRecipes = () => {
                   className="save-btn"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onToggleSave(product.id);
+                    onToggleSave(recipe.id);
                   }}
                 >
                   <img
-                    src={product.isSaved ? savedIcon : unsavedIcon}
+                    src={recipe.isSaved ? savedIcon : unsavedIcon}
                     alt="Save"
                   />
                 </button>
@@ -128,7 +143,13 @@ const SavedRecipes = () => {
             </div>
             <hr className="divider" />
           </div>
-        ))}
+        ))
+      ) : (
+        <div className="no-recipes-message">
+          <img src={altIcon} alt="No recipes icon" />
+          <p>저장된 레시피가 존재하지 않습니다.</p>
+        </div>
+      )}
     </div>
   );
 };
