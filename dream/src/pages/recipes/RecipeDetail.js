@@ -18,12 +18,19 @@ const RecipeDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [token, setToken] = useState("");
+  const [username, setUsername] = useState(""); // 현재 사용자 이름 상태
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
+    const storedUsername = localStorage.getItem("username"); // username 저장 위치
+
     if (storedToken) {
       setToken(storedToken);
     }
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+
     const fetchRecipe = () => {
       axios
         .get(`http://127.0.0.1:8000/recipes/${id}`, {
@@ -32,9 +39,14 @@ const RecipeDetail = () => {
           },
         })
         .then((response) => {
-          setRecipe(response.data);
-          setIsAuthor(response.data.authorId === /* 로그인된 사용자 ID */ 1);
-          setIsSaved(response.data.isSaved); // Assuming `isSaved` is returned from API
+          const recipeData = response.data;
+          setRecipe(recipeData);
+          setIsAuthor(recipeData.author === storedUsername);
+          setIsSaved(recipeData.isSaved); // Assuming `isSaved` is returned from API
+
+          // 로그 출력
+          console.log("Recipe Author:", recipeData.author);
+          console.log("Current Username:", storedUsername);
         })
         .catch((error) => {
           console.error("레시피 불러오기에 실패했습니다:", error);
@@ -115,7 +127,7 @@ const RecipeDetail = () => {
           <div className="show_title">{recipe.title}</div>
           <div className="show_tag">{recipe.tags}</div>
         </div>
-        <div className="right-content">
+        <div className="recipe-buttons">
           {isAuthor ? (
             <>
               <button
