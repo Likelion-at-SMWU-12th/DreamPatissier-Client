@@ -159,7 +159,7 @@ const Recipes = () => {
 
     loadSavedRecipes();
     fetchRecipes();
-  }, [token]);
+  }, []);
 
   const filteredRecipes = recipes.filter(
     (recipe) =>
