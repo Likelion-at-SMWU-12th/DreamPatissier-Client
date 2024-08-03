@@ -18,6 +18,8 @@ const Cart = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
+    console.log("Fetching cart items with token:", token); // 디버깅 로그 추가
+
     axios
       .get("http://127.0.0.1:8000/cart-items/", {
         headers: {
@@ -25,6 +27,7 @@ const Cart = () => {
         },
       })
       .then((response) => {
+        console.log("API response:", response); // 디버깅 로그 추가
         setCartItems(response.data);
       })
       .catch((error) => {
@@ -33,11 +36,13 @@ const Cart = () => {
   }, []);
 
   useEffect(() => {
+    console.log("Cart items updated:", cartItems); // 디버깅 로그 추가
     const checkedItems = cartItems.some((item) => item.selected);
     setAnyChecked(checkedItems);
   }, [cartItems]);
 
   const handleQuantityChange = (id, delta) => {
+    console.log("Changing quantity for item id:", id, "Delta:", delta); // 디버깅 로그 추가
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id ? { ...item, quantity: item.quantity + delta } : item
@@ -46,11 +51,13 @@ const Cart = () => {
   };
 
   const handleSelectAll = () => {
+    console.log("Toggling select all:", !selectAll); // 디버깅 로그 추가
     setSelectAll(!selectAll);
     setCartItems(cartItems.map((item) => ({ ...item, selected: !selectAll })));
   };
 
   const handleSelectItem = (id) => {
+    console.log("Toggling selection for item id:", id); // 디버깅 로그 추가
     setCartItems(
       cartItems.map((item) =>
         item.id === id ? { ...item, selected: !item.selected } : item
@@ -60,6 +67,7 @@ const Cart = () => {
 
   const handleDeleteSelected = () => {
     const selectedItems = cartItems.filter((item) => item.selected);
+    console.log("Deleting selected items:", selectedItems); // 디버깅 로그 추가
     const token = localStorage.getItem("token");
 
     axios
@@ -72,6 +80,7 @@ const Cart = () => {
         },
       })
       .then(() => {
+        console.log("Successfully deleted selected items"); // 디버깅 로그 추가
         setCartItems(cartItems.filter((item) => !item.selected));
         setSelectAll(false);
       })
@@ -100,55 +109,65 @@ const Cart = () => {
         {cartItems.length === 0 ? (
           <div>장바구니에 상품이 없습니다.</div>
         ) : (
-          cartItems.map((item) => (
-            <React.Fragment key={item.id}>
-              <CartItem>
-                <SelectItem>
-                  <StyledCheck
-                    type="checkbox"
-                    checked={item.selected}
-                    onChange={() => handleSelectItem(item.id)}
-                  />
-                </SelectItem>
-                <ProductBox>
-                  <ProductImgBox>
-                    <ProductImg
-                      src={item.bread.img_src}
-                      alt={item.bread.name}
+          cartItems.map((item) => {
+            console.log("Rendering item:", item); // 디버깅 로그 추가
+            const tags =
+              typeof item.bread.tags === "string"
+                ? item.bread.tags.split(",").map((tag) => tag.trim())
+                : item.bread.tags || [];
+
+            return (
+              <React.Fragment key={item.id}>
+                <CartItem>
+                  <SelectItem>
+                    <StyledCheck
+                      type="checkbox"
+                      checked={item.selected}
+                      onChange={() => handleSelectItem(item.id)}
                     />
-                  </ProductImgBox>
-                  <ProductDetails>
-                    <ProductText>
-                      <Titles>{item.bread.name}</Titles>
-                      <Keywords>
-                        {item.bread.tags.join(", ")} {/* 수정된 부분 */}
-                      </Keywords>
-                      <QuantityPriceWrapper>
-                        <QuantityControl>
-                          <button
-                            onClick={() => handleQuantityChange(item.id, -1)}
-                            disabled={item.quantity <= 1}
-                          >
-                            <strong>-</strong>
-                          </button>
-                          <span>{item.quantity}</span>
-                          <button
-                            onClick={() => handleQuantityChange(item.id, 1)}
-                          >
-                            +
-                          </button>
-                        </QuantityControl>
-                        <ItemPrice>
-                          {formatPrice(item.bread.price * item.quantity)}원
-                        </ItemPrice>
-                      </QuantityPriceWrapper>
-                    </ProductText>
-                  </ProductDetails>
-                </ProductBox>
-              </CartItem>
-              <HrDiv />
-            </React.Fragment>
-          ))
+                  </SelectItem>
+                  <ProductBox>
+                    <ProductImgBox>
+                      <ProductImg
+                        src={item.bread.img_src}
+                        alt={item.bread.name}
+                      />
+                    </ProductImgBox>
+                    <ProductDetails>
+                      <ProductText>
+                        <Titles>{item.bread.name}</Titles>
+                        <Keywords>
+                          {tags.map((tag, index) => (
+                            <Tag key={index}>{tag}</Tag>
+                          ))}
+                        </Keywords>
+                        <QuantityPriceWrapper>
+                          <QuantityControl>
+                            <button
+                              onClick={() => handleQuantityChange(item.id, -1)}
+                              disabled={item.quantity <= 1}
+                            >
+                              <strong>-</strong>
+                            </button>
+                            <span>{item.quantity}</span>
+                            <button
+                              onClick={() => handleQuantityChange(item.id, 1)}
+                            >
+                              +
+                            </button>
+                          </QuantityControl>
+                          <ItemPrice>
+                            {formatPrice(item.bread.price * item.quantity)}원
+                          </ItemPrice>
+                        </QuantityPriceWrapper>
+                      </ProductText>
+                    </ProductDetails>
+                  </ProductBox>
+                </CartItem>
+                <HrDiv />
+              </React.Fragment>
+            );
+          })
         )}
       </CartItems>
       <YellowBtn
