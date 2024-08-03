@@ -1,14 +1,39 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/Users.css";
 import { Link, useNavigate } from "react-router-dom";
 import advertise from "../assets/advertise.png";
 import profile from "../assets/myprofile.png";
+import axios from "axios";
 
 const Users = () => {
   const navigate = useNavigate();
+  const [resultId, setResultId] = useState(null);
   const username = localStorage.getItem("username");
   const last_name = localStorage.getItem("last_name");
-  const resultId = localStorage.getItem("result_id"); // 로그인 후 결과 ID를 로컬 스토리지에 저장
+
+  useEffect(() => {
+    const fetchResultId = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const response = await axios.get(`/test/result/${resultId}`, {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        });
+
+        if (response.data && response.data.result_id) {
+          setResultId(response.data.result_id);
+          localStorage.setItem("result_id", response.data.result_id); // 최신 결과 ID를 로컬 스토리지에 저장
+        }
+      } catch (error) {
+        console.error("결과 ID를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchResultId();
+  }, []);
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -17,14 +42,14 @@ const Users = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("last_name");
       localStorage.removeItem("username");
-      localStorage.removeItem("result_id"); // 로그아웃 시 result_id 삭제
+      localStorage.removeItem("result_id");
       navigate("/accounts/login/");
     }
   };
 
   const handleTestStart = () => {
     const startTest = window.confirm(
-      "빵 유형 테스트를 해주세요\n\n'하러가기'를 클릭하면 시작합니다."
+      "유형테스트 결과가 없어요! 테스트 시작으로 안내합니다."
     );
     if (startTest) {
       navigate("/test/questions/1");
@@ -67,9 +92,9 @@ const Users = () => {
             빵 유형 테스트 결과 보기 &gt;
           </Link>
         ) : (
-          <p className="option-link" onClick={handleTestStart}>
-            빵 유형 테스트를 시작하세요 &gt;
-          </p>
+          <div className="option-link" onClick={handleTestStart}>
+            빵 유형 테스트 결과 보기 &gt;
+          </div>
         )}
 
         <Link to="/of-use" className="option-link">

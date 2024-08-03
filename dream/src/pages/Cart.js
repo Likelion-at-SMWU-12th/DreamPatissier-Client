@@ -71,7 +71,7 @@ const Cart = () => {
     const token = localStorage.getItem("token");
 
     axios
-      .delete("http://127.0.0.1:8000/cart/", {
+      .delete("http://127.0.0.1:8000/cart-items/", {
         headers: {
           Authorization: `Token ${token}`,
         },
