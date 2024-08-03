@@ -4,6 +4,7 @@ import axios from "axios";
 import styled, { keyframes, css } from "styled-components";
 import ShopIcon from "../assets/shoppingcart.svg";
 import Footer from "../components/Footer";
+import Warning from "../assets/warning.png";
 
 const Detail = () => {
   const navigate = useNavigate();
@@ -103,7 +104,10 @@ const Detail = () => {
       <Section>
         <SectionTitle>리뷰</SectionTitle>
         {reviews.length === 0 ? (
-          <div>리뷰가 없습니다..</div>
+          <MsgBox>
+            <WarningImg src={Warning} />
+            <Message>아직 리뷰를 굽는 중이에요...🍞</Message>
+          </MsgBox>
         ) : (
           reviews.map((review, index) => (
             <ReviewBox key={index}>
@@ -347,6 +351,27 @@ const GoBtn = styled.button`
   border: none;
   background-color: var(--yellow);
   cursor: pointer;
+`;
+
+const MsgBox = styled.div`
+  width: 100%;
+  text-align: center;
+  margin: 70px 0px;
+`;
+
+const Message = styled.div`
+  text-align: center;
+  font-size: 18px;
+  color: #979797;
+  font-family: "Noto Sans KR";
+  font-weight: medium;
+  padding-bottom: 10px;
+`;
+
+const WarningImg = styled.img`
+  width: 54px;
+  height: auto;
+  margin-bottom: 15px;
 `;
 
 export default Detail;

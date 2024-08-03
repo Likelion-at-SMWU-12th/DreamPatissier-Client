@@ -6,7 +6,6 @@ import Search from "../components/Search";
 import Category from "../components/Category";
 import CategoryPage from "./CategoryPage";
 import SearchPage from "./SearchPage";
-import Detail from "./Detail";
 import {
   Routes,
   Route,
