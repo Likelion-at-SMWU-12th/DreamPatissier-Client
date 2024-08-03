@@ -1,42 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import "../styles/Users.css";
-import { Link, useNavigate } from "react-router-dom";
 import advertise from "../assets/advertise.png";
 import profile from "../assets/myprofile.png";
-import axios from "axios";
 
 const Users = () => {
   const navigate = useNavigate();
-  const [resultId, setResultId] = useState(null);
-  const username = localStorage.getItem("username");
-  const last_name = localStorage.getItem("last_name");
+  const [resultId, setResultId] = useState(localStorage.getItem("result_id"));
 
   useEffect(() => {
-    const fetchResultId = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+    const newResultId = localStorage.getItem("result_id");
+    if (newResultId !== resultId) {
+      setResultId(newResultId);
+    }
+  }, [resultId]);
 
-        const response = await axios.get(
-          "http://127.0.0.1:8000/test/result_id",
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          }
-        );
+  const fetchResultIdFromServer = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
 
-        if (response.data && response.data.result_id) {
-          setResultId(response.data.result_id);
-          localStorage.setItem("result_id", response.data.result_id); // 최신 결과 ID를 로컬 스토리지에 저장
-        }
-      } catch (error) {
-        console.error("결과 ID를 가져오는 중 오류 발생:", error);
-      }
-    };
+      const response = await axios.get("http://127.0.0.1:8000/test/result_id", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
 
-    fetchResultId();
-  }, []);
+      const newResultId = response.data.result_id;
+      setResultId(newResultId);
+      localStorage.setItem("result_id", newResultId);
+    } catch (error) {
+      console.error("서버에서 결과 ID를 가져오는 중 오류 발생:", error);
+    }
+  };
+
+  const handleResultIdUpdate = async (e) => {
+    e.preventDefault();
+    await fetchResultIdFromServer();
+    const latestResultId = localStorage.getItem("result_id");
+    navigate(`/test/result/${latestResultId}`); // 최신 resultId로 이동
+  };
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -46,13 +50,14 @@ const Users = () => {
       localStorage.removeItem("last_name");
       localStorage.removeItem("username");
       localStorage.removeItem("result_id");
+      setResultId(null);
       navigate("/accounts/login/");
     }
   };
 
   const handleTestStart = () => {
     const startTest = window.confirm(
-      "유형테스트 결과가 없어요! 테스트 시작으로 안내합니다."
+      "빵 유형 테스트를 해주세요\n\n'하러가기'를 클릭하면 시작합니다."
     );
     if (startTest) {
       navigate("/test/questions/1");
@@ -64,9 +69,11 @@ const Users = () => {
       <div className="profile-section">
         <img src={profile} alt="Profile" className="profile-pic" />
         <div className="profile-info">
-          <h2 className="profile-name">{last_name ? last_name : "UNKNOWN"}</h2>
+          <h2 className="profile-name">
+            {localStorage.getItem("last_name") || "UNKNOWN"}
+          </h2>
           <p className="profile-email">
-            {username ? username : "로그인 후 이용해주세요."}
+            {localStorage.getItem("username") || "로그인 후 이용해주세요."}
           </p>
         </div>
       </div>
@@ -89,11 +96,10 @@ const Users = () => {
           My 레시피 &gt;
         </Link>
 
-        {/* 결과 ID가 존재할 경우 링크를 제공, 그렇지 않으면 테스트 시작을 요청 */}
         {resultId ? (
-          <Link to={`/test/result/${resultId}`} className="option-link">
+          <div className="option-link" onClick={handleResultIdUpdate}>
             빵 유형 테스트 결과 보기 &gt;
-          </Link>
+          </div>
         ) : (
           <div className="option-link" onClick={handleTestStart}>
             빵 유형 테스트 결과 보기 &gt;
