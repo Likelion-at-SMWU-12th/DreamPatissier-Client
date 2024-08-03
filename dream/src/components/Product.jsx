@@ -49,6 +49,8 @@ const ProductImg = styled.img`
   width: 100%;
   align-items: center;
   margin: 0;
+  border-radius: 10px;
+  box-shadow: 0px 1px 3px 0px rgba(0217, 217, 217, 0.25);
 `;
 
 const ProductText = styled.div`
