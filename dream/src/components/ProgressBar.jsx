@@ -6,10 +6,10 @@ const ProgressBar = ({ current, total }) => (
     <BarBox>
       <Bar
         style={{
-          width: `${((current + 1) / total) * 100}%`,
+          width: `${(current / total) * 100}%`,
         }}
       ></Bar>
-      <Numb>{`${current + 1}/${total}`}</Numb>
+      <Numb>{`${current}/${total}`}</Numb>
     </BarBox>
   </ProWrap>
 );

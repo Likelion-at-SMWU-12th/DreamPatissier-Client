@@ -5,29 +5,36 @@ import axios from "axios";
 import YellowBtn from "./YellowBtn";
 import LogoIcon from "../assets/logoIcon.svg";
 
-const Result = () => {
+const Result = ({ resetTest }) => {
   const { resultId } = useParams();
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
 
   useEffect(() => {
-    if (resultId) {
-      axios
-        .get(`/test/result/${resultId}`)
-        .then((response) => {
-          console.log("API 응답 데이터:", response.data);
-          setResult(response.data);
-          const products = response.data.breads
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 2);
-          console.log("추천 빵 데이터:", products);
-          setRecommendedProducts(products);
-        })
-        .catch((error) => {
-          console.error("결과를 가져오는 중 오류 발생:", error);
-        });
-    }
+    const fetchResultData = async () => {
+      try {
+        const response = await axios.get(`/test/result/${resultId}`);
+        console.log("API 응답 데이터:", response.data);
+        setResult(response.data);
+
+        // Update local storage if the fetched result is different
+        const localResultId = localStorage.getItem("result_id");
+        if (localResultId !== resultId) {
+          localStorage.setItem("result_id", resultId);
+        }
+
+        const products = response.data.breads
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 2);
+        console.log("추천 빵 데이터:", products);
+        setRecommendedProducts(products);
+      } catch (error) {
+        console.error("결과를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchResultData();
   }, [resultId]);
 
   if (!result) {
@@ -58,9 +65,9 @@ const Result = () => {
       </RecommendTitle>
       <TypeProductWrap>
         {recommendedProducts.map((item) => {
-          console.log("추천 빵 아이템:", item); // 각 추천 빵 아이템 확인
+          console.log("추천 빵 아이템:", item);
           if (!item.id) {
-            console.error("추천 빵 아이템에 ID가 없습니다:", item); // ID가 없는 경우 로그 출력
+            console.error("추천 빵 아이템에 ID가 없습니다:", item);
           }
           return (
             <StyledLink to={`/bakery/product/${item.id}`} key={item.id}>
@@ -83,7 +90,7 @@ const Result = () => {
         <YellowBtn
           width={"338px"}
           txt="빵 유형 테스트 다시 하기"
-          onBtnClick={() => navigate("/test/questions/1")}
+          onBtnClick={resetTest}
         />
         <YellowBtn
           width={"338px"}
@@ -99,7 +106,7 @@ const Result = () => {
 
 export default Result;
 
-// 스타일 정의 (변경 없음)
+// 스타일 정의
 const ResultWrap = styled.div`
   display: flex;
   flex-direction: column;
