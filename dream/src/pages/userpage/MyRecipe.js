@@ -170,27 +170,30 @@ const MyRecipes = () => {
   };
 
   return (
-    <div className="container">
-      <div className="search-container">
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      </div>
-      {filteredRecipes.length > 0 ? (
-        filteredRecipes.map((recipe) => (
-          <RecipeItem
-            key={recipe.id}
-            recipe={recipe}
-            onEditRecipe={handleEditRecipe}
-            onDeleteRecipe={handleDeleteRecipe}
-            onDetailRecipe={handleDetailRecipe}
-          />
-        ))
-      ) : (
-        <div className="no-recipes-message">
-          <img src={altIcon} alt="No Recipes" />
-          <p>No recipes found. Try changing your search terms.</p>
+    <>
+      <div className="orderlist-title2">저장한 레시피</div>
+      <div className="container">
+        <div className="search-container">
+          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
-      )}
-    </div>
+        {filteredRecipes.length > 0 ? (
+          filteredRecipes.map((recipe) => (
+            <RecipeItem
+              key={recipe.id}
+              recipe={recipe}
+              onEditRecipe={handleEditRecipe}
+              onDeleteRecipe={handleDeleteRecipe}
+              onDetailRecipe={handleDetailRecipe}
+            />
+          ))
+        ) : (
+          <div className="no-recipes-message">
+            <img src={altIcon} alt="No Recipes" />
+            <p>No recipes found. Try changing your search terms.</p>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
