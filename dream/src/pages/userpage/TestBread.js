@@ -24,7 +24,7 @@ const TestBread = () => {
       return;
     }
 
-    console.log(`Fetching questions for page: ${page}`); // 요청 페이지 로그
+    console.log(`Fetching questions for page: ${page}`);
 
     axios
       .get(`http://127.0.0.1:8000/test/questions/${page}`, {
@@ -33,12 +33,12 @@ const TestBread = () => {
         },
       })
       .then((response) => {
-        console.log("서버로부터 받은 데이터:", response.data); // 서버 응답 로그
+        console.log("서버로부터 받은 데이터:", response.data);
         setQuestions((prevQuestions) => [
           ...prevQuestions,
           {
             q: response.data.question,
-            a: response.data.choices, // 선택지를 그대로 전달
+            a: response.data.choices,
           },
         ]);
       })
@@ -51,8 +51,8 @@ const TestBread = () => {
   };
 
   useEffect(() => {
-    console.log(`Current page: ${currentPage}`); // 현재 페이지 로그
-    loadQuestions(currentPage); // 첫 번째 질문 로드
+    console.log(`Current page: ${currentPage}`);
+    loadQuestions(currentPage);
   }, [currentPage]);
 
   const getResultString = (scores) => {
@@ -65,14 +65,12 @@ const TestBread = () => {
   };
 
   const handleOptionClick = (type, page) => {
-    console.log(`Option clicked: ${type}`); // 선택된 옵션 타입 로그
+    console.log(`Option clicked: ${type}`);
 
-    // type으로 점수 업데이트 및 페이지 이동
     setScores((prevScores) => {
       const updatedScores = { ...prevScores, [type]: prevScores[type] + 1 };
       const nextPage = parseInt(page) + 1;
 
-      // 점수 총합 및 각 타입 점수 출력
       console.log("Updated Scores:", updatedScores);
       console.log("Total Scores:");
       console.log(`F: ${updatedScores.F}`);
@@ -81,7 +79,6 @@ const TestBread = () => {
       console.log(`J: ${updatedScores.J}`);
 
       if (nextPage <= 6) {
-        // 질문이 6개인 경우 (수정 필요 시에 반영)
         setCurrentPage(nextPage);
         navigate(`/test/questions/${nextPage}`);
       } else {
@@ -105,7 +102,7 @@ const TestBread = () => {
         }
       )
       .then((response) => {
-        console.log("테스트 결과 전송 완료:", response.data); // 결과 전송 응답 로그
+        console.log("테스트 결과 전송 완료:", response.data);
         navigate(`/test/result/${response.data.result_id}`);
       })
       .catch((error) => {
@@ -114,6 +111,12 @@ const TestBread = () => {
           error.response ? error.response.data : error.message
         );
       });
+  };
+
+  const resetTest = () => {
+    setScores({ F: 0, T: 0, P: 0, J: 0 });
+    setCurrentPage(1);
+    navigate(`/test/questions/1`);
   };
 
   return (
@@ -127,7 +130,10 @@ const TestBread = () => {
           />
         }
       />
-      <Route path="result/:resultId" element={<Result />} />
+      <Route
+        path="result/:resultId"
+        element={<Result resetTest={resetTest} />}
+      />
       <Route path="/" element={<Navigate to="/test/questions/1" />} />
     </Routes>
   );
@@ -140,7 +146,7 @@ const QuestionPage = ({ questions, handleOptionClick }) => {
 
   useEffect(() => {
     if (isNaN(pageIndex) || pageIndex < 0 || pageIndex >= questions.length) {
-      console.warn(`Invalid pageIndex: ${pageIndex}`); // 페이지 인덱스 오류 로그
+      console.warn(`Invalid pageIndex: ${pageIndex}`);
       navigate("/test/questions/1");
     }
   }, [pageIndex, navigate, questions.length]);
@@ -152,8 +158,7 @@ const QuestionPage = ({ questions, handleOptionClick }) => {
 
   return (
     <div>
-      <ProgressBar current={pageIndex} total={6} />{" "}
-      {/* 질문 수를 고정 6으로 가정 */}
+      <ProgressBar current={pageIndex} total={6} />
       <Question
         q={questions[pageIndex].q}
         a={questions[pageIndex].a}

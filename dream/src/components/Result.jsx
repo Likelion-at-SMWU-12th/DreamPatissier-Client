@@ -5,7 +5,8 @@ import axios from "axios";
 import YellowBtn from "./YellowBtn";
 import LogoIcon from "../assets/logoIcon.svg";
 
-const Result = () => {
+const Result = ({ resetTest }) => {
+  // resetTest 함수 props로 추가
   const { resultId } = useParams();
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
@@ -58,9 +59,9 @@ const Result = () => {
       </RecommendTitle>
       <TypeProductWrap>
         {recommendedProducts.map((item) => {
-          console.log("추천 빵 아이템:", item); // 각 추천 빵 아이템 확인
+          console.log("추천 빵 아이템:", item);
           if (!item.id) {
-            console.error("추천 빵 아이템에 ID가 없습니다:", item); // ID가 없는 경우 로그 출력
+            console.error("추천 빵 아이템에 ID가 없습니다:", item);
           }
           return (
             <StyledLink to={`/bakery/product/${item.id}`} key={item.id}>
@@ -83,7 +84,7 @@ const Result = () => {
         <YellowBtn
           width={"338px"}
           txt="빵 유형 테스트 다시 하기"
-          onBtnClick={() => navigate("/test/questions/1")}
+          onBtnClick={resetTest} // 상태 초기화 함수 호출
         />
         <YellowBtn
           width={"338px"}
