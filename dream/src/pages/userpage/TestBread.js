@@ -17,7 +17,6 @@ const TestBread = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
-  // 함수 내 디버깅 로그 추가
   const loadQuestions = (page) => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -66,10 +65,21 @@ const TestBread = () => {
   };
 
   const handleOptionClick = (type, page) => {
+    console.log(`Option clicked: ${type}`); // 선택된 옵션 타입 로그
+
     // type으로 점수 업데이트 및 페이지 이동
     setScores((prevScores) => {
       const updatedScores = { ...prevScores, [type]: prevScores[type] + 1 };
       const nextPage = parseInt(page) + 1;
+
+      // 점수 총합 및 각 타입 점수 출력
+      console.log("Updated Scores:", updatedScores);
+      console.log("Total Scores:");
+      console.log(`F: ${updatedScores.F}`);
+      console.log(`T: ${updatedScores.T}`);
+      console.log(`P: ${updatedScores.P}`);
+      console.log(`J: ${updatedScores.J}`);
+
       if (nextPage <= 6) {
         // 질문이 6개인 경우 (수정 필요 시에 반영)
         setCurrentPage(nextPage);
