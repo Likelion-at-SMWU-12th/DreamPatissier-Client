@@ -22,6 +22,10 @@ const Menubar = () => {
       : "menu-link";
   };
 
+  const isActiveIcon = (path) => {
+    return location.pathname.startsWith(path) ? "icon active" : "icon";
+  };
+
   return (
     <>
       <div className="menubar">
@@ -32,10 +36,10 @@ const Menubar = () => {
             </Link>
           </div>
           <div className="icons">
-            <Link to="/cart" className="icon">
+            <Link to="/cart" className={isActiveIcon("/cart")}>
               <i className="fas fa-shopping-cart"></i>
             </Link>
-            <Link to="/users" className="icon">
+            <Link to="/users" className={isActiveIcon("/users")}>
               <i className="fas fa-user"></i>
             </Link>
             <SidebarBtn onClick={toggleSide} className="icon">

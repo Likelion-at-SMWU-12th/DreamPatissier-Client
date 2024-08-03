@@ -12,33 +12,35 @@ const Result = ({ resetTest }) => {
   const [recommendedProducts, setRecommendedProducts] = useState([]);
 
   useEffect(() => {
-    const fetchResultData = async () => {
-      try {
-        const response = await axios.get(`/test/result/${resultId}`);
-        console.log("API 응답 데이터:", response.data);
-        setResult(response.data);
+    // fetchResultData 함수 정의
+    const fetchResultData = () => {
+      axios
+        .get(`/test/result/${resultId}`)
+        .then((response) => {
+          setResult(response.data);
 
-        // Update local storage if the fetched result is different
-        const localResultId = localStorage.getItem("result_id");
-        if (localResultId !== resultId) {
-          localStorage.setItem("result_id", resultId);
-        }
+          const localResultId = localStorage.getItem("result_id");
+          if (localResultId !== resultId) {
+            localStorage.setItem("result_id", resultId);
+          }
 
-        const products = response.data.breads
-          .sort(() => 0.5 - Math.random())
-          .slice(0, 2);
-        console.log("추천 빵 데이터:", products);
-        setRecommendedProducts(products);
-      } catch (error) {
-        console.error("결과를 가져오는 중 오류 발생:", error);
-      }
+          const products = response.data.breads
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 2);
+          console.log("추천 빵 데이터:", products);
+          setRecommendedProducts(products);
+        })
+        .catch((error) => {
+          console.error("결과를 가져오는 중 오류 발생:", error);
+        });
     };
 
+    // fetchResultData 함수 호출
     fetchResultData();
   }, [resultId]);
 
   if (!result) {
-    return <div>결과를 찾을 수 없습니다.</div>;
+    return <div>Loading...</div>;
   }
 
   return (
@@ -65,10 +67,6 @@ const Result = ({ resetTest }) => {
       </RecommendTitle>
       <TypeProductWrap>
         {recommendedProducts.map((item) => {
-          console.log("추천 빵 아이템:", item);
-          if (!item.id) {
-            console.error("추천 빵 아이템에 ID가 없습니다:", item);
-          }
           return (
             <StyledLink to={`/bakery/product/${item.id}`} key={item.id}>
               <ProductBox>
@@ -231,6 +229,7 @@ const Tag = styled.span`
   color: #ffb415;
   font-weight: bold;
   letter-spacing: -0.5px;
+  margin-left: 3px;
 `;
 
 const ButtonWrap = styled.div`
