@@ -201,3 +201,13 @@ textarea {
   background-color: transparent;
   color: black;
 }
+
+.recipe-buttons button {
+  padding: 3px 10px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+}
