@@ -44,11 +44,31 @@ const Cart = () => {
   }, [cartItems]);
 
   const handleQuantityChange = (id, delta) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + delta } : item
-      )
+    const updatedItems = cartItems.map((item) =>
+      item.id === id ? { ...item, quantity: item.quantity + delta } : item
     );
+    setCartItems(updatedItems);
+
+    const updatedItem = updatedItems.find((item) => item.id === id);
+
+    // 서버에 PUT 요청을 통해 수량 업데이트
+    const token = localStorage.getItem("token");
+    axios
+      .put(
+        "http://127.0.0.1:8000/cart/",
+        { id: updatedItem.id, quantity: updatedItem.quantity }, // API 명세에 맞는 데이터 형식
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Quantity updated successfully", response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to update quantity", error);
+      });
   };
 
   const handleSelectAll = () => {
