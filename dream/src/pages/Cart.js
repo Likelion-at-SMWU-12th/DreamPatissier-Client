@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import YellowBtn from "../components/YellowBtn";
+import Warning from "../assets/warning.png";
 
 const Cart = () => {
   const formatPrice = (price) => {
@@ -107,10 +108,12 @@ const Cart = () => {
       <HrDiv />
       <CartItems>
         {cartItems.length === 0 ? (
-          <div>장바구니에 상품이 없습니다.</div>
+          <MsgBox>
+            <WarningImg src={Warning} />
+            <Message>장바구니에 상품이 없습니다.</Message>
+          </MsgBox>
         ) : (
           cartItems.map((item) => {
-            console.log("Rendering item:", item); // 디버깅 로그 추가
             const tags =
               typeof item.bread.tags === "string"
                 ? item.bread.tags.split(",").map((tag) => tag.trim())
@@ -371,4 +374,25 @@ const HrDiv = styled.div`
   width: 100%;
   border-bottom: 1px solid #d9d9d9;
   box-shadow: 0 2px 4px 0 rgba(217, 217, 217, 0.5);
+`;
+
+const MsgBox = styled.div`
+  width: 100%;
+  text-align: center;
+  margin-top: 150px;
+`;
+
+const Message = styled.div`
+  text-align: center;
+  font-size: 14px;
+  color: #979797;
+  font-family: "Noto Sans KR";
+  font-weight: medium;
+  padding-bottom: 10px;
+`;
+
+const WarningImg = styled.img`
+  width: 54px;
+  height: auto;
+  margin-bottom: 15px;
 `;
