@@ -20,6 +20,10 @@ const Category = ({ imgSrc, name, uiName, isSelected, onClick }) => {
 
 export default Category;
 
+//
+// 스타일
+//
+
 const CategoryWrap = styled.div`
   justify-content: center;
   display: flex;

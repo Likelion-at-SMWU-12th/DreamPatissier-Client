@@ -64,9 +64,9 @@ const CategoryPage = () => {
       {products.map((product) => (
         <StyledLink to={`/bakery/product/${product.id}`} key={product.id}>
           <Product
-            imgSrc={product.img_src} // imgSrc -> img_src
+            imgSrc={product.img_src}
             tags={product.tags}
-            name={product.name} // title -> name
+            name={product.name}
             price={product.price}
           />
         </StyledLink>
@@ -75,12 +75,18 @@ const CategoryPage = () => {
   );
 };
 
+//
+// 스타일
+//
+
+// 링크 제거
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;
   display: block;
 `;
 
+// 카테고리 없음 페이지
 const MsgBox = styled.div`
   width: 100%;
   margin: 30px 0px;
@@ -102,6 +108,7 @@ const WarningImg = styled.img`
   margin-bottom: 15px;
 `;
 
+// 제품 스타일
 const ProductWrap = styled.div`
   margin: 0px 25px;
   display: grid;

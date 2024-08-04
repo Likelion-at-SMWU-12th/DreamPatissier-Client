@@ -20,6 +20,12 @@ const Footer = () => {
   );
 };
 
+export default Footer;
+
+//
+// 스타일
+//
+
 const BngImg = styled.img`
   width: 10px;
   height: 9px;
@@ -48,5 +54,3 @@ const Email = styled.span`
   color: var(--brown);
   font-weight: bold;
 `;
-
-export default Footer;

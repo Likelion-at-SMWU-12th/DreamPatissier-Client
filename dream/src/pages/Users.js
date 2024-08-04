@@ -3,7 +3,15 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "../styles/Users.css";
 import advertise from "../assets/advertise.png";
-import profile from "../assets/myprofile.png";
+import Profile from "../assets/profile.png";
+import ReviewIcon from "../assets/US-review.png";
+import OrderIcon from "../assets/US-order.png";
+import RecipeIcon from "../assets/US-recipe.png";
+import SaveIcon from "../assets/US-save.png";
+import OfuseIcon from "../assets/US-ofuse.png";
+import TestIcon from "../assets/US-test.png";
+import LogoutIcon from "../assets/US-logout.png";
+import Arrow from "../assets/arrow.png";
 
 const Users = () => {
   const navigate = useNavigate();
@@ -39,7 +47,7 @@ const Users = () => {
     e.preventDefault();
     await fetchResultIdFromServer();
     const latestResultId = localStorage.getItem("result_id");
-    navigate(`/test/result/${latestResultId}`); // 최신 resultId로 이동
+    navigate(`/test/result/${latestResultId}`);
   };
 
   const handleLogout = (e) => {
@@ -57,7 +65,7 @@ const Users = () => {
 
   const handleTestStart = () => {
     const startTest = window.confirm(
-      "빵 유형 테스트를 해주세요\n\n'하러가기'를 클릭하면 시작합니다."
+      "유형 테스트 결과가 없어요. 테스트를 시작하시겠습니까?"
     );
     if (startTest) {
       navigate("/test/questions/1");
@@ -67,7 +75,9 @@ const Users = () => {
   return (
     <div className="user-page">
       <div className="profile-section">
-        <img src={profile} alt="Profile" className="profile-pic" />
+        <div className="profile-imgbox">
+          <img className="profile-img" src={Profile} />
+        </div>
         <div className="profile-info">
           <h2 className="profile-name">
             {localStorage.getItem("last_name") || "UNKNOWN"}
@@ -84,37 +94,58 @@ const Users = () => {
 
       <div className="user-options">
         <Link to="/users/orders" className="option-link">
-          주문목록 &gt;
+          <img src={OrderIcon} className="option-icon" alt="주문목록" />
+          주문목록
+          <img src={Arrow} alt="화살표" className="arrow" />
         </Link>
         <Link to="/users/reviews" className="option-link">
-          My 리뷰 &gt;
+          <img src={ReviewIcon} className="option-icon" alt="My 리뷰" />
+          MY 리뷰
+          <img src={Arrow} alt="화살표" className="arrow" />
         </Link>
         <Link to="/users/saved-recipes" className="option-link">
-          저장한 레시피 &gt;
+          <img src={SaveIcon} className="option-icon" alt="저장한 레시피" />
+          저장한 레시피
+          <img src={Arrow} alt="화살표" className="arrow" />
         </Link>
         <Link to="/users/my-recipes" className="option-link">
-          My 레시피 &gt;
+          <img src={RecipeIcon} className="option-icon" alt="My 레시피" />
+          MY 레시피
+          <img src={Arrow} alt="화살표" className="arrow" />
         </Link>
-
         {resultId ? (
           <div className="option-link" onClick={handleResultIdUpdate}>
-            빵 유형 테스트 결과 보기 &gt;
+            <img
+              src={TestIcon}
+              className="option-icon"
+              alt="빵 유형 테스트 결과 보기"
+            />
+            빵 유형 테스트 결과 보기
+            <img src={Arrow} alt="화살표" className="arrow" />
           </div>
         ) : (
           <div className="option-link" onClick={handleTestStart}>
-            빵 유형 테스트 결과 보기 &gt;
+            <img
+              src={TestIcon}
+              className="option-icon"
+              alt="빵 유형 테스트 결과 보기"
+            />
+            빵 유형 테스트 결과 보기
+            <img src={Arrow} alt="화살표" className="arrow" />
           </div>
         )}
-
         <Link to="/of-use" className="option-link">
-          서비스 이용약관 &gt;
+          <img src={OfuseIcon} className="option-icon" alt="서비스 이용약관" />
+          서비스 이용약관
+          <img src={Arrow} alt="화살표" className="arrow" />
         </Link>
         <Link
           to="/accounts/logout/"
           className="option-link"
           onClick={handleLogout}
         >
-          로그아웃 &gt;
+          <img src={LogoutIcon} className="option-icon" alt="로그아웃" />
+          로그아웃
         </Link>
       </div>
     </div>

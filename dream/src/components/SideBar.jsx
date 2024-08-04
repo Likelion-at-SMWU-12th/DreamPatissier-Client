@@ -148,6 +148,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
 export default Sidebar;
 
+//
+// 스타일
+//
+
 const Overlay = styled.div`
   position: fixed;
   top: 0;

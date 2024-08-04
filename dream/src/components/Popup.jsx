@@ -17,6 +17,10 @@ const Popup = ({ title, children, onClose }) => {
 
 export default Popup;
 
+//
+// 스타일
+//
+
 const Bar = styled.div`
   font-size: 22px;
   display: flex;
