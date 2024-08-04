@@ -39,11 +39,18 @@ const Menubar = () => {
       setCartCount((prevCount) => prevCount + event.detail);
     };
 
+    // cartReset 이벤트 리스너 추가
+    const handleCartReset = () => {
+      setCartCount(0); // 장바구니 수량을 0으로 설정
+    };
+
     window.addEventListener("cartUpdated", handleCartUpdate);
+    window.addEventListener("cartReset", handleCartReset);
 
     // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
+      window.removeEventListener("cartReset", handleCartReset);
     };
   }, []);
 
