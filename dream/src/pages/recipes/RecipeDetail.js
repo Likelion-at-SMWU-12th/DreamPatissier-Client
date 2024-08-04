@@ -34,40 +34,43 @@ const RecipeDetail = () => {
       setUsername(storedUsername);
     }
 
-    const fetchRecipe = () => {
-      axios
-        .get(`http://127.0.0.1:8000/recipes/${id}`, {
-          headers: {
-            Authorization: `Token ${storedToken}`,
-          },
-        })
-        .then((response) => {
-          const recipeData = response.data;
-          setRecipe(recipeData);
-          setIsAuthor(recipeData.author === storedUsername);
-          setLoading(false);
-
-          return axios.get(`http://127.0.0.1:8000/users/saved-recipes/${id}`, {
+    const fetchRecipe = async () => {
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8000/recipes/${id}`,
+          {
             headers: {
               Authorization: `Token ${storedToken}`,
             },
-          });
-        })
-        .then((savedResponse) => {
-          setIsSaved(savedResponse.data.isSaved);
-        })
-        .catch((error) => {
-          console.error("레시피 불러오기에 실패했습니다:", error);
-          setError(error);
-          setLoading(false);
-        });
+          }
+        );
+        const recipeData = response.data;
+        setRecipe(recipeData);
+        setIsAuthor(recipeData.author === storedUsername);
+        setLoading(false);
+
+        // Check if the recipe is saved
+        const savedResponse = await axios.get(
+          `http://127.0.0.1:8000/users/saved-recipes/${id}`,
+          {
+            headers: {
+              Authorization: `Token ${storedToken}`,
+            },
+          }
+        );
+        setIsSaved(savedResponse.data.isSaved);
+      } catch (error) {
+        console.error("레시피 불러오기에 실패했습니다:", error);
+        setError(error);
+        setLoading(false);
+      }
     };
 
     fetchRecipe();
   }, [id]);
 
   const onEditRecipe = (recipeId) => {
-    navigate(`/recipes/edit/${recipeId}`);
+    navigate(`/edit/recipe/${recipeId}`);
   };
 
   const onDelete = (recipeId) => {
@@ -89,41 +92,35 @@ const RecipeDetail = () => {
     }
   };
 
-  const onToggleSave = (recipeId) => {
-    if (isSaved) {
-      // Remove from saved recipes
-      axios
-        .delete(`http://127.0.0.1:8000/users/saved-recipes/${recipeId}`, {
+  const onToggleSave = async (recipeId) => {
+    try {
+      if (isSaved) {
+        // Remove from saved recipes
+        await axios.delete(`http://127.0.0.1:8000/users/saved-recipes/`, {
           headers: {
             Authorization: `Token ${token}`,
           },
-        })
-        .then(() => {
-          setIsSaved(false);
-        })
-        .catch((error) => {
-          console.error("스크랩 상태 변경에 실패했습니다:", error);
-          alert("스크랩 상태 변경에 실패했습니다.");
         });
-    } else {
-      // Add to saved recipes
-      axios
-        .post(
-          `http://127.0.0.1:8000/users/saved-recipes/`,
+        setIsSaved(false);
+      } else {
+        await axios.post(
+          `http://127.0.0.1:8000/users/saved-recipes/${recipeId}`,
           { recipe: recipeId },
           {
             headers: {
               Authorization: `Token ${token}`,
             },
           }
-        )
-        .then(() => {
-          setIsSaved(true);
-        })
-        .catch((error) => {
-          console.error("스크랩 상태 변경에 실패했습니다:", error);
-          alert("스크랩 상태 변경에 실패했습니다.");
-        });
+        );
+        setIsSaved(true);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 405) {
+        alert("이 요청 메소드는 지원되지 않습니다. 서버 설정을 확인해 주세요.");
+      } else {
+        console.error("스크랩 상태 변경에 실패했습니다:", error);
+        alert("스크랩 상태 변경에 실패했습니다.");
+      }
     }
   };
 
