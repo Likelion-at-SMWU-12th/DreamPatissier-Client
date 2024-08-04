@@ -6,13 +6,19 @@ import axios from "axios";
 
 const OrderList = () => {
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
     axios
-      .get("http://127.0.0.1:8000/users/orders")
+      .get("http://127.0.0.1:8000/users/orders", {
+        headers: {
+          Authorization: `Token ${token}`, // 헤더에 토큰 추가
+        },
+      })
       .then((response) => {
-        setProducts(response.data);
+        setOrders(response.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -30,51 +36,66 @@ const OrderList = () => {
   return (
     <div className="order-list">
       <div className="orderlist-title">주문목록</div>
-      {products.map((product) => (
-        <div key={product.id} className="product-card">
-          <div className="product-date">{product.date}</div>
-          <div className="product-show">
-            <img
-              src={product.image || profile}
-              alt={product.name}
-              className="product-image"
-            />
-            <div className="product-info">
-              <h3 className="product-name">{product.name}</h3>
-              <div className="product-tags">{product.tags.join(" ")}</div>
-              <div className="product-price">
-                {product.price.toLocaleString()}원
-              </div>
+      {orders.length === 0 ? (
+        <div className="no-orders">주문이 없습니다.</div>
+      ) : (
+        orders.map((order) => (
+          <div key={order.id} className="order-card">
+            <div className="order-items">
+              {order.items.map((item, index) => (
+                <div key={index} className="product-card">
+                  <div className="product-date">
+                    {new Date(order.created_at).toLocaleDateString()}
+                  </div>
+                  <img
+                    src={item.image || profile}
+                    alt={item.name || "Product"}
+                    className="product-image"
+                  />
+                  <div className="product-info">
+                    <h3 className="product-name">
+                      {item.name || "Unknown Product"}
+                    </h3>
+                    <div className="product-tags">
+                      {item.tags ? item.tags.join(" ") : "No Tags"}
+                    </div>
+                    <div className="product-price">
+                      총 금액: {parseFloat(order.total_price).toLocaleString()}
+                      원
+                    </div>
+                  </div>
+                  <div className="product-actions">
+                    {!item.reviewed && (
+                      <>
+                        <button
+                          className="write-review"
+                          onClick={() => handleReviewClick(item)}
+                        >
+                          리뷰쓰기
+                        </button>
+                        <button
+                          className="add"
+                          onClick={() => handleAddToCartClick(item.id)}
+                        >
+                          같은 빵 담기
+                        </button>
+                      </>
+                    )}
+                    {item.reviewed && (
+                      <button
+                        className="add"
+                        onClick={() => handleAddToCartClick(item.id)}
+                      >
+                        같은 빵 담기
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="product-actions">
-            {!product.reviewed && (
-              <>
-                <button
-                  className="write-review"
-                  onClick={() => handleReviewClick(product)}
-                >
-                  리뷰쓰기
-                </button>
-                <button
-                  className="add"
-                  onClick={() => handleAddToCartClick(product.id)}
-                >
-                  같은 빵 담기
-                </button>
-              </>
-            )}
-            {product.reviewed && (
-              <button
-                className="add"
-                onClick={() => handleAddToCartClick(product.id)}
-              >
-                같은 빵 담기
-              </button>
-            )}
-          </div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 };
