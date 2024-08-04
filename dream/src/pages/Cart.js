@@ -16,6 +16,7 @@ const Cart = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [anyChecked, setAnyChecked] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
+  let totalDeletedQuantity = 0; // 삭제된 수량을 추적
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -108,6 +109,14 @@ const Cart = () => {
           setCartItems((prevItems) =>
             prevItems.filter((prevItem) => prevItem.id !== item.id)
           );
+          // 삭제된 수량을 계산
+          totalDeletedQuantity += item.quantity;
+
+          // 각 항목 삭제마다 이벤트 발생
+          const cartEvent = new CustomEvent("cartUpdated", {
+            detail: -item.quantity, // 삭제된 수량만큼 감소
+          });
+          window.dispatchEvent(cartEvent);
         })
         .catch((error) => {
           console.error("Failed to delete selected item", error);

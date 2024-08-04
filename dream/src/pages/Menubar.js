@@ -74,7 +74,11 @@ const Menubar = () => {
           <div className="icons">
             <Link to="/cart" className={isActiveIcon("/cart")}>
               <i className="fas fa-shopping-cart"></i>
-              {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+              {cartCount > 0 && (
+                <div className="count-box">
+                  <div className="cart-count">{cartCount}</div>
+                </div>
+              )}
             </Link>
             <Link to="/users" className={isActiveIcon("/users")}>
               <i className="fas fa-user"></i>
