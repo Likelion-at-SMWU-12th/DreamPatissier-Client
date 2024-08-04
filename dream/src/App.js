@@ -59,7 +59,7 @@ function App() {
         <Route path="/accounts/login/" element={<Login />} />
         <Route path="/test/*" element={<TestBread />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/cart/order" element={<Order />} />
+        <Route path="/cart/checkout/" element={<Order />} />
         <Route path="/cart/orderclear" element={<OrderClear />} />
       </Routes>
     </>

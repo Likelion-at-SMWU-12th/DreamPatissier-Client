@@ -10,19 +10,37 @@ import { useNavigate } from "react-router-dom";
 const Order = () => {
   const navigate = useNavigate();
   const [selectedPay, setSelectedPay] = useState("");
+  const [formValues, setFormValues] = useState({
+    recipient: "",
+    postalCode: "",
+    address: "",
+    contact: "",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handlePaymentToggle = (payOption) => {
     setSelectedPay((prevPay) => (prevPay === payOption ? "" : payOption));
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
   const handlePaymentSubmission = () => {
+    const { recipient, postalCode, address, contact } = formValues;
+
+    if (!recipient || !postalCode || !address || !contact) {
+      setErrorMessage("ⓘ 결제에 실패했습니다. 정보를 모두 입력해주세요.");
+      return;
+    }
+
     const token = localStorage.getItem("token");
     const headers = {
       Authorization: `Token ${token}`,
     };
     const payload = {
       paymentMethod: selectedPay,
-      // Add other payment details as needed
     };
 
     axios
@@ -42,13 +60,37 @@ const Order = () => {
         <InfoText>배송지 정보</InfoText>
         <InputWrap>
           <InputBox>
-            <StyledInput placeholder="받는 분" type="text" />
+            <StyledInput
+              name="recipient"
+              value={formValues.recipient}
+              onChange={handleInputChange}
+              placeholder="받는 분"
+              type="text"
+            />
             <OrderHrDiv />
-            <StyledInput placeholder="우편번호" type="text" />
+            <StyledInput
+              name="postalCode"
+              value={formValues.postalCode}
+              onChange={handleInputChange}
+              placeholder="우편번호"
+              type="text"
+            />
             <OrderHrDiv />
-            <StyledInput placeholder="상세 주소" type="text" />
+            <StyledInput
+              name="address"
+              value={formValues.address}
+              onChange={handleInputChange}
+              placeholder="상세 주소"
+              type="text"
+            />
             <OrderHrDiv />
-            <StyledInput placeholder="연락처" type="text" />
+            <StyledInput
+              name="contact"
+              value={formValues.contact}
+              onChange={handleInputChange}
+              placeholder="연락처"
+              type="text"
+            />
           </InputBox>
         </InputWrap>
       </DeliveryWrap>
@@ -98,6 +140,8 @@ const Order = () => {
           <strong>위 내용을 확인하였으며 결제에 동의합니다.</strong>
         </GuideText>
       </Guide>
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+
       <ButtonContainer>
         <YellowBtn
           onBtnClick={handlePaymentSubmission}
@@ -242,6 +286,15 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 150px;
   position: relative;
+`;
+
+// 에러 메시지
+const ErrorMessage = styled.div`
+  margin-top: 20px;
+  font-size: 12px;
+  color: red;
+  text-align: center;
+  font-weight: 800;
 `;
