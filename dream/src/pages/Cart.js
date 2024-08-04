@@ -16,6 +16,7 @@ const Cart = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [anyChecked, setAnyChecked] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
+  let totalDeletedQuantity = 0; // 삭제된 수량을 추적
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -60,7 +61,7 @@ const Cart = () => {
     axios
       .put(
         `http://127.0.0.1:8000/cart-items/${updatedItem.id}/`, // 엔드포인트 수정
-        { quantity: updatedItem.quantity }, // API 명세에 맞는 데이터 형식
+        { quantity: updatedItem.quantity },
         {
           headers: {
             Authorization: `Token ${token}`,
@@ -68,7 +69,8 @@ const Cart = () => {
         }
       )
       .then((response) => {
-        console.log("Quantity updated successfully", response.data);
+        const cartEvent = new CustomEvent("cartUpdated", { detail: delta });
+        window.dispatchEvent(cartEvent);
       })
       .catch((error) => {
         console.error("Failed to update quantity", error);
@@ -98,7 +100,6 @@ const Cart = () => {
     selectedItems.forEach((item) => {
       axios
         .delete(`http://127.0.0.1:8000/cart-items/${item.id}/`, {
-          // 엔드포인트 수정
           headers: {
             Authorization: `Token ${token}`,
           },
@@ -108,6 +109,14 @@ const Cart = () => {
           setCartItems((prevItems) =>
             prevItems.filter((prevItem) => prevItem.id !== item.id)
           );
+          // 삭제된 수량을 계산
+          totalDeletedQuantity += item.quantity;
+
+          // 각 항목 삭제마다 이벤트 발생
+          const cartEvent = new CustomEvent("cartUpdated", {
+            detail: -item.quantity, // 삭제된 수량만큼 감소
+          });
+          window.dispatchEvent(cartEvent);
         })
         .catch((error) => {
           console.error("Failed to delete selected item", error);
