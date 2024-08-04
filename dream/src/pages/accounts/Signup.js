@@ -26,6 +26,11 @@ const Signup = () => {
 
 export default Signup;
 
+//
+// 스타일
+//
+
+// 상단 배너
 const Bar = styled.div`
   font-size: 22px;
   display: flex;
@@ -52,6 +57,7 @@ const CancelIcon = styled.img`
   cursor: pointer;
 `;
 
+// 회원가입 폼 감싸기
 const ContentWrap = styled.div`
   justify-content: center;
   align-items: center;

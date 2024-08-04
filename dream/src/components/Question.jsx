@@ -11,7 +11,7 @@ const Question = ({ q, a, onOptionClick }) => (
         <Button
           key={index}
           onClick={() => onOptionClick(option.type, index)} // 클릭 시 type과 index 전달
-          dangerouslySetInnerHTML={{ __html: option.text }} // 선택지 텍스트를 HTML로 삽입
+          dangerouslySetInnerHTML={{ __html: option.text }}
         />
       ))}
     </ButtonBox>
@@ -19,6 +19,10 @@ const Question = ({ q, a, onOptionClick }) => (
 );
 
 export default Question;
+
+//
+// 스타일
+//
 
 const Container = styled.div`
   text-align: center;

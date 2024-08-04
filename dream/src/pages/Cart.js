@@ -210,13 +210,17 @@ const Cart = () => {
 
 export default Cart;
 
+//
 // 스타일 정의
+//
+
 const CartContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
+// 상단 (전체선택 & 선택삭제 & 선택)
 const CartHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -277,6 +281,7 @@ const StyledCheck = styled.input`
   }
 `;
 
+// 장바구니 아이템
 const CartItems = styled.div`
   width: 100%;
 `;
@@ -348,6 +353,7 @@ const Titles = styled.p`
   letter-spacing: -0.5px;
 `;
 
+// 가격
 const QuantityPriceWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -392,12 +398,15 @@ const ItemPrice = styled.div`
   position: absolute;
   right: 30px;
 `;
+
+// 구분선
 const HrDiv = styled.div`
   width: 100%;
   border-bottom: 1px solid #d9d9d9;
   box-shadow: 0 2px 4px 0 rgba(217, 217, 217, 0.5);
 `;
 
+// 장바구니 제품 0일시
 const MsgBox = styled.div`
   width: 100%;
   text-align: center;
@@ -419,6 +428,7 @@ const WarningImg = styled.img`
   margin-bottom: 15px;
 `;
 
+// 총금액
 const TotalWrap = styled.div`
   padding: 20px 0px;
   width: 100%;

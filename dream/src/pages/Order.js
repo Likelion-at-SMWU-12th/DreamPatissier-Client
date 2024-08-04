@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import YellowBtn from "../components/YellowBtn";
 import TossPay from "../assets/tosspay.png";
 import NPay from "../assets/npay.png";
@@ -8,8 +9,32 @@ import { useNavigate } from "react-router-dom";
 
 const Order = () => {
   const navigate = useNavigate();
-
   const [selectedPay, setSelectedPay] = useState("");
+
+  const handlePaymentToggle = (payOption) => {
+    setSelectedPay((prevPay) => (prevPay === payOption ? "" : payOption));
+  };
+
+  const handlePaymentSubmission = () => {
+    const token = localStorage.getItem("token");
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+    const payload = {
+      paymentMethod: selectedPay,
+      // Add other payment details as needed
+    };
+
+    axios
+      .post("/cart/checkout/", payload, { headers })
+      .then((response) => {
+        navigate("/cart/orderclear");
+      })
+      .catch((error) => {
+        console.error("Payment failed:", error);
+        alert("결제에 실패했습니다. 다시 시도해주세요.");
+      });
+  };
 
   return (
     <>
@@ -18,8 +43,11 @@ const Order = () => {
         <InputWrap>
           <InputBox>
             <StyledInput placeholder="받는 분" type="text" />
+            <OrderHrDiv />
             <StyledInput placeholder="우편번호" type="text" />
+            <OrderHrDiv />
             <StyledInput placeholder="상세 주소" type="text" />
+            <OrderHrDiv />
             <StyledInput placeholder="연락처" type="text" />
           </InputBox>
         </InputWrap>
@@ -29,10 +57,9 @@ const Order = () => {
         <PayTitle>결제수단</PayTitle>
         <PayOption>
           <StyledCheck
-            type="radio"
-            name="payment"
+            type="checkbox"
             checked={selectedPay === "toss"}
-            onChange={() => setSelectedPay("toss")}
+            onChange={() => handlePaymentToggle("toss")}
           />
           <PayText isSelected={selectedPay === "toss"}>
             <PayImage src={TossPay} alt="토스페이" /> 토스페이
@@ -40,10 +67,9 @@ const Order = () => {
         </PayOption>
         <PayOption>
           <StyledCheck
-            type="radio"
-            name="payment"
+            type="checkbox"
             checked={selectedPay === "npay"}
-            onChange={() => setSelectedPay("npay")}
+            onChange={() => handlePaymentToggle("npay")}
           />
           <PayText isSelected={selectedPay === "npay"}>
             <PayImage src={NPay} alt="네이버페이" />
@@ -52,10 +78,9 @@ const Order = () => {
         </PayOption>
         <PayOption>
           <StyledCheck
-            type="radio"
-            name="payment"
+            type="checkbox"
             checked={selectedPay === "kakao"}
-            onChange={() => setSelectedPay("kakao")}
+            onChange={() => handlePaymentToggle("kakao")}
           />
           <PayText isSelected={selectedPay === "kakao"}>
             <PayImage src={KakaoPay} alt="카카오페이" /> 카카오페이
@@ -75,7 +100,7 @@ const Order = () => {
       </Guide>
       <ButtonContainer>
         <YellowBtn
-          onBtnClick={() => navigate("/cart/orderclear")}
+          onBtnClick={handlePaymentSubmission}
           txt="결제하기"
           width={"85%"}
           position={"relative"}
@@ -88,10 +113,15 @@ const Order = () => {
 
 export default Order;
 
-// Styled Components 정의
+//
+// 스타일
+//
+
+// 배송지 정보
 const DeliveryWrap = styled.div`
   margin: 17px 28px;
 `;
+
 const InfoText = styled.div`
   color: var(--brown);
   font-size: 20px;
@@ -120,12 +150,20 @@ const StyledInput = styled.input`
   border-radius: 0px;
   font-size: 14px;
   outline: none;
+  height: 40px;
 `;
 
 const HrDiv = styled.div`
   border-bottom: 1px solid #d9d9d9;
   box-shadow: 0 2px 4px 0 rgba(217, 217, 217, 0.5);
 `;
+
+const OrderHrDiv = styled.div`
+  border-bottom: 1px solid #d9d9d9;
+  width: 100%;
+`;
+
+// 결제 수단
 
 const PayWrap = styled.div`
   margin: 17px 28px 0px 28px;
@@ -186,6 +224,8 @@ const PayText = styled.div`
   line-height: 22px;
   font-weight: 800;
 `;
+
+// 이용 안내
 const Guide = styled.div`
   background-color: #f8f8f8;
   padding: 13px 30px;
@@ -197,6 +237,7 @@ const GuideText = styled.div`
   color: #8a8888;
 `;
 
+// 버튼
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;

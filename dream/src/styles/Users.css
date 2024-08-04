@@ -7,21 +7,28 @@
 }
 
 .profile-section {
-  border-radius: 20px;
-  padding: 25px 20px;
+  padding: 25px 34px;
+  margin: -20px -20px;
   background-color: #f8f8f8;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.profile-pic {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+.profile-imgbox {
+  width: 91px;
+  height: 96px;
+  border-radius: 30px;
   margin-right: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(71, 29, 6, 0.25);
+  background-color: #ffde97;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.profile-img {
+  width: 47px;
+  height: 60px;
 }
 
 .profile-info {
@@ -41,13 +48,12 @@
 .ad-banner {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin: 40px 0px 20px 0px;
 }
 
 .ad-banner img {
   width: 100%;
   height: auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .user-options {
@@ -56,16 +62,33 @@
 }
 
 .option-link {
+  font-family: "Noto Sans KR";
   font-size: 17px;
-  padding: 13px;
-  margin-bottom: 8px;
+  padding: 10px 13px;
+  margin-bottom: 5px;
   border: 0;
   border-radius: 5px;
   text-align: left;
   text-decoration: none;
   color: black;
+  font-size: 18px;
 }
 
 .option-link:hover {
   background-color: #e2e6ea;
+}
+
+.option-icon {
+  margin-right: 10px;
+  width: 32px;
+  height: auto;
+  vertical-align: middle;
+}
+
+.arrow {
+  width: 8px;
+  height: 13px;
+  position: absolute;
+  right: 25px;
+  margin-top: 10px;
 }
