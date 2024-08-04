@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import YellowBtn from "../components/YellowBtn";
 import TossPay from "../assets/tosspay.png";
 import NPay from "../assets/npay.png";
@@ -12,6 +13,27 @@ const Order = () => {
 
   const handlePaymentToggle = (payOption) => {
     setSelectedPay((prevPay) => (prevPay === payOption ? "" : payOption));
+  };
+
+  const handlePaymentSubmission = () => {
+    const token = localStorage.getItem("token");
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+    const payload = {
+      paymentMethod: selectedPay,
+      // Add other payment details as needed
+    };
+
+    axios
+      .post("/cart/checkout/", payload, { headers })
+      .then((response) => {
+        navigate("/cart/orderclear");
+      })
+      .catch((error) => {
+        console.error("Payment failed:", error);
+        alert("결제에 실패했습니다. 다시 시도해주세요.");
+      });
   };
 
   return (
@@ -35,7 +57,7 @@ const Order = () => {
         <PayTitle>결제수단</PayTitle>
         <PayOption>
           <StyledCheck
-            type="checkbox" // Changed from radio to checkbox for toggling
+            type="checkbox"
             checked={selectedPay === "toss"}
             onChange={() => handlePaymentToggle("toss")}
           />
@@ -45,7 +67,7 @@ const Order = () => {
         </PayOption>
         <PayOption>
           <StyledCheck
-            type="checkbox" // Changed from radio to checkbox for toggling
+            type="checkbox"
             checked={selectedPay === "npay"}
             onChange={() => handlePaymentToggle("npay")}
           />
@@ -78,7 +100,7 @@ const Order = () => {
       </Guide>
       <ButtonContainer>
         <YellowBtn
-          onBtnClick={() => navigate("/cart/orderclear")}
+          onBtnClick={handlePaymentSubmission}
           txt="결제하기"
           width={"85%"}
           position={"relative"}
