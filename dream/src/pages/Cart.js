@@ -16,6 +16,7 @@ const Cart = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [anyChecked, setAnyChecked] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
+  let totalDeletedQuantity = 0; // 삭제된 수량을 추적
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -34,18 +35,22 @@ const Cart = () => {
   }, []);
 
   useEffect(() => {
-    const checkedItems = cartItems.some((item) => item.selected);
-    setAnyChecked(checkedItems);
-
+    // 전체 금액 계산
     const total = cartItems.reduce((acc, item) => {
       return acc + item.bread.price * item.quantity;
     }, 0);
     setTotalPrice(total);
+
+    // 선택 항목 여부 확인
+    const checkedItems = cartItems.some((item) => item.selected);
+    setAnyChecked(checkedItems);
   }, [cartItems]);
 
   const handleQuantityChange = (id, delta) => {
     const updatedItems = cartItems.map((item) =>
-      item.id === id ? { ...item, quantity: item.quantity + delta } : item
+      item.id === id
+        ? { ...item, quantity: Math.max(1, item.quantity + delta) }
+        : item
     );
     setCartItems(updatedItems);
 
@@ -55,8 +60,8 @@ const Cart = () => {
     const token = localStorage.getItem("token");
     axios
       .put(
-        "http://127.0.0.1:8000/cart/",
-        { id: updatedItem.id, quantity: updatedItem.quantity }, // API 명세에 맞는 데이터 형식
+        `http://127.0.0.1:8000/cart-items/${updatedItem.id}/`, // 엔드포인트 수정
+        { quantity: updatedItem.quantity },
         {
           headers: {
             Authorization: `Token ${token}`,
@@ -64,7 +69,8 @@ const Cart = () => {
         }
       )
       .then((response) => {
-        console.log("Quantity updated successfully", response.data);
+        const cartEvent = new CustomEvent("cartUpdated", { detail: delta });
+        window.dispatchEvent(cartEvent);
       })
       .catch((error) => {
         console.error("Failed to update quantity", error);
@@ -72,8 +78,11 @@ const Cart = () => {
   };
 
   const handleSelectAll = () => {
-    setSelectAll(!selectAll);
-    setCartItems(cartItems.map((item) => ({ ...item, selected: !selectAll })));
+    const newSelectAll = !selectAll;
+    setSelectAll(newSelectAll);
+    setCartItems(
+      cartItems.map((item) => ({ ...item, selected: newSelectAll }))
+    );
   };
 
   const handleSelectItem = (id) => {
@@ -88,22 +97,37 @@ const Cart = () => {
     const selectedItems = cartItems.filter((item) => item.selected);
     const token = localStorage.getItem("token");
 
-    axios
-      .delete("http://127.0.0.1:8000/cart-items/", {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-        data: {
-          items: selectedItems.map((item) => item.id),
-        },
-      })
-      .then(() => {
-        setCartItems(cartItems.filter((item) => !item.selected));
-        setSelectAll(false);
-      })
-      .catch((error) => {
-        console.error("Failed to delete selected items", error);
-      });
+    selectedItems.forEach((item) => {
+      axios
+        .delete(`http://127.0.0.1:8000/cart-items/${item.id}/`, {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        })
+        .then(() => {
+          // 삭제 성공 시, 해당 항목을 상태에서 제거
+          setCartItems((prevItems) =>
+            prevItems.filter((prevItem) => prevItem.id !== item.id)
+          );
+          // 삭제된 수량을 계산
+          totalDeletedQuantity += item.quantity;
+
+          // 각 항목 삭제마다 이벤트 발생
+          const cartEvent = new CustomEvent("cartUpdated", {
+            detail: -item.quantity, // 삭제된 수량만큼 감소
+          });
+          window.dispatchEvent(cartEvent);
+        })
+        .catch((error) => {
+          console.error("Failed to delete selected item", error);
+        });
+    });
+    setSelectAll(false);
+  };
+
+  const handleOrder = () => {
+    // 주문하기 버튼을 눌렀을 때 /cart/checkout/ 페이지로 이동
+    navigate("/cart/checkout/");
   };
 
   return (
@@ -194,7 +218,7 @@ const Cart = () => {
         <TotalPrice>{formatPrice(totalPrice)}원</TotalPrice>
       </TotalWrap>
       <YellowBtn
-        onBtnClick={() => navigate("/cart/order/")}
+        onBtnClick={handleOrder}
         type={"submit"}
         width={"90%"}
         fontWeight={"800"}

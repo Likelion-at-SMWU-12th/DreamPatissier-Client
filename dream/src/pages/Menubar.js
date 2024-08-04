@@ -1,15 +1,51 @@
-import React, { useState } from "react";
+// Menubar.js
+
+import React, { useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../components/SideBar";
 import "../styles/Menubar.css";
 import logo from "../assets/logo.png";
 import styled from "styled-components";
+import axios from "axios";
 
 const Menubar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+
   const toggleSide = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    const fetchCartItems = () => {
+      axios
+        .get("/cart-items/", {
+          headers: { Authorization: `Token ${localStorage.getItem("token")}` },
+        })
+        .then((response) => {
+          const totalItems = response.data.reduce(
+            (sum, item) => sum + item.quantity,
+            0
+          );
+          setCartCount(totalItems);
+        })
+        .catch((error) => console.log(error));
+    };
+
+    fetchCartItems();
+
+    // cartUpdated 이벤트 리스너 추가
+    const handleCartUpdate = (event) => {
+      setCartCount((prevCount) => prevCount + event.detail);
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
+  }, []);
 
   const location = useLocation();
   const isTestPath =
@@ -38,6 +74,11 @@ const Menubar = () => {
           <div className="icons">
             <Link to="/cart" className={isActiveIcon("/cart")}>
               <i className="fas fa-shopping-cart"></i>
+              {cartCount > 0 && (
+                <div className="count-box">
+                  <div className="cart-count">{cartCount}</div>
+                </div>
+              )}
             </Link>
             <Link to="/users" className={isActiveIcon("/users")}>
               <i className="fas fa-user"></i>
