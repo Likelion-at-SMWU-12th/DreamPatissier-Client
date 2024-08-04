@@ -60,7 +60,7 @@ const Cart = () => {
     axios
       .put(
         `http://127.0.0.1:8000/cart-items/${updatedItem.id}/`, // 엔드포인트 수정
-        { quantity: updatedItem.quantity }, // API 명세에 맞는 데이터 형식
+        { quantity: updatedItem.quantity },
         {
           headers: {
             Authorization: `Token ${token}`,
@@ -68,7 +68,8 @@ const Cart = () => {
         }
       )
       .then((response) => {
-        console.log("Quantity updated successfully", response.data);
+        const cartEvent = new CustomEvent("cartUpdated", { detail: delta });
+        window.dispatchEvent(cartEvent);
       })
       .catch((error) => {
         console.error("Failed to update quantity", error);
@@ -98,7 +99,6 @@ const Cart = () => {
     selectedItems.forEach((item) => {
       axios
         .delete(`http://127.0.0.1:8000/cart-items/${item.id}/`, {
-          // 엔드포인트 수정
           headers: {
             Authorization: `Token ${token}`,
           },

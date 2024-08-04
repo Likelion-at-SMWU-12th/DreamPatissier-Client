@@ -56,6 +56,9 @@ const Detail = () => {
         setTimeout(() => {
           setShowPopup(false);
         }, 4000);
+
+        const cartEvent = new CustomEvent("cartUpdated", { detail: 1 }); // quantity 1 추가
+        window.dispatchEvent(cartEvent);
       })
       .catch((error) => {
         console.error("Failed to add product to cart", error);
