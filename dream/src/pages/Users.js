@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "../styles/Users.css";
 import advertise from "../assets/advertise.png";
-import profile from "../assets/myprofile.png";
+import Profile from "../assets/profile.png";
 
 const Users = () => {
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ const Users = () => {
     e.preventDefault();
     await fetchResultIdFromServer();
     const latestResultId = localStorage.getItem("result_id");
-    navigate(`/test/result/${latestResultId}`); // 최신 resultId로 이동
+    navigate(`/test/result/${latestResultId}`);
   };
 
   const handleLogout = (e) => {
@@ -57,7 +57,7 @@ const Users = () => {
 
   const handleTestStart = () => {
     const startTest = window.confirm(
-      "빵 유형 테스트를 해주세요\n\n'하러가기'를 클릭하면 시작합니다."
+      "유형 테스트 결과가 없어요. 테스트를 시작하시겠습니까?"
     );
     if (startTest) {
       navigate("/test/questions/1");
@@ -67,7 +67,9 @@ const Users = () => {
   return (
     <div className="user-page">
       <div className="profile-section">
-        <img src={profile} alt="Profile" className="profile-pic" />
+        <div className="profile-imgbox">
+          <img className="profile-img" src={Profile} />
+        </div>
         <div className="profile-info">
           <h2 className="profile-name">
             {localStorage.getItem("last_name") || "UNKNOWN"}
@@ -84,37 +86,37 @@ const Users = () => {
 
       <div className="user-options">
         <Link to="/users/orders" className="option-link">
-          주문목록 &gt;
+          주문목록
         </Link>
         <Link to="/users/reviews" className="option-link">
-          My 리뷰 &gt;
+          My 리뷰
         </Link>
         <Link to="/users/saved-recipes" className="option-link">
-          저장한 레시피 &gt;
+          저장한 레시피
         </Link>
         <Link to="/users/my-recipes" className="option-link">
-          My 레시피 &gt;
+          My 레시피
         </Link>
 
         {resultId ? (
           <div className="option-link" onClick={handleResultIdUpdate}>
-            빵 유형 테스트 결과 보기 &gt;
+            빵 유형 테스트 결과 보기
           </div>
         ) : (
           <div className="option-link" onClick={handleTestStart}>
-            빵 유형 테스트 결과 보기 &gt;
+            빵 유형 테스트 결과 보기
           </div>
         )}
 
         <Link to="/of-use" className="option-link">
-          서비스 이용약관 &gt;
+          서비스 이용약관
         </Link>
         <Link
           to="/accounts/logout/"
           className="option-link"
           onClick={handleLogout}
         >
-          로그아웃 &gt;
+          로그아웃
         </Link>
       </div>
     </div>

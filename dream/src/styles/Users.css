@@ -7,21 +7,28 @@
 }
 
 .profile-section {
-  border-radius: 20px;
-  padding: 25px 20px;
+  padding: 25px 34px;
+  margin: -20px -20px;
   background-color: #f8f8f8;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.profile-pic {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+.profile-imgbox {
+  width: 91px;
+  height: 96px;
+  border-radius: 30px;
   margin-right: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(71, 29, 6, 0.25);
+  background-color: #ffde97;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.profile-img {
+  width: 47px;
+  height: 60px;
 }
 
 .profile-info {
@@ -41,13 +48,12 @@
 .ad-banner {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin: 40px 0px 20px 0px;
 }
 
 .ad-banner img {
   width: 100%;
   height: auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .user-options {
