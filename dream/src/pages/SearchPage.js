@@ -70,7 +70,7 @@ const SearchPage = () => {
           <Product
             key={product.id}
             imgSrc={product.img_src}
-            tags={product.tags} // JSON 문자열 형태로 넘어옴
+            tags={product.tags}
             name={product.name}
             price={product.price}
           />
@@ -82,7 +82,11 @@ const SearchPage = () => {
 
 export default SearchPage;
 
+//
 // 스타일 정의
+//
+
+// 제품 없을 시
 const MsgBox = styled.div`
   width: 100%;
   margin: 30px 0px;
@@ -104,6 +108,7 @@ const WarningImg = styled.img`
   margin-bottom: 15px;
 `;
 
+// 제품 wrap
 const ProductWrap = styled.div`
   margin: 0 25px;
   display: grid;
@@ -113,6 +118,7 @@ const ProductWrap = styled.div`
   justify-content: center;
 `;
 
+// 링크 없애기
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;

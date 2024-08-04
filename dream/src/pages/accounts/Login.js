@@ -36,6 +36,7 @@ const Login = () => {
     setPassword("");
   };
 
+  // 입력 유효성 검사
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -54,6 +55,7 @@ const Login = () => {
 
     console.log("Submitted data:", { username, password });
 
+    //연동
     axios
       .post("http://127.0.0.1:8000/accounts/login/", {
         username,
@@ -148,6 +150,10 @@ const Login = () => {
 
 export default Login;
 
+//
+// 스타일
+//
+
 const LoginWrap = styled.div`
   justify-content: center;
   align-items: center;
@@ -183,6 +189,7 @@ const IconLogo = styled.img`
   width: 100px;
 `;
 
+// 인풋 관련
 const LoginFormWarp = styled.div`
   width: auto;
   height: auto;

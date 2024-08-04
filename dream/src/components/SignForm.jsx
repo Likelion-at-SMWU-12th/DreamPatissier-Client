@@ -185,6 +185,7 @@ const SignForm = () => {
       phone: formData.phone,
     };
 
+    // 서버에 제출
     axios
       .post("http://127.0.0.1:8000/accounts/signup/", submitData)
       .then((response) => {
@@ -242,7 +243,7 @@ const SignForm = () => {
                 value={formData.username}
                 onChange={handleChange}
               />
-              {/* 인풋 필드 별 에러메세지 */}
+              {/* 에러메세지 */}
               {errors.username && (
                 <ErrorMessage>{errors.username}</ErrorMessage>
               )}
@@ -269,7 +270,7 @@ const SignForm = () => {
                   <img src={delPasswordIcon} alt="Clear" />
                 </PWDelBtn>
               </SignInputBox>
-              {/* 인풋 필드 별 에러메세지 */}
+              {/* 에러메세지 */}
               {errors.password && (
                 <ErrorMessage>{errors.password}</ErrorMessage>
               )}
@@ -297,7 +298,7 @@ const SignForm = () => {
                   <img src={delPasswordIcon} alt="Clear" />
                 </PW2DelBtn>
               </SignInputBox>
-              {/* 인풋 필드 별 에러메세지 */}
+              {/* 에러메세지 */}
 
               {errors.confirmPassword && (
                 <ErrorMessage>{errors.confirmPassword}</ErrorMessage>
@@ -313,7 +314,7 @@ const SignForm = () => {
                 value={formData.last_name}
                 onChange={handleChange}
               />
-              {/* 인풋 필드 별 에러메세지 */}
+              {/* 에러메세지 */}
 
               {errors.last_name && (
                 <ErrorMessage>{errors.last_name}</ErrorMessage>
@@ -429,7 +430,10 @@ const SignForm = () => {
 };
 
 export default SignForm;
+
+//
 // 스타일
+//
 
 // 인풋필드 스타일
 const SignInputContainer = styled.div`

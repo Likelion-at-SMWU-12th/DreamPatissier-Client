@@ -104,9 +104,9 @@ function Bakery() {
             <StyledLink to={`/bakery/product/${product.id}`} key={product.id}>
               <Product
                 key={product.id}
-                imgSrc={product.img_src} // imgSrc -> img_src
+                imgSrc={product.img_src}
                 tags={product.tags}
-                name={product.name} // title -> name
+                name={product.name}
                 price={product.price}
               />
             </StyledLink>
@@ -122,7 +122,10 @@ function Bakery() {
   );
 }
 
+//
 // 카테고리 데이터
+//
+
 const categories = [
   { name: "bread", uiName: "식빵", imgSrc: Morning },
   { name: "baguette", uiName: "바게트/치아바타", imgSrc: Baguette },
@@ -134,7 +137,11 @@ const categories = [
   { name: "special", uiName: "기획전", imgSrc: Event },
 ];
 
-// CSS
+//
+// 스타일
+//
+
+// 배너
 const BannerBox = styled.div`
   position: relative;
   padding-top: 56.25%;
@@ -150,6 +157,7 @@ const BannerImg = styled.img`
   object-fit: cover;
 `;
 
+// 상품
 const ProductBox = styled.div`
   margin: 0px 25px;
   display: grid;
@@ -159,12 +167,14 @@ const ProductBox = styled.div`
   justify-content: center;
 `;
 
+// 링크 가리기
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;
   display: block;
 `;
 
+// 카테고리
 const CategoryWrap = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -173,6 +183,7 @@ const CategoryWrap = styled.div`
   margin: 10px;
 `;
 
+// 제품 없음 & 서버 오류
 const MsgBox = styled.div`
   width: 100%;
   margin: 100px 0px;
