@@ -120,7 +120,7 @@ const Login = () => {
               <LoginHrDiv />
               <PaBox>
                 <PaInput
-                  type={showPassword ? "static" : "password"} // 수정: "text"로 변경
+                  type={showPassword ? "static" : "password"}
                   placeholder="비밀번호"
                   value={password}
                   onChange={handlePwChange}

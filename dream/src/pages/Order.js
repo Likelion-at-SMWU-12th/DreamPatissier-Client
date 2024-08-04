@@ -18,8 +18,11 @@ const Order = () => {
         <InputWrap>
           <InputBox>
             <StyledInput placeholder="받는 분" type="text" />
+            <OrderHrDiv />
             <StyledInput placeholder="우편번호" type="text" />
+            <OrderHrDiv />
             <StyledInput placeholder="상세 주소" type="text" />
+            <OrderHrDiv />
             <StyledInput placeholder="연락처" type="text" />
           </InputBox>
         </InputWrap>
@@ -120,6 +123,7 @@ const StyledInput = styled.input`
   border-radius: 0px;
   font-size: 14px;
   outline: none;
+  height: 40px;
 `;
 
 const HrDiv = styled.div`
@@ -203,4 +207,9 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
   margin-bottom: 20px;
   position: relative;
+`;
+
+const OrderHrDiv = styled.div`
+  border-bottom: 1px solid #d9d9d9;
+  width: 100%;
 `;
