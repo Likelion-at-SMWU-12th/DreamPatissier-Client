@@ -4,6 +4,14 @@ import axios from "axios";
 import "../styles/Users.css";
 import advertise from "../assets/advertise.png";
 import Profile from "../assets/profile.png";
+import ReviewIcon from "../assets/US-review.png";
+import OrderIcon from "../assets/US-order.png";
+import RecipeIcon from "../assets/US-recipe.png";
+import SaveIcon from "../assets/US-save.png";
+import OfuseIcon from "../assets/US-ofuse.png";
+import TestIcon from "../assets/US-test.png";
+import LogoutIcon from "../assets/US-logout.png";
+import Arrow from "../assets/arrow.png";
 
 const Users = () => {
   const navigate = useNavigate();
@@ -86,36 +94,57 @@ const Users = () => {
 
       <div className="user-options">
         <Link to="/users/orders" className="option-link">
+          <img src={OrderIcon} className="option-icon" alt="주문목록" />
           주문목록
+          <img src={Arrow} alt="화살표" className="arrow" />
         </Link>
         <Link to="/users/reviews" className="option-link">
-          My 리뷰
+          <img src={ReviewIcon} className="option-icon" alt="My 리뷰" />
+          MY 리뷰
+          <img src={Arrow} alt="화살표" className="arrow" />
         </Link>
         <Link to="/users/saved-recipes" className="option-link">
+          <img src={SaveIcon} className="option-icon" alt="저장한 레시피" />
           저장한 레시피
+          <img src={Arrow} alt="화살표" className="arrow" />
         </Link>
         <Link to="/users/my-recipes" className="option-link">
-          My 레시피
+          <img src={RecipeIcon} className="option-icon" alt="My 레시피" />
+          MY 레시피
+          <img src={Arrow} alt="화살표" className="arrow" />
         </Link>
-
         {resultId ? (
           <div className="option-link" onClick={handleResultIdUpdate}>
+            <img
+              src={TestIcon}
+              className="option-icon"
+              alt="빵 유형 테스트 결과 보기"
+            />
             빵 유형 테스트 결과 보기
+            <img src={Arrow} alt="화살표" className="arrow" />
           </div>
         ) : (
           <div className="option-link" onClick={handleTestStart}>
+            <img
+              src={TestIcon}
+              className="option-icon"
+              alt="빵 유형 테스트 결과 보기"
+            />
             빵 유형 테스트 결과 보기
+            <img src={Arrow} alt="화살표" className="arrow" />
           </div>
         )}
-
         <Link to="/of-use" className="option-link">
+          <img src={OfuseIcon} className="option-icon" alt="서비스 이용약관" />
           서비스 이용약관
+          <img src={Arrow} alt="화살표" className="arrow" />
         </Link>
         <Link
           to="/accounts/logout/"
           className="option-link"
           onClick={handleLogout}
         >
+          <img src={LogoutIcon} className="option-icon" alt="로그아웃" />
           로그아웃
         </Link>
       </div>
