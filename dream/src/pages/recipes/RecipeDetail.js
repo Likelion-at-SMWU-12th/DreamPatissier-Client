@@ -24,18 +24,18 @@ const RecipeDetail = () => {
   const [error, setError] = useState(null); // 에러 상태
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUsername = localStorage.getItem("username"); // username 저장 위치
-
-    if (storedToken) {
-      setToken(storedToken);
-    }
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
-
     const fetchRecipe = async () => {
       try {
+        const storedToken = localStorage.getItem("token");
+        const storedUsername = localStorage.getItem("username"); // username 저장 위치
+
+        if (storedToken) {
+          setToken(storedToken);
+        }
+        if (storedUsername) {
+          setUsername(storedUsername);
+        }
+
         const response = await axios.get(
           `http://127.0.0.1:8000/recipes/${id}`,
           {
@@ -47,21 +47,26 @@ const RecipeDetail = () => {
         const recipeData = response.data;
         setRecipe(recipeData);
         setIsAuthor(recipeData.author === storedUsername);
-        setLoading(false);
 
         // Check if the recipe is saved
-        const savedResponse = await axios.get(
-          `http://127.0.0.1:8000/users/saved-recipes/${id}`,
-          {
-            headers: {
-              Authorization: `Token ${storedToken}`,
-            },
-          }
-        );
-        setIsSaved(savedResponse.data.isSaved);
-      } catch (error) {
-        console.error("레시피 불러오기에 실패했습니다:", error);
-        setError(error);
+        try {
+          const savedResponse = await axios.get(
+            `http://127.0.0.1:8000/users/saved-recipes/${id}`,
+            {
+              headers: {
+                Authorization: `Token ${storedToken}`,
+              },
+            }
+          );
+          setIsSaved(savedResponse.data.isSaved);
+        } catch (savedError) {
+          console.error("스크랩 상태 확인에 실패했습니다:", savedError);
+        }
+
+        setLoading(false);
+      } catch (fetchError) {
+        console.error("레시피 불러오기에 실패했습니다:", fetchError);
+        setError(fetchError);
         setLoading(false);
       }
     };
@@ -96,15 +101,19 @@ const RecipeDetail = () => {
     try {
       if (isSaved) {
         // Remove from saved recipes
-        await axios.delete(`http://127.0.0.1:8000/users/saved-recipes/`, {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
+        await axios.delete(
+          `http://127.0.0.1:8000/users/saved-recipes/${recipeId}`,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
         setIsSaved(false);
       } else {
+        // Add to saved recipes
         await axios.post(
-          `http://127.0.0.1:8000/users/saved-recipes/${recipeId}`,
+          `http://127.0.0.1:8000/users/saved-recipes/`,
           { recipe: recipeId },
           {
             headers: {
@@ -249,7 +258,7 @@ const RecipeDetail = () => {
               <img className="tool_img" src={toolIcon} alt="조리도구 아이콘" />
               조리도구
             </div>
-            <div className="equi_show">{recipe.equipment}</div>
+            <div className="equi_show">{equipment}</div>
           </div>
         </div>
       </div>
