@@ -45,12 +45,16 @@ const RecipeDetail = () => {
           const recipeData = response.data;
           setRecipe(recipeData);
           setIsAuthor(recipeData.author === storedUsername);
-          setIsSaved(recipeData.isSaved); // Assuming `isSaved` is returned from API
-
-          // 로그 출력
-          console.log("Recipe Author:", recipeData.author);
-          console.log("Current Username:", storedUsername);
           setLoading(false);
+
+          return axios.get(`http://127.0.0.1:8000/users/saved-recipes/${id}`, {
+            headers: {
+              Authorization: `Token ${storedToken}`,
+            },
+          });
+        })
+        .then((savedResponse) => {
+          setIsSaved(savedResponse.data.isSaved);
         })
         .catch((error) => {
           console.error("레시피 불러오기에 실패했습니다:", error);
@@ -63,7 +67,7 @@ const RecipeDetail = () => {
   }, [id]);
 
   const onEditRecipe = (recipeId) => {
-    navigate(`/edit/recipe/${recipeId}`);
+    navigate(`/recipes/edit/${recipeId}`);
   };
 
   const onDelete = (recipeId) => {
@@ -86,22 +90,41 @@ const RecipeDetail = () => {
   };
 
   const onToggleSave = (recipeId) => {
-    axios
-      .post(
-        `http://127.0.0.1:8000/recipes/${recipeId}/toggle-save`,
-        {},
-        {
+    if (isSaved) {
+      // Remove from saved recipes
+      axios
+        .delete(`http://127.0.0.1:8000/users/saved-recipes/${recipeId}`, {
           headers: {
             Authorization: `Token ${token}`,
           },
-        }
-      )
-      .then((response) => {
-        setIsSaved(response.data.isSaved);
-      })
-      .catch((error) => {
-        console.error("레시피 저장 상태 변경에 실패했습니다:", error);
-      });
+        })
+        .then(() => {
+          setIsSaved(false);
+        })
+        .catch((error) => {
+          console.error("스크랩 상태 변경에 실패했습니다:", error);
+          alert("스크랩 상태 변경에 실패했습니다.");
+        });
+    } else {
+      // Add to saved recipes
+      axios
+        .post(
+          `http://127.0.0.1:8000/users/saved-recipes/`,
+          { recipe: recipeId },
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        )
+        .then(() => {
+          setIsSaved(true);
+        })
+        .catch((error) => {
+          console.error("스크랩 상태 변경에 실패했습니다:", error);
+          alert("스크랩 상태 변경에 실패했습니다.");
+        });
+    }
   };
 
   if (loading) {
