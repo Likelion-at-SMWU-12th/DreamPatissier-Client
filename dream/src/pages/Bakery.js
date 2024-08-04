@@ -53,6 +53,12 @@ function Bakery() {
       });
   }, []);
 
+  useEffect(() => {
+    if (location.pathname === "/bakery") {
+      setSelectedCategory(null);
+    }
+  }, [location.pathname]);
+
   const handleCategoryClick = (name) => {
     setSelectedCategory(name);
     navigate(`/bakery/category/${name}`);
@@ -133,7 +139,7 @@ const categories = [
   { name: "cake", uiName: "케이크", imgSrc: Cake },
   { name: "donut", uiName: "도넛", imgSrc: Donut },
   { name: "cream", uiName: "크림빵", imgSrc: Cream },
-  { name: "root_vegetable", uiName: "구황작물빵", imgSrc: Harverst }, // harverst가 아니라 올바른 imgSrc를 사용해야 합니다.
+  { name: "root_vegetable", uiName: "구황작물빵", imgSrc: Harverst },
   { name: "special", uiName: "기획전", imgSrc: Event },
 ];
 
