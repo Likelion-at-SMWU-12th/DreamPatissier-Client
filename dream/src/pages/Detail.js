@@ -44,7 +44,7 @@ const Detail = () => {
     axios
       .post(
         `http://127.0.0.1:8000/bakery/${id}/add-to-cart/`,
-        {}, // 필요한 데이터가 있으면 여기에 추가
+        {},
         {
           headers: {
             Authorization: `Token ${token}`,
@@ -315,14 +315,14 @@ const PopWrap = styled.div`
   display: flex;
   position: fixed;
   right: 0;
-  left: 10%;
+  left: 5%;
   bottom: 5%;
   z-index: 4;
-  width: 80%;
+  width: 90%;
   animation: ${(props) =>
     props.showPopup
       ? css`
-          ${fadeOut} 5s forwards
+          ${fadeOut} 4.5s forwards
         `
       : "none"};
 `;
