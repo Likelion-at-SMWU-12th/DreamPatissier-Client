@@ -5,70 +5,6 @@ import "../../styles/WriteRecipe.css";
 import representPicture from "./represent_picture.png";
 import init_image from "./init_recipe_image.png";
 
-const ImageComponent = ({ image, onImageChange }) => {
-  const fileInputRef = useRef(null);
-
-  const handleImageClick = () => {
-    fileInputRef.current.click();
-  };
-
-  return (
-    <div
-      className="picture_re_input"
-      onClick={handleImageClick}
-      style={{ cursor: "pointer", position: "relative" }}
-    >
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: "none" }}
-        onChange={onImageChange}
-        id="recipe-image-upload"
-      />
-      <img src={image} alt="대표사진" className="image-preview" />
-    </div>
-  );
-};
-
-const StepComponent = ({ step, index, onStepChange, onStepImageChange }) => {
-  const fileInputRef = useRef(null);
-
-  const handleImageClick = () => {
-    fileInputRef.current.click();
-  };
-
-  return (
-    <div className="recipe-step" key={index}>
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: "none" }}
-        onChange={(e) => onStepImageChange(index, e)}
-        id={`step${index + 1}-image-upload`}
-      />
-      <div className="image-container" onClick={handleImageClick}>
-        <img
-          src={
-            step.imageFile
-              ? URL.createObjectURL(step.imageFile)
-              : step.imageUrl || init_image
-          }
-          alt={`조리 단계 ${index + 1} 사진`}
-          className="image-preview"
-        />
-      </div>
-      <textarea
-        rows="9"
-        className="text-explain"
-        placeholder="조리방법"
-        value={step.description}
-        onChange={(e) => onStepChange(index, "description", e.target.value)}
-        id={`step${index + 1}-description`}
-      />
-    </div>
-  );
-};
-
 const EditRecipe = () => {
   const { id } = useParams();
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -82,6 +18,10 @@ const EditRecipe = () => {
   const [steps, setSteps] = useState(
     Array(10).fill({ description: "", imageFile: null, imageUrl: "" })
   );
+
+  const fileInputRef = useRef(null);
+  const stepFileInputRefs = useRef([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -115,6 +55,15 @@ const EditRecipe = () => {
           alert("레시피 정보를 불러오는 데 실패했습니다.");
         });
     }
+
+    return () => {
+      // Clean up URL.createObjectURL references for only blob URLs
+      steps.forEach((step) => {
+        if (step.imageFile && step.imageFile instanceof File) {
+          URL.revokeObjectURL(URL.createObjectURL(step.imageFile));
+        }
+      });
+    };
   }, [id, token]);
 
   const handleImageChange = (e) => {
@@ -125,7 +74,11 @@ const EditRecipe = () => {
     }
   };
 
-  const handleStepChange = (index, field, value) => {
+  const handleImageClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleChange = (index, field, value) => {
     const updatedSteps = [...steps];
     updatedSteps[index] = { ...updatedSteps[index], [field]: value };
     setSteps(updatedSteps);
@@ -145,29 +98,45 @@ const EditRecipe = () => {
   };
 
   const addIngredient = () => {
-    setIngredients([...ingredients, { name: "", amount: "" }]);
+    setIngredients([...ingredients, { item: "", quantity: "" }]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title || !tags || !cookingTime || !equipment || !imageFile) {
+    if (!title || !tags || !cookingTime || !equipment) {
       alert("모든 필드를 작성해 주세요.");
       return;
     }
 
+    // 최소 1단계의 설명 또는 이미지 확인
+    const hasValidStep = steps.some(
+      (step) => step.description.trim() || step.imageFile || step.imageUrl
+    );
+
+    if (!hasValidStep) {
+      alert("조리 방법의 최소 1단계는 사진이나 설명이 필요합니다.");
+      return;
+    }
+
     const formData = new FormData();
-    if (imageFile) formData.append("image", imageFile);
-    if (title) formData.append("title", title);
-    if (tags) formData.append("tags", tags);
-    if (cookingTime) formData.append("cooking_time", cookingTime);
-    if (equipment) formData.append("equipment", equipment);
-    if (ingredients.length > 0)
-      formData.append("ingredients", JSON.stringify(ingredients));
+    if (imageFile) {
+      formData.append("image", imageFile);
+    } else if (image && image !== representPicture) {
+      formData.append("image_url", image);
+    }
+
+    formData.append("title", title);
+    formData.append("tags", tags);
+    formData.append("cookingTime", cookingTime);
+    formData.append("equipment", equipment);
+    formData.append("ingredients", JSON.stringify(ingredients));
 
     steps.forEach((step, index) => {
       if (step.imageFile) {
         formData.append(`step${index + 1}_image`, step.imageFile);
+      } else if (step.imageUrl) {
+        formData.append(`step${index + 1}_image_url`, step.imageUrl);
       }
       formData.append(`step${index + 1}_description`, step.description);
     });
@@ -175,53 +144,63 @@ const EditRecipe = () => {
     const authorUsername = localStorage.getItem("username");
     formData.append("author", authorUsername);
 
-    axios
-      .put(`http://127.0.0.1:8000/recipes/${id}/`, formData, {
-        headers: {
-          Authorization: `Token ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log("서버 응답 데이터:", response.data);
-        alert("레시피가 수정되었습니다!");
-        navigate("/recipes");
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.error("서버 응답 데이터:", error.response.data);
-          console.error("서버 응답 상태:", error.response.status);
-          console.error("서버 응답 헤더:", error.response.headers);
-          alert(
-            `서버 오류: ${
-              error.response.data.author || "알 수 없는 오류가 발생했습니다."
-            }`
-          );
-        } else if (error.request) {
-          console.error(
-            "서버에 요청을 보냈지만 응답이 없습니다:",
-            error.request
-          );
-          alert("서버에 요청을 보냈지만 응답이 없습니다.");
-        } else {
-          console.error("요청 설정 중 오류 발생:", error.message);
-          alert("요청 설정 중 오류가 발생했습니다.");
+    try {
+      const response = await axios.put(
+        `http://127.0.0.1:8000/recipes/${id}/`,
+        formData,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
-      });
+      );
+
+      console.log("서버 응답 데이터:", response.data);
+      alert("레시피가 수정되었습니다!");
+      navigate("/recipes");
+    } catch (error) {
+      if (error.response) {
+        console.error("서버 응답 데이터:", error.response.data);
+        console.error("서버 응답 상태:", error.response.status);
+        console.error("서버 응답 헤더:", error.response.headers);
+        alert(
+          `서버 오류: ${
+            error.response.data.author || "알 수 없는 오류가 발생했습니다."
+          }`
+        );
+      } else if (error.request) {
+        console.error("서버에 요청을 보냈지만 응답이 없습니다:", error.request);
+        alert("서버에 요청을 보냈지만 응답이 없습니다.");
+      } else {
+        console.error("요청 설정 중 오류 발생:", error.message);
+        alert("요청 설정 중 오류가 발생했습니다.");
+      }
+    }
   };
 
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit}>
-        <ImageComponent image={image} onImageChange={handleImageChange} />
+        <div
+          className="picture_re_input"
+          onClick={handleImageClick}
+          style={{ cursor: "pointer", position: "relative" }}
+        >
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            onChange={handleImageChange}
+          />
+          <img src={image} alt="대표사진" className="image-preview" />
+        </div>
         <input
           className="input-recipe-data"
           type="text"
           value={title}
           placeholder="레시피명을 작성해 주세요."
           onChange={(e) => setTitle(e.target.value)}
-          id="recipe-title"
-          name="title"
         />
         <input
           className="input-recipe-data"
@@ -229,8 +208,6 @@ const EditRecipe = () => {
           value={tags}
           placeholder="#웰니스 키워드를 작성해 주세요."
           onChange={(e) => setTags(e.target.value)}
-          id="recipe-tags"
-          name="tags"
         />
         <input
           className="input-recipe-data"
@@ -238,8 +215,6 @@ const EditRecipe = () => {
           value={cookingTime}
           placeholder="조리시간을 작성해 주세요."
           onChange={(e) => setCookingTime(e.target.value)}
-          id="recipe-cooking-time"
-          name="cooking_time"
         />
         <input
           className="input-recipe-data"
@@ -247,8 +222,6 @@ const EditRecipe = () => {
           value={equipment}
           placeholder="조리기구를 하나만 작성해 주세요. (전자레인지/오븐/에어프라이어 등)"
           onChange={(e) => setEquipment(e.target.value)}
-          id="recipe-equipment"
-          name="equipment"
         />
 
         <div className="style2">
@@ -267,8 +240,6 @@ const EditRecipe = () => {
                       )
                     )
                   }
-                  id={`ingredient-${index}-item`}
-                  name={`ingredient-${index}-item`}
                 />
                 <input
                   type="text"
@@ -281,8 +252,6 @@ const EditRecipe = () => {
                       )
                     )
                   }
-                  id={`ingredient-${index}-quantity`}
-                  name={`ingredient-${index}-quantity`}
                 />
               </div>
             ))}
@@ -299,13 +268,37 @@ const EditRecipe = () => {
           </div>
           <div className="recipe-step-container">
             {steps.map((step, index) => (
-              <StepComponent
-                key={index}
-                step={step}
-                index={index}
-                onStepChange={handleStepChange}
-                onStepImageChange={handleStepImageChange}
-              />
+              <div className="recipe-step" key={index}>
+                <input
+                  type="file"
+                  ref={(el) => (stepFileInputRefs.current[index] = el)}
+                  style={{ display: "none" }}
+                  onChange={(e) => handleStepImageChange(index, e)}
+                />
+                <div
+                  className="image-container"
+                  onClick={() => stepFileInputRefs.current[index]?.click()}
+                >
+                  <img
+                    src={
+                      step.imageFile
+                        ? URL.createObjectURL(step.imageFile)
+                        : step.imageUrl || init_image
+                    }
+                    alt={`조리 단계 ${index + 1} 사진`}
+                    className="image-preview"
+                  />
+                </div>
+                <textarea
+                  rows="9"
+                  className="text-explain"
+                  placeholder="조리방법"
+                  value={step.description}
+                  onChange={(e) =>
+                    handleChange(index, "description", e.target.value)
+                  }
+                />
+              </div>
             ))}
           </div>
         </div>

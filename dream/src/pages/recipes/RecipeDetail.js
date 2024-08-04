@@ -24,39 +24,51 @@ const RecipeDetail = () => {
   const [error, setError] = useState(null); // 에러 상태
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUsername = localStorage.getItem("username"); // username 저장 위치
+    const fetchRecipe = async () => {
+      try {
+        const storedToken = localStorage.getItem("token");
+        const storedUsername = localStorage.getItem("username"); // username 저장 위치
 
-    if (storedToken) {
-      setToken(storedToken);
-    }
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
+        if (storedToken) {
+          setToken(storedToken);
+        }
+        if (storedUsername) {
+          setUsername(storedUsername);
+        }
 
-    const fetchRecipe = () => {
-      axios
-        .get(`http://127.0.0.1:8000/recipes/${id}`, {
-          headers: {
-            Authorization: `Token ${storedToken}`,
-          },
-        })
-        .then((response) => {
-          const recipeData = response.data;
-          setRecipe(recipeData);
-          setIsAuthor(recipeData.author === storedUsername);
-          setIsSaved(recipeData.isSaved); // Assuming `isSaved` is returned from API
+        const response = await axios.get(
+          `http://127.0.0.1:8000/recipes/${id}`,
+          {
+            headers: {
+              Authorization: `Token ${storedToken}`,
+            },
+          }
+        );
+        const recipeData = response.data;
+        setRecipe(recipeData);
+        setIsAuthor(recipeData.author === storedUsername);
 
-          // 로그 출력
-          console.log("Recipe Author:", recipeData.author);
-          console.log("Current Username:", storedUsername);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("레시피 불러오기에 실패했습니다:", error);
-          setError(error);
-          setLoading(false);
-        });
+        // Check if the recipe is saved
+        try {
+          const savedResponse = await axios.get(
+            `http://127.0.0.1:8000/users/saved-recipes/${id}`,
+            {
+              headers: {
+                Authorization: `Token ${storedToken}`,
+              },
+            }
+          );
+          setIsSaved(savedResponse.data.isSaved);
+        } catch (savedError) {
+          console.error("스크랩 상태 확인에 실패했습니다:", savedError);
+        }
+
+        setLoading(false);
+      } catch (fetchError) {
+        console.error("레시피 불러오기에 실패했습니다:", fetchError);
+        setError(fetchError);
+        setLoading(false);
+      }
     };
 
     fetchRecipe();
@@ -85,23 +97,40 @@ const RecipeDetail = () => {
     }
   };
 
-  const onToggleSave = (recipeId) => {
-    axios
-      .post(
-        `http://127.0.0.1:8000/recipes/${recipeId}/toggle-save`,
-        {},
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        setIsSaved(response.data.isSaved);
-      })
-      .catch((error) => {
-        console.error("레시피 저장 상태 변경에 실패했습니다:", error);
-      });
+  const onToggleSave = async (recipeId) => {
+    try {
+      if (isSaved) {
+        // Remove from saved recipes
+        await axios.delete(
+          `http://127.0.0.1:8000/users/saved-recipes/${recipeId}`,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
+        setIsSaved(false);
+      } else {
+        // Add to saved recipes
+        await axios.post(
+          `http://127.0.0.1:8000/users/saved-recipes/`,
+          { recipe: recipeId },
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
+        setIsSaved(true);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 405) {
+        alert("이 요청 메소드는 지원되지 않습니다. 서버 설정을 확인해 주세요.");
+      } else {
+        console.error("스크랩 상태 변경에 실패했습니다:", error);
+        alert("스크랩 상태 변경에 실패했습니다.");
+      }
+    }
   };
 
   if (loading) {
