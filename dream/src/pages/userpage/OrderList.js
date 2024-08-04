@@ -47,21 +47,24 @@ const OrderList = () => {
                   <div className="product-date">
                     {new Date(order.created_at).toLocaleDateString()}
                   </div>
-                  <img
-                    src={item.image || profile}
-                    alt={item.name || "Product"}
-                    className="product-image"
-                  />
-                  <div className="product-info">
-                    <h3 className="product-name">
-                      {item.name || "Unknown Product"}
-                    </h3>
-                    <div className="product-tags">
-                      {item.tags ? item.tags.join(" ") : "No Tags"}
-                    </div>
-                    <div className="product-price">
-                      총 금액: {parseFloat(order.total_price).toLocaleString()}
-                      원
+                  <div className="product-show">
+                    {" "}
+                    {/* Flex container 추가 */}
+                    <img
+                      src={item.image || profile}
+                      alt={item.name || "Product"}
+                      className="product-image"
+                    />
+                    <div className="product-info">
+                      <h3 className="product-name">
+                        {item.name || "Unknown Product"}
+                      </h3>
+                      <div className="product-tags">
+                        {item.tags ? item.tags.join(" ") : "No Tags"}
+                      </div>
+                      <div className="product-price">
+                        {parseFloat(order.total_price).toLocaleString()}원
+                      </div>
                     </div>
                   </div>
                   <div className="product-actions">

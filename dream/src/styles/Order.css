@@ -4,7 +4,6 @@
   font-size: 20px;
   margin: 10px 20px;
   padding: 10px;
-  background-color: pink;
 }
 
 .product-card {
@@ -15,37 +14,37 @@
   flex-direction: column;
   border: 1px solid #ddd;
   padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  background-color: cadetblue;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
 .product-show {
   display: flex;
-  flex-direction: row; /* Ensure children are in a row */
-  align-items: center; /* Vertically center align items */
+  flex-direction: row;
+  align-items: center;
+  margin-top: -5px;
+  margin-bottom: 10px;
 }
 
 .product-image {
   border-radius: 10px;
   width: 89px;
   height: 89px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
   margin-right: 15px;
 }
 
 .product-info {
   display: flex;
   flex-direction: column;
-  flex: 1; /* Allow it to grow and take available space */
+  flex: 1;
   padding: 0;
   margin: 0;
-  background-color: beige;
 }
 
 .product-name {
   color: #471d06;
-  font-size: 18px;
+  font-size: 13px;
   font-weight: bold;
   margin-bottom: 20px;
   margin: 0;
@@ -54,9 +53,9 @@
 .product-tags {
   color: #ffb415;
   font-weight: 700;
-  font-size: 12px;
+  font-size: 11px;
   margin-top: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .product-price {
@@ -68,11 +67,8 @@
 .product-date {
   color: #000;
   font-family: Inter;
-  font-size: 15px !important;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  background-color: #ffb415;
+  font-size: 13px !important;
+  font-weight: 900;
   margin-top: 10px;
 }
 
