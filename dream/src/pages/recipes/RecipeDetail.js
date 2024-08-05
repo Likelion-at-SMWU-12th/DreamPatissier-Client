@@ -3,7 +3,6 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import "../../styles/RecipeDetail.css";
 import init_image from "./init_recipe_image.png";
-
 import timerIcon from "../../assets/timer.png";
 import toolIcon from "../../assets/tool.png";
 import savedIcon from "../../assets/saved-icon.png";
@@ -11,141 +10,143 @@ import unsavedIcon from "../../assets/unsaved-icon.png";
 import editIcon from "../../assets/edit-icon.png";
 import deleteIcon from "../../assets/delete-icon.png";
 
-// 레시피 상세 컴포넌트
+const handleError = (error) => {
+  if (error.response) {
+    console.error(
+      "Error:",
+      error.response.data,
+      "Status:",
+      error.response.status
+    );
+  } else if (error.request) {
+    console.error("Error: No response received");
+  } else {
+    console.error("Error:", error.message);
+  }
+};
+
 const RecipeDetail = () => {
   const [recipe, setRecipe] = useState(null);
-  const [isAuthor, setIsAuthor] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
+  const [isScrapped, setIsScrapped] = useState(false);
+  const [token, setToken] = useState("");
+  const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const { id } = useParams();
   const navigate = useNavigate();
-  const [token, setToken] = useState("");
-  const [username, setUsername] = useState(""); // 현재 사용자 이름 상태
-  const [loading, setLoading] = useState(true); // 로딩 상태
-  const [error, setError] = useState(null); // 에러 상태
 
   useEffect(() => {
-    const fetchRecipe = async () => {
-      try {
-        const storedToken = localStorage.getItem("token");
-        const storedUsername = localStorage.getItem("username"); // username 저장 위치
+    const storedToken = localStorage.getItem("token");
+    const storedUsername = localStorage.getItem("username");
 
-        if (storedToken) {
-          setToken(storedToken);
-        }
-        if (storedUsername) {
-          setUsername(storedUsername);
-        }
+    if (storedToken) {
+      setToken(storedToken);
+    }
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
 
-        const response = await axios.get(
-          `http://127.0.0.1:8000/recipes/${id}`,
-          {
+    // fetchRecipe 함수 정의
+    const fetchRecipe = () => {
+      axios
+        .get(`http://127.0.0.1:8000/recipes/${id}`, {
+          headers: {
+            Authorization: `Token ${storedToken}`,
+          },
+        })
+        .then((recipeResponse) => {
+          const recipeData = recipeResponse.data;
+          setRecipe(recipeData);
+
+          return axios.get(`http://127.0.0.1:8000/users/saved-recipes/${id}`, {
             headers: {
               Authorization: `Token ${storedToken}`,
             },
-          }
-        );
-        const recipeData = response.data;
-        setRecipe(recipeData);
-        setIsAuthor(recipeData.author === storedUsername);
-
-        // Check if the recipe is saved
-        try {
-          const savedResponse = await axios.get(
-            `http://127.0.0.1:8000/users/saved-recipes/${id}`,
-            {
-              headers: {
-                Authorization: `Token ${storedToken}`,
-              },
-            }
-          );
-          setIsSaved(savedResponse.data.isSaved);
-        } catch (savedError) {
-          console.error("스크랩 상태 확인에 실패했습니다:", savedError);
-        }
-
-        setLoading(false);
-      } catch (fetchError) {
-        console.error("레시피 불러오기에 실패했습니다:", fetchError);
-        setError(fetchError);
-        setLoading(false);
-      }
+          });
+        })
+        .then((savedResponse) => {
+          setIsScrapped(savedResponse.data.is_scrapped);
+        })
+        .catch((fetchError) => {
+          handleError(fetchError);
+          setError(fetchError);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     };
 
     fetchRecipe();
-  }, [id]);
+  }, [id, token]);
 
-  const onEditRecipe = (recipeId) => {
-    navigate(`/edit/recipe/${recipeId}`);
-  };
+  const handleToggleSave = (recipeId) => {
+    const url = `http://127.0.0.1:8000/users/saved-recipes/${recipeId}`;
+    const headers = { Authorization: `Token ${token}` };
 
-  const onDelete = (recipeId) => {
-    if (window.confirm("이 레시피를 정말 삭제하시겠습니까?")) {
+    if (isScrapped) {
+      // 이미 스크랩된 상태에서 삭제 요청
       axios
-        .delete(`http://127.0.0.1:8000/recipes/${recipeId}`, {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        })
+        .delete(url, { headers })
         .then(() => {
-          alert("레시피가 삭제되었습니다.");
-          navigate("/"); // 홈 페이지로 리다이렉트
+          setIsScrapped(false); // 상태 업데이트
         })
         .catch((error) => {
-          console.error("레시피 삭제에 실패했습니다:", error);
-          alert("레시피 삭제에 실패했습니다.");
+          handleError(error);
+        });
+    } else {
+      // 스크랩되지 않은 상태에서 추가 요청
+      axios
+        .post(url, {}, { headers })
+        .then(() => {
+          setIsScrapped(true); // 상태 업데이트
+        })
+        .catch((error) => {
+          handleError(error);
         });
     }
   };
 
-  const onToggleSave = async (recipeId) => {
-    try {
-      if (isSaved) {
-        // Remove from saved recipes
-        await axios.delete(
-          `http://127.0.0.1:8000/users/saved-recipes/${recipeId}`,
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          }
-        );
-        setIsSaved(false);
-      } else {
-        // Add to saved recipes
-        await axios.post(
-          `http://127.0.0.1:8000/users/saved-recipes/`,
-          { recipe: recipeId },
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          }
-        );
-        setIsSaved(true);
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 405) {
-        alert("이 요청 메소드는 지원되지 않습니다. 서버 설정을 확인해 주세요.");
-      } else {
-        console.error("스크랩 상태 변경에 실패했습니다:", error);
-        alert("스크랩 상태 변경에 실패했습니다.");
-      }
+  const handleDeleteRecipe = (recipeId) => {
+    if (!token) {
+      console.error("No token found in localStorage.");
+      return;
     }
+
+    axios
+      .delete(`http://127.0.0.1:8000/recipes/${recipeId}`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then(() => {
+        alert("레시피가 삭제되었습니다.");
+        navigate("/");
+      })
+      .catch((error) => {
+        handleError(error);
+        alert("레시피 삭제에 실패했습니다.");
+      });
+  };
+
+  const onEditRecipe = (recipeId) => {
+    navigate(`/recipes/edit/${recipeId}`);
   };
 
   if (loading) {
-    return <div>Loading...</div>; // 로딩 중일 때 표시
+    return <div>로딩 중...</div>;
   }
 
   if (error) {
-    return <div>Error loading recipe detail: {error.message}</div>; // 에러 발생 시 표시
+    return (
+      <div>레시피 상세 정보를 불러오는 데 실패했습니다: {error.message}</div>
+    );
   }
 
   if (!recipe) {
-    return <div>Recipe not found</div>; // 레시피가 없는 경우 표시
+    return <div>레시피를 찾을 수 없습니다.</div>;
   }
 
-  // 조리 단계 데이터를 배열로 변환
   const steps = [];
   for (let i = 1; i <= 10; i++) {
     const image = recipe[`step${i}_image`];
@@ -155,7 +156,6 @@ const RecipeDetail = () => {
     }
   }
 
-  // recipe.tags와 recipe.equipment이 배열이 아닐 경우를 대비해 기본값 처리
   const tags = Array.isArray(recipe.tags)
     ? recipe.tags.join(", ")
     : "태그 정보 없음";
@@ -165,7 +165,6 @@ const RecipeDetail = () => {
 
   return (
     <div className="recipe-detail-container">
-      {/* 사진 */}
       <div className="recipe-image-container">
         <img
           src={recipe.image || init_image}
@@ -174,30 +173,23 @@ const RecipeDetail = () => {
         />
       </div>
 
-      {/* 빵 이름 및 태그, 버튼 */}
       <div className="header-container">
         <div className="left-content">
           <div className="show_title">{recipe.title}</div>
           <div className="show_tag">{tags}</div>
         </div>
         <div className="recipe-buttons">
-          {isAuthor ? (
+          {recipe.author === username ? (
             <>
               <button
                 className="edit-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEditRecipe(recipe.id);
-                }}
+                onClick={() => onEditRecipe(recipe.id)}
               >
                 <img src={editIcon} alt="수정하기" />
               </button>
               <button
                 className="delete-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(recipe.id);
-                }}
+                onClick={() => handleDeleteRecipe(recipe.id)}
               >
                 <img src={deleteIcon} alt="삭제하기" />
               </button>
@@ -205,25 +197,20 @@ const RecipeDetail = () => {
           ) : (
             <button
               className="save-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleSave(recipe.id);
-              }}
+              onClick={() => handleToggleSave(recipe.id)}
             >
               <img
-                src={isSaved ? savedIcon : unsavedIcon}
-                alt={isSaved ? "저장됨" : "저장되지 않음"}
+                src={isScrapped ? savedIcon : unsavedIcon}
+                alt={isScrapped ? "저장됨" : "저장되지 않음"}
               />
             </button>
           )}
         </div>
       </div>
 
-      {/* 구분선 */}
       <hr className="line_show" />
 
       <div className="section-container">
-        {/* 왼쪽: 재료 */}
         <div className="section-left">
           <div className="cate_show">재료</div>
           <div className="li_show">
@@ -244,7 +231,6 @@ const RecipeDetail = () => {
           </div>
         </div>
 
-        {/* 오른쪽: 조리시간과 조리도구 */}
         <div className="section-right">
           <div>
             <div className="cate_show">
@@ -263,15 +249,14 @@ const RecipeDetail = () => {
         </div>
       </div>
 
-      {/* 조리 단계 */}
       <div className="steps-container">
-        <h2>Steps</h2>
+        <h2>조리 단계</h2>
         {steps.length > 0 ? (
           steps.map((step, index) => (
             <div key={index} className="step">
               <img
                 src={step.image || init_image}
-                alt={`Step ${index + 1}`}
+                alt={`단계 ${index + 1}`}
                 className="step-image"
               />
               <p>{step.description}</p>
