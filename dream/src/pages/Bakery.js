@@ -17,6 +17,7 @@ import axios from "axios";
 
 // 이미지
 import bbangSlide from "../assets/bbangSlide.png";
+import bbangSlide2 from "../assets/bbangSlide2.png";
 import Morning from "../assets/CT-morning.png";
 import Bagle from "../assets/CT-bagle.png";
 import Baguette from "../assets/CT-baugette.png";
