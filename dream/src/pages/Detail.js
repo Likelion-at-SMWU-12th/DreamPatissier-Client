@@ -12,6 +12,8 @@ const Detail = () => {
   const [product, setProduct] = useState(null);
   const [productStatus, setProductStatus] = useState("loading");
   const [showPopup, setShowPopup] = useState(false);
+  const [currentImg, setCurrentImg] = useState("img_src");
+  const [startX, setStartX] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -32,6 +34,23 @@ const Detail = () => {
         setProductStatus("error");
       });
   }, [id]);
+
+  const handleDragStart = (e) => {
+    setStartX(e.type.includes("mouse") ? e.pageX : e.touches[0].pageX);
+  };
+
+  const handleDragEnd = (e) => {
+    const endX = e.type.includes("mouse") ? e.pageX : e.changedTouches[0].pageX;
+    if (startX - endX > 50) {
+      toggleImage();
+    } else if (startX - endX < -50) {
+      toggleImage();
+    }
+  };
+
+  const toggleImage = () => {
+    setCurrentImg(currentImg === "img_src" ? "img_dtl" : "img_src");
+  };
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US").format(price);
@@ -80,8 +99,18 @@ const Detail = () => {
 
   return (
     <>
-      <ImgBox>
-        <BreadImg src={product.img_src} alt={product.name} />
+      <ImgBox
+        onMouseDown={handleDragStart}
+        onMouseUp={handleDragEnd}
+        onTouchStart={handleDragStart}
+        onTouchEnd={handleDragEnd}
+        onClick={toggleImage}
+      >
+        <BreadImg src={product[currentImg]} alt={product.name} />
+        <Dots>
+          <Dot active={currentImg === "img_src"} />
+          <Dot active={currentImg === "img_dtl"} />
+        </Dots>
       </ImgBox>
       <TitleInfo>
         <Title>{product.name}</Title>
@@ -172,23 +201,6 @@ const ShopText = styled.div`
   font-weight: 800;
   color: var(--brown);
   display: inline-block;
-`;
-
-// 이미지 섹션
-
-const BreadImg = styled.img`
-  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
-`;
-
-const ImgBox = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 25px;
-  margin-bottom: 20px;
-  img {
-    width: 90%;
-  }
 `;
 
 // 가격&빵이름
@@ -375,6 +387,40 @@ const WarningImg = styled.img`
   width: 54px;
   height: auto;
   margin-bottom: 15px;
+`;
+
+// 이미지 섹션
+const ImgBox = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+  margin-bottom: 20px;
+  position: relative; // 상위 요소를 relative로 설정
+  cursor: pointer;
+`;
+
+const BreadImg = styled.img`
+  width: 90%;
+  border-radius: 20px;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.25);
+`;
+
+const Dots = styled.div`
+  position: absolute;
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%) translateY(50%); // 중앙 하단 정렬
+  display: flex;
+`;
+
+const Dot = styled.span`
+  height: 10px;
+  width: 10px;
+  margin: 0 5px;
+  background-color: ${({ active }) => (active ? "#fff" : "#bbb")};
+  opacity: 50%;
+  border-radius: 50%;
+  transition: background-color 0.3s;
 `;
 
 export default Detail;
