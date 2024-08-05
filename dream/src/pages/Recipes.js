@@ -36,7 +36,6 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => (
 
 const RecipeItem = ({
   recipe,
-  currentUser,
   onToggleSave,
   isScrapped,
   onDelete,
@@ -128,32 +127,27 @@ const Recipes = () => {
   useEffect(() => {
     if (!token) return;
 
-    const fetchSavedRecipes = async () => {
-      try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/users/saved-recipes/",
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          }
-        );
+    axios
+      .get("http://127.0.0.1:8000/users/saved-recipes/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((response) => {
         if (response.status === 200) {
           setSavedRecipes(response.data);
           localStorage.setItem("savedRecipes", JSON.stringify(response.data));
         }
-      } catch (error) {
-        handleError(error);
-      }
-    };
+      })
+      .catch((error) => handleError(error));
 
-    const fetchRecipes = async () => {
-      try {
-        const response = await axios.get("http://127.0.0.1:8000/recipes/", {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
+    axios
+      .get("http://127.0.0.1:8000/recipes/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((response) => {
         if (response.status === 200) {
           const data = response.data;
           if (Array.isArray(data)) {
@@ -162,7 +156,7 @@ const Recipes = () => {
                 ...recipe,
                 tags: recipe.tags ? recipe.tags.split(",") : [],
                 equipment: recipe.equipment ? recipe.equipment.split(",") : [],
-                isScrapped: recipe.is_scrapped || false, // 추가: 스크랩 상태
+                isScrapped: recipe.is_scrapped || false,
               }))
             );
           } else {
@@ -171,15 +165,13 @@ const Recipes = () => {
         } else {
           console.error("Unexpected response status:", response.status);
         }
-      } catch (error) {
+      })
+      .catch((error) => {
         setError(error);
-      } finally {
+      })
+      .finally(() => {
         setLoading(false);
-      }
-    };
-
-    fetchSavedRecipes();
-    fetchRecipes();
+      });
   }, [token, location]);
 
   const filteredRecipes = recipes.filter(
@@ -193,9 +185,9 @@ const Recipes = () => {
       )
   );
 
-  const handleToggleSave = async (recipeId) => {
-    try {
-      await axios.post(
+  const handleToggleSave = (recipeId) => {
+    axios
+      .post(
         `http://127.0.0.1:8000/users/saved-recipes/${recipeId}`,
         {},
         {
@@ -203,44 +195,44 @@ const Recipes = () => {
             Authorization: `Token ${token}`,
           },
         }
-      );
-      setRecipes((prevRecipes) =>
-        prevRecipes.map((recipe) =>
-          recipe.id === recipeId
-            ? { ...recipe, isScrapped: !recipe.isScrapped }
-            : recipe
-        )
-      );
-      setSavedRecipes((prevSaved) => {
-        const updatedSaved = prevSaved.includes(recipeId)
-          ? prevSaved.filter((id) => id !== recipeId)
-          : [...prevSaved, recipeId];
-        localStorage.setItem("savedRecipes", JSON.stringify(updatedSaved));
-        return updatedSaved;
-      });
-    } catch (error) {
-      handleError(error);
-    }
+      )
+      .then(() => {
+        setRecipes((prevRecipes) =>
+          prevRecipes.map((recipe) =>
+            recipe.id === recipeId
+              ? { ...recipe, isScrapped: !recipe.isScrapped }
+              : recipe
+          )
+        );
+        setSavedRecipes((prevSaved) => {
+          const updatedSaved = prevSaved.includes(recipeId)
+            ? prevSaved.filter((id) => id !== recipeId)
+            : [...prevSaved, recipeId];
+          localStorage.setItem("savedRecipes", JSON.stringify(updatedSaved));
+          return updatedSaved;
+        });
+      })
+      .catch((error) => handleError(error));
   };
 
-  const handleDeleteRecipe = async (recipeId) => {
+  const handleDeleteRecipe = (recipeId) => {
     if (!token) {
       console.error("No token found in localStorage.");
       return;
     }
 
-    try {
-      await axios.delete(`http://127.0.0.1:8000/recipes/${recipeId}`, {
+    axios
+      .delete(`http://127.0.0.1:8000/recipes/${recipeId}`, {
         headers: {
           Authorization: `Token ${token}`,
         },
-      });
-      setRecipes((prevRecipes) =>
-        prevRecipes.filter((recipe) => recipe.id !== recipeId)
-      );
-    } catch (error) {
-      handleError(error);
-    }
+      })
+      .then(() => {
+        setRecipes((prevRecipes) =>
+          prevRecipes.filter((recipe) => recipe.id !== recipeId)
+        );
+      })
+      .catch((error) => handleError(error));
   };
 
   const handleAddRecipe = () => {
