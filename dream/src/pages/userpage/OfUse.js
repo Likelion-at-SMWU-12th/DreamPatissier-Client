@@ -12,10 +12,10 @@ const OfUse = () => {
 
   return (
     <>
-      <Bar>
+      <BBar>
         <Title>서비스 이용 약관</Title>
         <CancelIcon src={Cancel} onClick={handleCancelClick} />
-      </Bar>
+      </BBar>
       <TermsWrap>
         <TermsContent>
           {" "}
@@ -142,14 +142,14 @@ const OfUse = () => {
 
 export default OfUse;
 
-const Bar = styled.div`
+const BBar = styled.div`
   font-size: 22px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: fixed;
   top: 0;
-  width: 100%;
+  width: 393px;
   background-color: white;
   z-index: 1;
   border-bottom: 1px solid #ddd;
