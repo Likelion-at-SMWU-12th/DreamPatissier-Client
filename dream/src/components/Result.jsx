@@ -10,22 +10,11 @@ const Result = ({ resetTest }) => {
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (!resultId || resultId === "null") {
-      console.error("Invalid resultId:", resultId);
-      navigate("/test/questions/1");
-      return;
-    }
-
     const fetchResultData = () => {
       axios
-        .get(`/test/result/${resultId}`, {
-          headers: {
-            token: token, // 헤더에 token 추가
-          },
-        })
+        .get(`/test/result/${resultId}`)
         .then((response) => {
           setResult(response.data);
 
