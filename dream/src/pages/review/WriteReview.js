@@ -7,12 +7,14 @@ const WriteReview = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
+  const [item, setItem] = useState(null);
 
   useEffect(() => {
-    if (location.state && location.state.product) {
+    if (location.state && location.state.product && location.state.item) {
       setProduct(location.state.product);
+      setItem(location.state.item);
     } else {
-      console.error("No product data available");
+      console.error("No product or item data available");
       navigate("/");
     }
   }, [location.state, navigate]);
@@ -20,49 +22,52 @@ const WriteReview = () => {
   const [selectedButton, setSelectedButton] = useState("");
   const [reviewText, setReviewText] = useState("");
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!selectedButton || !reviewText) {
       alert("Please select a rating and write a review.");
       return;
     }
 
-    try {
-      let now = new Date();
-      now.setHours(now.getHours() + 9);
-      let writedate = now.toISOString().split("T")[0];
-
-      const reviewData = {
-        ...product,
-        like: selectedButton,
-        description: reviewText,
-        writedate: writedate,
-        reviewed: true,
-      };
-
-      console.log("Review data:", reviewData);
-
-      await axios.post("http://127.0.0.1:8000/reviews", reviewData);
-
-      const orderId = product.orderId || product.id;
-      if (!orderId) {
-        throw new Error("Order ID is missing from product data.");
-      }
-
-      console.log("Order ID for update:", orderId);
-
-      await axios.put(`http://127.0.0.1:8000/orders/${orderId}`, {
-        reviewed: true,
-      });
-
-      alert("리뷰가 제출되었습니다!");
-      navigate("/users/orders");
-    } catch (error) {
-      console.error("There was an error submitting your review:", error);
-      alert("리뷰 제출에 실패했습니다. 다시 시도해 주세요.");
+    if (!item) {
+      console.error("No item data available");
+      alert("Item data is missing.");
+      return;
     }
+
+    const reviewData = {
+      content: reviewText,
+      satisfaction: selectedButton === "like" ? "S" : "D",
+      order_item_id: item.id, // OrderItem ID를 전달
+    };
+
+    console.log("Review data:", reviewData);
+
+    const token = localStorage.getItem("token");
+
+    axios
+      .post("http://127.0.0.1:8000/users/reviews/", reviewData, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Review submitted:", response.data);
+
+        alert("리뷰가 제출되었습니다!");
+        navigate("/users/orders");
+      })
+      .catch((error) => {
+        console.error("There was an error submitting your review:", error);
+        alert("리뷰 제출에 실패했습니다. 다시 시도해 주세요.");
+      });
   };
 
-  if (!product) return null;
+  if (!product || !item) return null;
+
+  const productTags =
+    typeof product.tags === "string"
+      ? product.tags.split(",").map((tag) => tag.trim())
+      : product.tags;
 
   return (
     <div>
@@ -70,16 +75,13 @@ const WriteReview = () => {
       <div className="product-info">
         <div className="product-show">
           <img
-            src={product.image}
+            src={product.img_src}
             alt={product.name}
             className="product-image"
           />
           <div className="product-info">
             <h3 className="product-name">{product.name}</h3>
-            <div className="product-tags">{product.tags.join(" ")}</div>
-            <div className="product-price">
-              {product.price.toLocaleString()}원
-            </div>
+            <div className="product-tags">{productTags.join(" ")}</div>
           </div>
         </div>
       </div>
@@ -107,7 +109,6 @@ const WriteReview = () => {
       <div className="orderlist-like">자세한 리뷰를 작성해 주세요</div>
       <textarea
         className="text_review"
-        placeholder="여기에 리뷰를 작성하세요"
         rows="9"
         value={reviewText}
         onChange={(e) => setReviewText(e.target.value)}

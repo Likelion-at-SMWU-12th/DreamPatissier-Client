@@ -2,18 +2,16 @@
   width: 80%;
   font-weight: 700;
   font-size: 20px;
-  margin: 10px 20px;
-  padding: 10px;
+  margin: 10px 20px -20px 20px !important;
 }
 
 .product-card {
-  margin: 0 auto;
-  margin-bottom: 15px;
+  margin: -20px auto 15px auto;
   display: flex;
   width: 80%;
   flex-direction: column;
   border: 1px solid #ddd;
-  padding: 16px;
+  padding: 14px !important;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
@@ -44,32 +42,54 @@
 
 .product-name {
   color: #471d06;
-  font-size: 13px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  margin: 0;
+  font-size: 13px !important;
+  font-weight: 800;
+  margin: 10px auto 20px auto;
+  padding: 0;
+  letter-spacing: -0.5px;
 }
 
 .product-tags {
   color: #ffb415;
   font-weight: 700;
-  font-size: 11px;
-  margin-top: 4px;
-  margin-bottom: 15px;
+  font-size: 11px !important;
+}
+
+.quantity-price {
+  display: flex;
+  align-items: center;
 }
 
 .product-price {
   color: #471d06;
-  font-size: 15px !important;
+  font-size: 16px !important;
+  letter-spacing: -0.5px;
+  line-height: 22px;
   font-weight: 800;
 }
 
-.product-date {
+.product-line {
+  color: #471d06;
+  margin-right: 10px;
+  margin-top: -2px;
+  font-weight: 600;
+  opacity: 30%;
+}
+
+.product-quantity {
+  color: #471d06;
+  font-size: 13px;
+  font-weight: 800;
+  margin-right: 10px;
+}
+
+.order-date {
   color: #000;
   font-family: Inter;
   font-size: 13px !important;
   font-weight: 900;
-  margin-top: 0px;
+  margin: 35px 0px 20px 0px;
+  padding-left: 30px;
 }
 
 .product-actions {
