@@ -52,6 +52,7 @@ const Bar = styled.div`
   position: fixed;
   top: 0;
   width: 100%;
+  width: 393px;
   background-color: white;
   z-index: 1;
   border-bottom: 1px solid #ddd;
