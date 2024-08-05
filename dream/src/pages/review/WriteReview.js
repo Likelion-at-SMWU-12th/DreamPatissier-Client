@@ -70,27 +70,27 @@ const WriteReview = () => {
       : product.tags;
 
   return (
-    <div>
-      <div className="orderlist-title">리뷰쓰기</div>
-      <div className="product-info">
-        <div className="product-show">
+    <div className="write-review-container">
+      <div className="write-orderlist-title">리뷰쓰기</div>
+      <div className="write-product-info">
+        <div className="write-product-show">
           <img
             src={product.img_src}
             alt={product.name}
-            className="product-image"
+            className="write-product-image"
           />
-          <div className="product-info">
-            <h3 className="product-name">{product.name}</h3>
-            <div className="product-tags">{productTags.join(" ")}</div>
+          <div className="write-product-info">
+            <h3 className="write-product-name">{product.name}</h3>
+            <div className="write-product-tags">{productTags.join(" ")}</div>
           </div>
         </div>
       </div>
-      <hr className="hr1" />
+      <hr className="write-hr1" />
       <br />
-      <div className="orderlist-like">구매하신 빵은 만족하셨나요?</div>
-      <div className="product-actions2">
+      <div className="write-orderlist-like">구매하신 빵은 만족하셨나요?</div>
+      <div className="write-product-actions2">
         <button
-          className={`show-button ${
+          className={`write-show-button ${
             selectedButton === "dislike" ? "selected" : ""
           }`}
           onClick={() => setSelectedButton("dislike")}
@@ -98,7 +98,7 @@ const WriteReview = () => {
           별로예요 👎🏻
         </button>
         <button
-          className={`show-button ${
+          className={`write-show-button ${
             selectedButton === "like" ? "selected" : ""
           }`}
           onClick={() => setSelectedButton("like")}
@@ -106,15 +106,15 @@ const WriteReview = () => {
           만족해요 👍🏻
         </button>
       </div>
-      <div className="orderlist-like">자세한 리뷰를 작성해 주세요</div>
+      <div className="write-orderlist-like">자세한 리뷰를 작성해 주세요</div>
       <textarea
-        className="text_review"
+        className="write-text_review"
         rows="9"
         value={reviewText}
         onChange={(e) => setReviewText(e.target.value)}
       />
-      <div className="submit-button-container">
-        <button className="submit-review" onClick={handleSubmit}>
+      <div className="write-submit-button-container">
+        <button className="write-submit-review" onClick={handleSubmit}>
           제출
         </button>
       </div>

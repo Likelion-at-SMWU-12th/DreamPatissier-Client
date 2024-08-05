@@ -38,56 +38,56 @@ const OrderList = () => {
   };
 
   return (
-    <div className="order-list">
-      <div className="orderlist-title">주문목록</div>
+    <div className="new-order-list">
+      <div className="new-orderlist-title">주문목록</div>
       {orders.length === 0 ? (
-        <div className="no-orders">주문이 없습니다.</div>
+        <div className="new-no-orders">주문이 없습니다.</div>
       ) : (
         orders.map((order) => (
-          <div key={order.id} className="order-card">
-            <div className="order-date">
+          <div key={order.id} className="new-order-card">
+            <div className="new-order-date">
               {new Date(order.created_at).toLocaleDateString()}
             </div>
-            <div className="order-items">
+            <div className="new-order-items">
               {(order.items || []).map((item) => {
                 const product = item.product;
                 return (
-                  <div key={item.id} className="product-card">
-                    <div className="product-show">
+                  <div key={item.id} className="new-product-card">
+                    <div className="new-product-show">
                       <img
                         src={product.img_src || profile}
                         alt={product.name || "Product"}
-                        className="product-image"
+                        className="new-product-image"
                       />
-                      <div className="product-info">
-                        <h3 className="product-name">
+                      <div className="new-product-info">
+                        <h3 className="new-product-name">
                           {product.name || "Unknown Product"}
                         </h3>
-                        <div className="product-tags">
+                        <div className="new-product-tags">
                           {product.tags
                             ? product.tags.split(",").join(" ")
                             : "No Tags"}
                         </div>
-                        <div className="quantity-price">
-                          <div className="product-quantity">
+                        <div className="new-quantity-price">
+                          <div className="new-product-quantity">
                             {item.quantity}개
                           </div>
-                          <div className="product-line">&#124;</div>
-                          <div className="product-price">
+                          <div className="new-product-line">&#124;</div>
+                          <div className="new-product-price">
                             {parseFloat(item.price).toLocaleString()}원
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="product-actions">
+                    <div className="new-product-actions">
                       <button
-                        className="write-review"
+                        className="new-write-review"
                         onClick={() => handleReviewClick(item)}
                       >
                         리뷰쓰기
                       </button>
                       <button
-                        className="add"
+                        className="new-add"
                         onClick={() => handleAddToCartClick(product.id)}
                       >
                         같은 빵 담기

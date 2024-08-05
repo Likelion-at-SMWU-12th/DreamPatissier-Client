@@ -1,11 +1,11 @@
-.orderlist-title {
+.new-orderlist-title {
   width: 80%;
   font-weight: 700;
   font-size: 20px;
   margin: 10px 20px -20px 20px !important;
 }
 
-.product-card {
+.new-product-card {
   margin: -20px auto 15px auto;
   display: flex;
   width: 80%;
@@ -16,7 +16,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
-.product-show {
+.new-product-show {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -24,7 +24,7 @@
   margin-bottom: 10px;
 }
 
-.product-image {
+.new-product-image {
   border-radius: 10px;
   width: 89px;
   height: 89px;
@@ -32,7 +32,7 @@
   margin-right: 15px;
 }
 
-.product-info {
+.new-product-info {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -40,7 +40,7 @@
   margin: 0;
 }
 
-.product-name {
+.new-product-name {
   color: #471d06;
   font-size: 13px !important;
   font-weight: 800;
@@ -49,18 +49,18 @@
   letter-spacing: -0.5px;
 }
 
-.product-tags {
+.new-product-tags {
   color: #ffb415;
   font-weight: 700;
   font-size: 11px !important;
 }
 
-.quantity-price {
+.new-quantity-price {
   display: flex;
   align-items: center;
 }
 
-.product-price {
+.new-product-price {
   color: #471d06;
   font-size: 16px !important;
   letter-spacing: -0.5px;
@@ -68,7 +68,7 @@
   font-weight: 800;
 }
 
-.product-line {
+.new-product-line {
   color: #471d06;
   margin-right: 10px;
   margin-top: -2px;
@@ -76,14 +76,14 @@
   opacity: 30%;
 }
 
-.product-quantity {
+.new-product-quantity {
   color: #471d06;
   font-size: 13px;
   font-weight: 800;
   margin-right: 10px;
 }
 
-.order-date {
+.new-order-date {
   color: #000;
   font-family: Inter;
   font-size: 13px !important;
@@ -92,14 +92,14 @@
   padding-left: 30px;
 }
 
-.product-actions {
+.new-product-actions {
   display: flex;
   flex-direction: row;
   padding: 0;
 }
 
-.write-review,
-.add {
+.new-write-review,
+.new-add {
   flex: 1;
   padding: 10px 10px;
   margin: 0 5px;
@@ -113,22 +113,22 @@
   text-align: center;
 }
 
-.write-review {
+.new-write-review {
   background-color: white;
   border: 1.5px solid #773d1e;
 }
 
-.write-review:hover {
+.new-write-review:hover {
   color: #ffc851;
   background-color: #773d1e;
 }
 
-.add {
+.new-add {
   border: none;
   background-color: #ffc851;
 }
 
-.add:hover {
+.new-add:hover {
   color: #ffc851;
   background-color: #773d1e;
 }
