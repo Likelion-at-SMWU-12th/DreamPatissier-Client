@@ -107,17 +107,28 @@ const SavedRecipes = () => {
     if (!token) return;
 
     try {
-      await axios.post(
-        `http://127.0.0.1:8000/users/saved-recipes/${id}`,
-        {},
-        {
+      const recipe = recipes.find((recipe) => recipe.id === id);
+      if (!recipe) return;
+
+      if (recipe.isSaved) {
+        // Ensure the URL ends with a trailing slash
+        await axios.delete(`http://127.0.0.1:8000/users/saved-recipes/${id}/`, {
           headers: { Authorization: `Token ${token}` },
-        }
-      );
+        });
+      } else {
+        // Ensure the URL ends with a trailing slash
+        await axios.put(
+          `http://127.0.0.1:8000/users/saved-recipes/${id}/`,
+          {},
+          {
+            headers: { Authorization: `Token ${token}` },
+          }
+        );
+      }
 
       setRecipes((prevRecipes) =>
-        prevRecipes.map((recipe) =>
-          recipe.id === id ? { ...recipe, isSaved: !recipe.isSaved } : recipe
+        prevRecipes.map((rec) =>
+          rec.id === id ? { ...rec, isSaved: !rec.isSaved } : rec
         )
       );
     } catch (error) {

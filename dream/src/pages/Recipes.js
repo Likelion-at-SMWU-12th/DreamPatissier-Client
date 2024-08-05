@@ -38,7 +38,7 @@ const RecipeItem = ({
   recipe,
   currentUser,
   onToggleSave,
-  isSaved,
+  isScrapped,
   onDelete,
   onDetailRecipe,
   onEditRecipe,
@@ -92,8 +92,8 @@ const RecipeItem = ({
               }}
             >
               <img
-                src={isSaved ? savedIcon : unsavedIcon}
-                alt={isSaved ? "저장됨" : "저장되지 않음"}
+                src={isScrapped ? savedIcon : unsavedIcon}
+                alt={isScrapped ? "저장됨" : "저장되지 않음"}
               />
             </button>
           )}
@@ -162,6 +162,7 @@ const Recipes = () => {
                 ...recipe,
                 tags: recipe.tags ? recipe.tags.split(",") : [],
                 equipment: recipe.equipment ? recipe.equipment.split(",") : [],
+                isScrapped: recipe.is_scrapped || false, // 추가: 스크랩 상태
               }))
             );
           } else {
@@ -203,13 +204,18 @@ const Recipes = () => {
           },
         }
       );
+      setRecipes((prevRecipes) =>
+        prevRecipes.map((recipe) =>
+          recipe.id === recipeId
+            ? { ...recipe, isScrapped: !recipe.isScrapped }
+            : recipe
+        )
+      );
       setSavedRecipes((prevSaved) => {
         const updatedSaved = prevSaved.includes(recipeId)
           ? prevSaved.filter((id) => id !== recipeId)
           : [...prevSaved, recipeId];
-
         localStorage.setItem("savedRecipes", JSON.stringify(updatedSaved));
-
         return updatedSaved;
       });
     } catch (error) {
@@ -267,7 +273,7 @@ const Recipes = () => {
             recipe={recipe}
             currentUser={currentUser}
             onToggleSave={handleToggleSave}
-            isSaved={savedRecipes.includes(recipe.id)}
+            isScrapped={recipe.isScrapped}
             onDelete={handleDeleteRecipe}
             onDetailRecipe={handleDetailRecipe}
             onEditRecipe={handleEditRecipe}
