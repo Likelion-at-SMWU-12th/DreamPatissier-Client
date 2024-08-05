@@ -7,11 +7,13 @@ import axios from "axios";
 const OrderList = () => {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
+    // Fetch orders
     axios
       .get("http://127.0.0.1:8000/users/orders", {
         headers: {
@@ -31,10 +33,24 @@ const OrderList = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+
+    // Fetch reviews
+    axios
+      .get("http://127.0.0.1:8000/users/reviews", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Received reviews:", response.data);
+        setReviews(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching reviews:", error);
+      });
   }, []);
 
   const handleReviewClick = (item) => {
-    // item을 명확하게 전달
     navigate(`/users/reviews/${item.product.id}`, {
       state: { product: item.product, item },
     });
@@ -46,7 +62,7 @@ const OrderList = () => {
     axios
       .post(
         `http://127.0.0.1:8000/bakery/${id}/add-to-cart/`,
-        {}, // 빈 객체로 quantity를 전송하지 않음
+        {},
         {
           headers: {
             Authorization: `Token ${token}`,
@@ -59,7 +75,6 @@ const OrderList = () => {
           setShowPopup(false);
         }, 4000);
 
-        // quantity를 1로 설정하여 이벤트 전송
         const cartEvent = new CustomEvent("cartUpdated", { detail: 1 });
         window.dispatchEvent(cartEvent);
       })
@@ -68,7 +83,7 @@ const OrderList = () => {
       });
   };
 
-  let lastOrderDate = ""; // 마지막으로 출력한 주문 날짜를 추적합니다.
+  let lastOrderDate = "";
 
   return (
     <OrderListContainer>
@@ -78,10 +93,8 @@ const OrderList = () => {
       ) : (
         orders.map((order) => {
           const orderDate = new Date(order.created_at).toLocaleDateString();
-
-          // 마지막으로 출력한 날짜와 현재 주문의 날짜가 같은지 확인합니다.
           const showDate = lastOrderDate !== orderDate;
-          lastOrderDate = orderDate; // 마지막 날짜를 업데이트합니다.
+          lastOrderDate = orderDate;
 
           return (
             <OrderCard key={order.id}>
@@ -89,6 +102,16 @@ const OrderList = () => {
               <OrderItems>
                 {(order.items || []).map((item) => {
                   const product = item.product;
+                  // Review 존재 확인
+                  const hasReview = reviews.some(
+                    (review) => review.order_item.id === item.id
+                  );
+
+                  // 디버깅 로그
+                  console.log("Processing item:", item);
+                  console.log("Order Item ID:", item.id);
+                  console.log("Review exists:", hasReview);
+
                   return (
                     <ProductCard key={item.id}>
                       <ProductShow>
@@ -118,11 +141,13 @@ const OrderList = () => {
                         </ProductInfo>
                       </ProductShow>
                       <ProductActions>
-                        <WriteReviewButton
-                          onClick={() => handleReviewClick(item)}
-                        >
-                          리뷰쓰기
-                        </WriteReviewButton>
+                        {!hasReview && (
+                          <WriteReviewButton
+                            onClick={() => handleReviewClick(item)}
+                          >
+                            리뷰쓰기
+                          </WriteReviewButton>
+                        )}
                         <AddButton
                           onClick={() => handleAddToCartClick(product.id)}
                         >
