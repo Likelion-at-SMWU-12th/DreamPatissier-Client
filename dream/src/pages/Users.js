@@ -59,7 +59,7 @@ const Users = () => {
       localStorage.removeItem("username");
       localStorage.removeItem("result_id");
       setResultId(null);
-      navigate("/accounts/login/");
+      navigate("/accounts/login");
     }
   };
 
