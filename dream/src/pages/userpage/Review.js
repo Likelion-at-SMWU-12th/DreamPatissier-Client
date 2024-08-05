@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../../styles/Review.css";
-import profile from "./bread.png";
+import styled from "styled-components";
 import { FaTrash } from "react-icons/fa";
+import profile from "./bread.png";
 import altIcon from "../../assets/alt.png";
 
 const Review = () => {
@@ -18,7 +18,6 @@ const Review = () => {
         },
       })
       .then((response) => {
-        console.log("Fetched reviews:", response.data);
         setReviews(response.data);
       })
       .catch((error) =>
@@ -28,7 +27,6 @@ const Review = () => {
 
   const handleDelete = (id) => {
     const token = localStorage.getItem("token");
-    console.log("삭제하려는 리뷰 ID:", id);
     const confirmed = window.confirm("정말로 이 리뷰를 삭제하시겠습니까?");
 
     if (confirmed) {
@@ -39,7 +37,6 @@ const Review = () => {
           },
         })
         .then((response) => {
-          console.log("리뷰가 성공적으로 삭제되었습니다");
           setReviews((prevReviews) =>
             prevReviews.filter((review) => review.id !== id)
           );
@@ -56,67 +53,182 @@ const Review = () => {
   };
 
   return (
-    <div className="order-list">
-      <div className="orderlist-title2">MY리뷰</div>
+    <OrderList>
+      <OrderListTitle>MY 리뷰</OrderListTitle>
       {reviews.length > 0 ? (
         reviews.map((review, index) => {
-          const product = review.order_item.product; // order_item에서 product를 추출
+          const product = review.order_item.product;
 
           return (
             <div key={review.id}>
-              <div className="product-card2">
-                <div className="product-date2">
-                  {new Date(review.created_at).toLocaleDateString()}
-                </div>
-                <div className="product-show2">
-                  <img
+              <ProductCard>
+                <ProductShow>
+                  <ProductImage
                     src={product?.img_src || profile} // product 객체를 사용
                     alt={product?.name || "Product"}
-                    className="product-image2"
                   />
-                  <div className="product-info2">
-                    <h3 className="product-name">
+                  <ProductInfo>
+                    <ProductName>
                       {product?.name || "Unknown Product"}
-                    </h3>
-                    <div className="product-tags2">
+                    </ProductName>
+                    <ProductTags>
                       {product?.tags
                         ? product.tags
-                            .split(",") // 콤마로 구분된 문자열을 분할
-                            .map((tag) => tag.trim()) // 공백 제거
-                            .join(" ") // 공백으로 구분하여 결합
+                            .split(",")
+                            .map((tag) => tag.trim())
+                            .join(" ")
                         : "No Tags"}
-                    </div>
-                  </div>
-                  <button
-                    className="delete-button2"
+                    </ProductTags>
+                  </ProductInfo>
+                  <DeleteButton
                     onClick={() => handleDelete(review.id)}
                     aria-label="Delete review"
                   >
                     <FaTrash />
-                  </button>
-                </div>
-                <div className="info-container">
-                  <div className="product-like-show">
+                  </DeleteButton>
+                </ProductShow>
+                <InfoContainer>
+                  <ProductLikeShow>
                     {review.satisfaction === "S" ? "만족해요" : "별로예요"}
-                  </div>
-                  <div className="product-date-show">
+                  </ProductLikeShow>
+                  <ProductDateShow>
                     {new Date(review.created_at).toLocaleDateString()}
-                  </div>
-                </div>
-                <div className="show_review_text">{review.content}</div>
-              </div>
-              {index < reviews.length - 1 && <hr className="divider" />}
+                  </ProductDateShow>
+                </InfoContainer>
+                <ReviewText>{review.content}</ReviewText>
+              </ProductCard>
+              {index < reviews.length - 1 && <Divider />}
             </div>
           );
         })
       ) : (
-        <div className="no-recipes-message">
+        <NoRecipesMessage>
           <img src={altIcon} alt="No reviews icon" />
           <p>작성된 리뷰가 존재하지 않습니다.</p>
-        </div>
+        </NoRecipesMessage>
       )}
-    </div>
+    </OrderList>
   );
 };
 
 export default Review;
+
+// Styled Components 정의
+
+const OrderList = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const OrderListTitle = styled.div`
+  width: 80vw;
+  font-weight: 700;
+  font-size: 20px;
+  margin: 20px 0 0 0;
+`;
+
+const ProductCard = styled.div`
+  margin: 25px auto;
+  display: flex;
+  width: 80vw;
+  flex-direction: column;
+`;
+
+const ProductShow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+`;
+
+const ProductImage = styled.img`
+  border-radius: 10px;
+  width: 65px;
+  height: 65px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+`;
+
+const ProductTags = styled.div`
+  color: #ffb415;
+  font-weight: 700;
+  font-size: 10px;
+  margin-top: 4px;
+  margin-bottom: 6px;
+`;
+
+const ProductInfo = styled.div`
+  flex-direction: column;
+  padding: 0;
+  margin: 0 13px;
+  flex: 1;
+  margin-left: 15px;
+`;
+
+const DeleteButton = styled.button`
+  font-size: 15px;
+  color: #8a8888;
+  background-color: white;
+  border: 0;
+  height: 35px;
+  cursor: pointer;
+`;
+
+const ReviewText = styled.div`
+  font-size: 11px;
+  letter-spacing: 1%;
+`;
+
+const InfoContainer = styled.div`
+  display: flex;
+  gap: 5px;
+  align-items: center;
+`;
+
+const ProductLikeShow = styled.div`
+  color: #000;
+  font-family: Inter;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1%;
+`;
+
+const ProductDateShow = styled.div`
+  color: #979797;
+  font-family: Inter;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1%;
+`;
+
+const Divider = styled.div`
+  width: 100vw;
+  border-bottom: 1px solid #d9d9d9;
+  height: 1px;
+  box-shadow: 0px 2px 4px 0px rgba(217, 217, 217, 0.5);
+`;
+
+const NoRecipesMessage = styled.div`
+  text-align: center;
+  margin-top: 100px;
+
+  img {
+    width: 40px;
+    height: 40px;
+  }
+
+  p {
+    margin-top: 10px;
+    font-size: 14px;
+    opacity: 50%;
+  }
+`;
+
+const ProductName = styled.div`
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  letter-spacing: -0.5px;
+  color: #471d06;
+`;
