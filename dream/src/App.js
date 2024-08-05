@@ -34,7 +34,7 @@ function App() {
     location.pathname.endsWith("/accounts/signup/") ||
     location.pathname.endsWith("/accounts/signup-clear/") ||
     location.pathname === "/" ||
-    location.pathname.endsWith("/of-use/");
+    location.pathname.endsWith("/of-use");
 
   return (
     <div className="show_screen">
