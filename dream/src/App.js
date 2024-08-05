@@ -30,11 +30,11 @@ function App() {
   const location = useLocation();
 
   const hideMenubar =
-    location.pathname === "/accounts/login" ||
-    location.pathname === "/accounts/signup" ||
-    location.pathname === "/accounts/signup-clear" ||
+    location.pathname.endsWith("/accounts/login/") ||
+    location.pathname.endsWith("/accounts/signup/") ||
+    location.pathname.endsWith("/accounts/signup-clear/") ||
     location.pathname === "/" ||
-    location.pathname === "/of-use";
+    location.pathname.endsWith("/of-use/");
 
   return (
     <div className="show_screen">

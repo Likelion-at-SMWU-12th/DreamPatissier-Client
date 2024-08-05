@@ -129,11 +129,11 @@ function Bakery() {
           onClick={toggleBanner}
         >
           <BannerImg src={banners[currentBanner]} alt="Banner" />
-          <Dots>
+          <DDots>
             {banners.map((_, index) => (
               <Dot key={index} active={index === currentBanner} />
             ))}
-          </Dots>
+          </DDots>
         </BannerBox>
       </div>
       <Search onSearch={handleSearch} />
@@ -210,8 +210,8 @@ const BannerImg = styled.img`
   object-fit: cover;
 `;
 
-// Dots for indicator
-const Dots = styled.div`
+// DDots for indicator
+const DDots = styled.div`
   position: absolute;
   left: 50%;
   bottom: 5%;
@@ -231,12 +231,10 @@ const Dot = styled.span`
 
 // 상품
 const ProductBox = styled.div`
-  margin: -5px 25px 0px 25px;
   display: grid;
-  grid-template-columns: repeat(2, 14vw);
-  align-items: center;
-  gap: 10px;
-  justify-content: center;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 20px;
 `;
 
 // 링크 가리기
