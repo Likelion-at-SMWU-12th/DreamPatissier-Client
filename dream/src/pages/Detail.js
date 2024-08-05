@@ -179,7 +179,7 @@ const Detail = () => {
 // 장바구니 버튼
 const CartButton = styled.button`
   position: fixed;
-  right: 5%;
+  right: 400px;
   bottom: 5%;
   z-index: 1;
   padding: 10px 10px;
@@ -330,10 +330,10 @@ const PopWrap = styled.div`
   display: flex;
   position: fixed;
   right: 0;
-  left: 5%;
+  left: 35%;
   bottom: 5%;
   z-index: 4;
-  width: 90%;
+  width: 30%;
   animation: ${(props) =>
     props.showPopup
       ? css`
