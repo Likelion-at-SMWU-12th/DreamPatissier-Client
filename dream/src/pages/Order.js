@@ -46,6 +46,11 @@ const Order = () => {
     axios
       .post("/cart/checkout/", payload, { headers })
       .then((response) => {
+        // 주문이 성공적으로 완료되었을 때 CustomEvent를 발생
+        const cartResetEvent = new CustomEvent("cartReset");
+        window.dispatchEvent(cartResetEvent);
+
+        // 주문 완료 후 페이지 이동
         navigate("/cart/orderclear");
       })
       .catch((error) => {
