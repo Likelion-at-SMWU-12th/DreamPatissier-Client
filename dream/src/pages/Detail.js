@@ -347,7 +347,7 @@ const CartPop = styled.div`
   border-radius: 10px;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 300px;
   height: 46px;
   display: flex;
   padding: 0px 19px;
