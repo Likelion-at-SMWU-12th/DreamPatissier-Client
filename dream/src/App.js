@@ -27,12 +27,13 @@ import OrderClear from "./pages/OrderClear";
 
 function App() {
   const location = useLocation();
+
   const hideMenubar =
-    location.pathname === "/accounts/login/" ||
-    location.pathname === "/accounts/signup/" ||
-    location.pathname === "/accounts/signup-clear" ||
+    location.pathname.endsWith("/accounts/login") ||
+    location.pathname.endsWith("/accounts/signup") ||
+    location.pathname.endsWith("/accounts/signup-clear") ||
     location.pathname === "/" ||
-    location.pathname === "/of-use";
+    location.pathname.endsWith("/of-use");
 
   return (
     <>
@@ -54,14 +55,14 @@ function App() {
         <Route path="/users/reviews" element={<Review />} />
         <Route path="/users/reviews/:id" element={<WriteReview />} />
         <Route path="/users/saved-recipes" element={<SavedRecipes />} />
-        <Route path="/test/result/{int:pk}" element={<TestBread />} />
+        <Route path="/test/result/:pk" element={<TestBread />} />
         <Route path="/of-use" element={<OfUse />} />
-        <Route path="/accounts/signup/" element={<Signup />} />
+        <Route path="/accounts/signup" element={<Signup />} />
         <Route path="/accounts/signup-clear" element={<SignClear />} />
-        <Route path="/accounts/login/" element={<Login />} />
+        <Route path="/accounts/login" element={<Login />} />
         <Route path="/test/*" element={<TestBread />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/cart/checkout/" element={<Order />} />
+        <Route path="/cart/checkout" element={<Order />} />
         <Route path="/cart/orderclear" element={<OrderClear />} />
       </Routes>
     </>

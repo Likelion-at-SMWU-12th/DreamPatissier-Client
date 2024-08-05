@@ -34,6 +34,11 @@ function Bakery() {
   const [status, setStatus] = useState("loading");
   const [selectedCategory, setSelectedCategory] = useState(null);
 
+  // State for controlling the banner slideshow
+  const [currentBanner, setCurrentBanner] = useState(0);
+  const [startX, setStartX] = useState(0);
+  const banners = [bbangSlide, bbangSlide2];
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -60,6 +65,14 @@ function Bakery() {
     }
   }, [location.pathname]);
 
+  // Automatically switch banners every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % banners.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const handleCategoryClick = (name) => {
     setSelectedCategory(name);
     navigate(`/bakery/category/${name}`);
@@ -67,6 +80,26 @@ function Bakery() {
 
   const handleSearch = (tagsArray) => {
     navigate(`/bakery/search/${tagsArray.join(",")}`);
+  };
+
+  // Handle manual image switch
+  const toggleBanner = () => {
+    setCurrentBanner((prev) => (prev + 1) % banners.length);
+  };
+
+  // Handle drag start
+  const handleDragStart = (e) => {
+    setStartX(e.type.includes("mouse") ? e.pageX : e.touches[0].pageX);
+  };
+
+  // Handle drag end
+  const handleDragEnd = (e) => {
+    const endX = e.type.includes("mouse") ? e.pageX : e.changedTouches[0].pageX;
+    if (startX - endX > 50) {
+      toggleBanner();
+    } else if (startX - endX < -50) {
+      toggleBanner();
+    }
   };
 
   if (status === "loading") {
@@ -88,8 +121,19 @@ function Bakery() {
   return (
     <div>
       <div>
-        <BannerBox>
-          <BannerImg src={bbangSlide} />
+        <BannerBox
+          onMouseDown={handleDragStart}
+          onMouseUp={handleDragEnd}
+          onTouchStart={handleDragStart}
+          onTouchEnd={handleDragEnd}
+          onClick={toggleBanner}
+        >
+          <BannerImg src={banners[currentBanner]} alt="Banner" />
+          <Dots>
+            {banners.map((_, index) => (
+              <Dot key={index} active={index === currentBanner} />
+            ))}
+          </Dots>
         </BannerBox>
       </div>
       <Search onSearch={handleSearch} />
@@ -154,6 +198,7 @@ const BannerBox = styled.div`
   padding-top: 56.25%;
   width: 100%;
   box-shadow: 0px 2px 4px 0 rgba(217, 217, 217, 0.5);
+  cursor: pointer;
 `;
 
 const BannerImg = styled.img`
@@ -163,6 +208,25 @@ const BannerImg = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+`;
+
+// Dots for indicator
+const Dots = styled.div`
+  position: absolute;
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+  display: flex;
+`;
+
+const Dot = styled.span`
+  height: 10px;
+  width: 10px;
+  margin: 0 5px;
+  background-color: ${({ active }) => (active ? "#fff" : "#bbb")};
+  opacity: 50%;
+  border-radius: 50%;
+  transition: background-color 0.3s;
 `;
 
 // 상품
