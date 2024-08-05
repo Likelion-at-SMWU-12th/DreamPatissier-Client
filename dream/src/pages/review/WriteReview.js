@@ -197,7 +197,7 @@ const ShowButton = styled.button`
   flex: 1;
   background-color: white;
   border: 1px solid #471d06;
-  width: 38vw;
+  width: 12vw;
   padding: 9px 0;
   margin: 0 15px;
   color: #471d06;

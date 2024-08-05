@@ -231,9 +231,9 @@ const Dot = styled.span`
 
 // 상품
 const ProductBox = styled.div`
-  margin: 0px 25px;
+  margin: -5px 25px 0px 25px;
   display: grid;
-  grid-template-columns: repeat(2, 47vw);
+  grid-template-columns: repeat(2, 14vw);
   align-items: center;
   gap: 10px;
   justify-content: center;
