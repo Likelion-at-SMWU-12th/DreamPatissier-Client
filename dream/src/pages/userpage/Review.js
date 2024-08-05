@@ -115,23 +115,19 @@ export default Review;
 
 // Styled Components 정의
 
-const OrderList = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+const OrderList = styled.div``;
 
 const OrderListTitle = styled.div`
-  width: 80vw;
+  width: auto;
   font-weight: 700;
   font-size: 20px;
-  margin: 20px 0 0 0;
+  margin: 20px 0 0 20px;
 `;
 
 const ProductCard = styled.div`
-  margin: 25px auto;
+  margin: 25px 25px;
   display: flex;
-  width: 80vw;
+  width: auto;
   flex-direction: column;
 `;
 
@@ -159,7 +155,6 @@ const ProductTags = styled.div`
 `;
 
 const ProductInfo = styled.div`
-  flex-direction: column;
   padding: 0;
   margin: 0 13px;
   flex: 1;
