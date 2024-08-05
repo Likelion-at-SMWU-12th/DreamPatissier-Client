@@ -244,7 +244,7 @@ const RecipeDetail = () => {
               <img className="tool_img" src={toolIcon} alt="조리도구 아이콘" />
               조리도구
             </div>
-            <div className="equi_show">{equipment}</div>
+            <div className="equi_show">{recipe.equipment}</div>
           </div>
         </div>
       </div>
