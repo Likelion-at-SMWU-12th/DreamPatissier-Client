@@ -27,7 +27,7 @@ const RecipeDetail = () => {
     const fetchRecipe = async () => {
       try {
         const storedToken = localStorage.getItem("token");
-        const storedUsername = localStorage.getItem("username"); // username 저장 위치
+        const storedUsername = localStorage.getItem("username");
 
         if (storedToken) {
           setToken(storedToken);
@@ -257,7 +257,7 @@ const RecipeDetail = () => {
               <img className="tool_img" src={toolIcon} alt="조리도구 아이콘" />
               조리도구
             </div>
-            <div className="equi_show">{equipment}</div>
+            <div className="equi_show">{recipe.equipment}</div>
           </div>
         </div>
       </div>
