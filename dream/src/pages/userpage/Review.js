@@ -59,48 +59,56 @@ const Review = () => {
     <div className="order-list">
       <div className="orderlist-title2">MY리뷰</div>
       {reviews.length > 0 ? (
-        reviews.map((review, index) => (
-          <div key={review.id}>
-            <div className="product-card2">
-              <div className="product-date2">
-                {new Date(review.created_at).toLocaleDateString()}
-              </div>
-              <div className="product-show2">
-                <img
-                  src={review.product.img_src || profile}
-                  alt={review.product.name}
-                  className="product-image2"
-                />
-                <div className="product-info2">
-                  <h3 className="product-name">{review.product.name}</h3>
-                  <div className="product-tags2">
-                    {Array.isArray(review.product.tags)
-                      ? review.product.tags.join(", ") // Join tags with comma
-                      : review.product.tags}{" "}
-                    {/* If already a string, display directly */}
-                  </div>
-                </div>
-                <button
-                  className="delete-button2"
-                  onClick={() => handleDelete(review.id)}
-                  aria-label="Delete review"
-                >
-                  <FaTrash />
-                </button>
-              </div>
-              <div className="info-container">
-                <div className="product-like-show">
-                  {review.satisfaction === "S" ? "만족해요" : "별로예요"}
-                </div>
-                <div className="product-date-show">
+        reviews.map((review, index) => {
+          const product = review.order_item.product; // order_item에서 product를 추출
+
+          return (
+            <div key={review.id}>
+              <div className="product-card2">
+                <div className="product-date2">
                   {new Date(review.created_at).toLocaleDateString()}
                 </div>
+                <div className="product-show2">
+                  <img
+                    src={product?.img_src || profile} // product 객체를 사용
+                    alt={product?.name || "Product"}
+                    className="product-image2"
+                  />
+                  <div className="product-info2">
+                    <h3 className="product-name">
+                      {product?.name || "Unknown Product"}
+                    </h3>
+                    <div className="product-tags2">
+                      {product?.tags
+                        ? product.tags
+                            .split(",") // 콤마로 구분된 문자열을 분할
+                            .map((tag) => tag.trim()) // 공백 제거
+                            .join(" ") // 공백으로 구분하여 결합
+                        : "No Tags"}
+                    </div>
+                  </div>
+                  <button
+                    className="delete-button2"
+                    onClick={() => handleDelete(review.id)}
+                    aria-label="Delete review"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
+                <div className="info-container">
+                  <div className="product-like-show">
+                    {review.satisfaction === "S" ? "만족해요" : "별로예요"}
+                  </div>
+                  <div className="product-date-show">
+                    {new Date(review.created_at).toLocaleDateString()}
+                  </div>
+                </div>
+                <div className="show_review_text">{review.content}</div>
               </div>
-              <div className="show_review_text">{review.content}</div>
+              {index < reviews.length - 1 && <hr className="divider" />}
             </div>
-            {index < reviews.length - 1 && <hr className="divider" />}
-          </div>
-        ))
+          );
+        })
       ) : (
         <div className="no-recipes-message">
           <img src={altIcon} alt="No reviews icon" />
