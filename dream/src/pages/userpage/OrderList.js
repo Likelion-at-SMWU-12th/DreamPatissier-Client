@@ -273,6 +273,7 @@ const ProductPrice = styled.div`
   letter-spacing: -0.5px;
   line-height: 22px;
   font-weight: 800;
+  margin-bottom: 2px;
 `;
 
 const ProductLine = styled.div`

@@ -1,17 +1,27 @@
 .user-page {
   justify-content: center;
-  width: 90%;
+  align-items: center;
   margin: 0 auto;
-  padding: 20px;
   font-family: Arial, sans-serif;
 }
 
 .profile-section {
+  --base-width: 83%;
+  --increment-per-10px: 0.5%;
+
   padding: 25px 34px;
-  margin: -20px -20px;
+  width: var(--base-width);
   background-color: #f8f8f8;
   display: flex;
   align-items: center;
+}
+
+@media (min-width: 410px) {
+  .profile-section {
+    width: calc(
+      var(--base-width) + ((100vw - 410px) / 10) * var(--increment-per-10px)
+    );
+  }
 }
 
 .profile-imgbox {
@@ -48,7 +58,7 @@
 .ad-banner {
   display: flex;
   justify-content: center;
-  margin: 40px 0px 20px 0px;
+  margin: 40px 28px 20px 28px;
 }
 
 .ad-banner img {
@@ -64,7 +74,7 @@
 .option-link {
   font-family: "Noto Sans KR";
   font-size: 17px;
-  padding: 10px 13px;
+  padding: 10px 28px;
   margin-bottom: 5px;
   border: 0;
   border-radius: 5px;
