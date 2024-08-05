@@ -31,13 +31,14 @@ function App() {
     location.pathname === "/accounts/login/" ||
     location.pathname === "/accounts/signup/" ||
     location.pathname === "/accounts/signup-clear" ||
+    location.pathname === "/" ||
     location.pathname === "/of-use";
 
   return (
     <>
       {!hideMenubar && <Menubar />}
       <Routes>
-        <Route path="/" element={<Navigate replace to="/account/login" />} />
+        <Route path="/" element={<Navigate replace to="/accounts/login" />} />
         <Route path="/bakery/*" element={<Bakery />} />
         <Route path="/bakery/product/:id" element={<Detail />} />
         <Route path="/recipes" element={<Recipes />} />
