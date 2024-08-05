@@ -56,7 +56,7 @@ function App() {
         <Route path="/users/reviews" element={<Review />} />
         <Route path="/users/reviews/:id" element={<WriteReview />} />
         <Route path="/users/saved-recipes" element={<SavedRecipes />} />
-        <Route path="/test/result/:pk" element={<TestBread />} />
+        <Route path="/test/result/{int:pk}" element={<TestBread />} />
         <Route path="/of-use" element={<OfUse />} />
         <Route path="/accounts/signup" element={<Signup />} />
         <Route path="/accounts/signup-clear" element={<SignClear />} />
