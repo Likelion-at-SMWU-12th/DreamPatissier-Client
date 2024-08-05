@@ -179,7 +179,7 @@ const Detail = () => {
 // 장바구니 버튼
 const CartButton = styled.button`
   position: fixed;
-  right: 400px;
+  margin-left: 270px;
   bottom: 5%;
   z-index: 1;
   padding: 10px 10px;

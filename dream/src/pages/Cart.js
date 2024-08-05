@@ -220,7 +220,7 @@ const Cart = () => {
       <YellowBtn
         onBtnClick={handleOrder}
         type={"submit"}
-        width={"27%"}
+        width={"330px"}
         fontWeight={"800"}
         txt={"결제하기"}
         position={"fixed"}
