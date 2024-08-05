@@ -110,12 +110,10 @@ const WarningImg = styled.img`
 
 // 제품 wrap
 const ProductWrap = styled.div`
-  margin: -5px 25px 0px 25px;
   display: grid;
-  grid-template-columns: repeat(2, 14vw);
-  align-items: center;
-  gap: 10px;
-  justify-content: center;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 20px;
 `;
 
 // 링크 없애기
