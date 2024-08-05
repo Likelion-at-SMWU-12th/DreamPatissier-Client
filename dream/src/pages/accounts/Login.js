@@ -141,7 +141,7 @@ const Login = () => {
         </form>
         <Guide>
           아직 회원이 아니신가요?{" "}
-          <Highlight to="/accounts/signup/">회원가입하기</Highlight>
+          <Highlight to="/accounts/signup">회원가입하기</Highlight>
         </Guide>
       </LoginBox>
     </LoginWrap>

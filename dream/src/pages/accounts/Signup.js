@@ -8,7 +8,7 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleCancelClick = () => {
-    navigate("/accounts/login/");
+    navigate("/accounts/login");
   };
 
   return (
@@ -61,8 +61,6 @@ const CancelIcon = styled.img`
 const ContentWrap = styled.div`
   justify-content: center;
   align-items: center;
-  height: 100vh;
   background-color: white;
-  padding-top: 70px;
-  margin-bottom: 100px;
+  padding-top: 90px;
 `;
