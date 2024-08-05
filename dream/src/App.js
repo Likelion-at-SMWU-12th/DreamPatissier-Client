@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import "./index.css";
 import Menubar from "./pages/Menubar";
 import Bakery from "./pages/Bakery";
@@ -37,6 +37,7 @@ function App() {
     <>
       {!hideMenubar && <Menubar />}
       <Routes>
+        <Route path="/" element={<Navigate replace to="/account/login" />} />
         <Route path="/bakery/*" element={<Bakery />} />
         <Route path="/bakery/product/:id" element={<Detail />} />
         <Route path="/recipes" element={<Recipes />} />
