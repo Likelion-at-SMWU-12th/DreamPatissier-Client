@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import profile from "./bread.png";
 import axios from "axios";
 
 const OrderList = () => {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -40,7 +41,31 @@ const OrderList = () => {
   };
 
   const handleAddToCartClick = (id) => {
-    console.log(`Add product ${id} to cart`);
+    const token = localStorage.getItem("token");
+
+    axios
+      .post(
+        `http://127.0.0.1:8000/bakery/${id}/add-to-cart/`,
+        {}, // 빈 객체로 quantity를 전송하지 않음
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      )
+      .then(() => {
+        setShowPopup(true);
+        setTimeout(() => {
+          setShowPopup(false);
+        }, 4000);
+
+        // quantity를 1로 설정하여 이벤트 전송
+        const cartEvent = new CustomEvent("cartUpdated", { detail: 1 });
+        window.dispatchEvent(cartEvent);
+      })
+      .catch((error) => {
+        console.error("Failed to add product to cart", error);
+      });
   };
 
   let lastOrderDate = ""; // 마지막으로 출력한 주문 날짜를 추적합니다.
@@ -111,6 +136,15 @@ const OrderList = () => {
             </OrderCard>
           );
         })
+      )}
+
+      {showPopup && (
+        <PopWrap showPopup={showPopup}>
+          <CartPop>
+            <PopText>장바구니에 상품을 담았어요</PopText>
+            <GoBtn onClick={() => navigate("/cart")}>바로가기 &gt;</GoBtn>
+          </CartPop>
+        </PopWrap>
       )}
     </OrderListContainer>
   );
@@ -262,6 +296,7 @@ const WriteReviewButton = styled.button`
 
 const AddButton = styled.button`
   margin: 20px 10px;
+  height: 40px;
   flex: 1;
   color: #471d06;
   font-size: 14px;
@@ -279,4 +314,58 @@ const AddButton = styled.button`
     color: #ffc851;
     background-color: #773d1e;
   }
+`;
+
+// Popup styles
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
+const PopWrap = styled.div`
+  justify-content: center;
+  display: flex;
+  position: fixed;
+  right: 0;
+  left: 5%;
+  bottom: 5%;
+  z-index: 4;
+  width: 90%;
+  animation: ${(props) =>
+    props.showPopup
+      ? css`
+          ${fadeOut} 4.5s forwards
+        `
+      : "none"};
+`;
+
+const CartPop = styled.div`
+  background-color: var(--yellow);
+  border-radius: 10px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 46px;
+  display: flex;
+  padding: 0px 19px;
+`;
+
+const PopText = styled.div`
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--brown);
+`;
+
+const GoBtn = styled.button`
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--brown);
+  border: none;
+  background-color: var(--yellow);
+  cursor: pointer;
 `;
