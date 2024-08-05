@@ -152,6 +152,7 @@ const BannerBox = styled.div`
   position: relative;
   padding-top: 56.25%;
   width: 100%;
+  box-shadow: 0px 2px 4px 0 rgba(217, 217, 217, 0.5);
 `;
 
 const BannerImg = styled.img`
