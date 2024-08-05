@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import timerIcon2 from "../../assets/timer2.png";
@@ -9,7 +9,7 @@ import unsavedIcon from "../../assets/unsaved-icon.png";
 import altIcon from "../../assets/alt.png";
 
 // RecipeCard Component
-const RecipeCard = ({ recipe, onDetail, onToggleSave }) => (
+const RecipeCard = React.memo(({ recipe, onDetail, onToggleSave }) => (
   <div key={recipe.id} onClick={() => onDetail(recipe.id)}>
     <div className="product-card2">
       <div className="product-show3">
@@ -45,7 +45,7 @@ const RecipeCard = ({ recipe, onDetail, onToggleSave }) => (
     </div>
     <hr className="divider" />
   </div>
-);
+));
 
 const SavedRecipes = () => {
   const navigate = useNavigate();
@@ -54,49 +54,49 @@ const SavedRecipes = () => {
   const [error, setError] = useState(null);
 
   // Fetch saved recipes when component mounts
-  useEffect(() => {
-    const fetchSavedRecipes = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.error("No token found in localStorage.");
-        setLoading(false);
-        return;
-      }
+  const fetchSavedRecipes = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found in localStorage.");
+      setLoading(false);
+      return;
+    }
 
-      try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/users/saved-recipes",
-          {
-            headers: { Authorization: `Token ${token}` },
-          }
-        );
-
-        if (response.status === 200) {
-          const data = response.data;
-          if (Array.isArray(data)) {
-            setRecipes(
-              data.map((recipe) => ({
-                ...recipe,
-                tags: recipe.tags ? recipe.tags.split(",") : [],
-                equipment: recipe.equipment ? recipe.equipment.split(",") : [],
-                isSaved: true,
-              }))
-            );
-          } else {
-            console.error("Data is not an array", data);
-          }
-        } else {
-          console.error("Unexpected response status:", response.status);
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/users/saved-recipes",
+        {
+          headers: { Authorization: `Token ${token}` },
         }
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      );
 
-    fetchSavedRecipes();
+      if (response.status === 200) {
+        const data = response.data;
+        if (Array.isArray(data)) {
+          setRecipes(
+            data.map((recipe) => ({
+              ...recipe,
+              tags: recipe.tags ? recipe.tags.split(",") : [],
+              equipment: recipe.equipment ? recipe.equipment.split(",") : [],
+              isSaved: true,
+            }))
+          );
+        } else {
+          console.error("Data is not an array", data);
+        }
+      } else {
+        console.error("Unexpected response status:", response.status);
+      }
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchSavedRecipes();
+  }, [fetchSavedRecipes]);
 
   const handleDetailRecipe = (id) => {
     navigate(`/recipes/${id}`);

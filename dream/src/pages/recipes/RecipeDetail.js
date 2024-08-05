@@ -124,12 +124,11 @@ const RecipeDetail = () => {
         setIsSaved(true);
       }
     } catch (error) {
-      if (error.response && error.response.status === 405) {
-        alert("이 요청 메소드는 지원되지 않습니다. 서버 설정을 확인해 주세요.");
-      } else {
-        console.error("스크랩 상태 변경에 실패했습니다:", error);
-        alert("스크랩 상태 변경에 실패했습니다.");
-      }
+      console.error(
+        "스크랩 상태 변경에 실패했습니다:",
+        error.response ? error.response.data : error.message
+      );
+      alert("스크랩 상태 변경에 실패했습니다.");
     }
   };
 
