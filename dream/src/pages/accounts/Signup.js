@@ -13,10 +13,10 @@ const Signup = () => {
 
   return (
     <div>
-      <TermBar>
+      <Bar>
         <Title>회원가입</Title>
         <CancelIcon src={Cancel} onClick={handleCancelClick} />
-      </TermBar>
+      </Bar>
       <ContentWrap>
         <SignForm />
       </ContentWrap>
@@ -31,7 +31,20 @@ export default Signup;
 //
 
 // 상단 배너
-const TermBar = styled.div``;
+const Bar = styled.div`
+  font-size: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 393px;
+  background-color: white;
+  z-index: 1;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 60px;
+`;
 
 const Title = styled.p`
   margin: 0;
