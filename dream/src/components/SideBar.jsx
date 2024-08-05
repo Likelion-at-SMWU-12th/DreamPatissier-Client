@@ -14,7 +14,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       localStorage.removeItem("token");
       localStorage.removeItem("nickname");
       localStorage.removeItem("username");
-      navigate("/accounts/login/");
+      navigate("/accounts/login");
     }
   };
 

@@ -8,13 +8,20 @@ import LogoIcon from "../assets/logoIcon.svg";
 const Result = ({ resetTest }) => {
   const { resultId } = useParams();
   const navigate = useNavigate();
+  const [token, setToken] = useState("");
   const [result, setResult] = useState(null);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
 
   useEffect(() => {
     const fetchResultData = () => {
+      const token = localStorage.getItem("token");
+
       axios
-        .get(`/test/result/${resultId}`)
+        .get(`/test/result/${resultId}`, {
+          headers: {
+            token: token, // 헤더에 token 추가
+          },
+        })
         .then((response) => {
           setResult(response.data);
 
