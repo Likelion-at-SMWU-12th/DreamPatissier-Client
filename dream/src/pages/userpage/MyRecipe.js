@@ -171,7 +171,7 @@ const MyRecipes = () => {
 
   return (
     <>
-      <div className="orderlist-title2">저장한 레시피</div>
+      <div className="orderlist-title2">MY 레시피</div>
       <div className="container">
         <div className="search-container">
           <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
