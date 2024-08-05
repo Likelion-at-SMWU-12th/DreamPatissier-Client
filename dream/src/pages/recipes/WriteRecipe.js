@@ -143,34 +143,36 @@ const WriteRecipe = () => {
           />
           <img src={image} alt="대표사진" className="image-preview" />
         </div>
-        <input
-          className="input-recipe-data"
-          type="text"
-          value={title}
-          placeholder="레시피명을 작성해 주세요."
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          className="input-recipe-data"
-          type="text"
-          value={tags}
-          placeholder="#웰니스 키워드를 작성해 주세요."
-          onChange={(e) => setTags(e.target.value)}
-        />
-        <input
-          className="input-recipe-data"
-          type="text"
-          value={cookingTime}
-          placeholder="조리시간을 작성해 주세요."
-          onChange={(e) => setCookingTime(e.target.value)}
-        />
-        <input
-          className="input-recipe-data"
-          type="text"
-          value={equipment}
-          placeholder="조리기구를 하나만 작성해 주세요. (전자레인지/오븐/에어프라이어 등)"
-          onChange={(e) => setEquipment(e.target.value)}
-        />
+        <div className="input-container">
+          <input
+            className="input-recipe-data"
+            type="text"
+            value={title}
+            placeholder="레시피명을 작성해 주세요."
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <input
+            className="input-recipe-data"
+            type="text"
+            value={tags}
+            placeholder="#웰니스 키워드를 작성해 주세요."
+            onChange={(e) => setTags(e.target.value)}
+          />
+          <input
+            className="input-recipe-data"
+            type="text"
+            value={cookingTime}
+            placeholder="조리시간을 작성해 주세요."
+            onChange={(e) => setCookingTime(e.target.value)}
+          />
+          <input
+            className="input-recipe-data"
+            type="text"
+            value={equipment}
+            placeholder="조리도구를 하나만 작성해 주세요. (전자레인지/오븐 등)"
+            onChange={(e) => setEquipment(e.target.value)}
+          />
+        </div>
 
         <div className="style2">
           <div>

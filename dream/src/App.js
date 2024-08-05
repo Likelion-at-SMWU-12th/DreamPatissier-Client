@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
-import "./index.css";
+import "./index.css"; // 기본 스타일
+import "./App.css"; // 추가한 스타일
 import Menubar from "./pages/Menubar";
 import Bakery from "./pages/Bakery";
 import Recipes from "./pages/Recipes";
@@ -36,7 +37,7 @@ function App() {
     location.pathname.endsWith("/of-use");
 
   return (
-    <>
+    <div className="show_screen">
       {!hideMenubar && <Menubar />}
       <Routes>
         <Route path="/" element={<Navigate replace to="/accounts/login" />} />
@@ -65,7 +66,7 @@ function App() {
         <Route path="/cart/checkout" element={<Order />} />
         <Route path="/cart/orderclear" element={<OrderClear />} />
       </Routes>
-    </>
+    </div>
   );
 }
 
