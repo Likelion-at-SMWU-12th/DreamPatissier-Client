@@ -29,7 +29,7 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => (
     type="text"
     className="search"
     value={searchTerm}
-    placeholder="    조리도구 및 웰니스 키워드를 검색해주세요."
+    placeholder="조리도구 및 웰니스 키워드를 검색해주세요."
     onChange={(e) => setSearchTerm(e.target.value)}
   />
 );
@@ -248,7 +248,7 @@ const Recipes = () => {
   };
 
   return (
-    <div className="container">
+    <div className="recipe-container1">
       <div className="search-container">
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>

@@ -1,6 +1,32 @@
-.container {
+.recipe-container1 {
   position: relative;
   padding: 20px;
+  min-height: 100vh; /* 화면 전체를 커버하기 위해 설정 */
+}
+
+.add-recipe-btn {
+  position: fixed;
+  background-color: white;
+  color: #471d06;
+  font-weight: 800;
+  border: 2px solid #471d06;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.4s ease, color 0.4s ease, border 0.4s ease,
+    box-shadow 0.4s ease;
+
+  /* 화면의 정중앙에 배치 */
+  left: 67%;
+  top: 97%;
+  transform: translate(-50%, -50%);
+}
+
+.add-recipe-btn:hover {
+  background-color: #471d06;
+  color: white;
 }
 
 .search-container {
@@ -97,27 +123,6 @@
 .save-btn img {
   width: 20px;
   height: 20px;
-}
-
-.add-recipe-btn {
-  position: absolute;
-  bottom: 30px;
-  right: 20px;
-  background-color: white;
-  color: #471d06;
-  font-weight: 800;
-  border: 2px solid #471d06;
-  border-radius: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.4s ease, color 0.4s ease;
-}
-
-.add-recipe-btn:hover {
-  background-color: #471d06;
-  color: white;
 }
 
 .no-recipes-message {
