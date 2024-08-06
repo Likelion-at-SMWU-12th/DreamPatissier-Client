@@ -44,7 +44,7 @@ const Order = () => {
     };
 
     axios
-      .post("/cart/checkout/", payload, { headers })
+      .post("http://52.78.180.44:8080/cart/checkout/", payload, { headers })
       .then((response) => {
         // 주문이 성공적으로 완료되었을 때 CustomEvent를 발생
         const cartResetEvent = new CustomEvent("cartReset");

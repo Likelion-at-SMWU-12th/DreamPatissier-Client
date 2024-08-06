@@ -16,7 +16,7 @@ const Result = ({ resetTest }) => {
     const token = localStorage.getItem("token");
     const fetchResultData = () => {
       axios
-        .get(`/test/result/${resultId}`, {
+        .get(`http://52.78.180.44:8080/test/result/${resultId}`, {
           headers: {
             Authorization: `Token ${token}`,
           },

@@ -43,7 +43,7 @@ function Bakery() {
     const token = localStorage.getItem("token");
 
     axios
-      .get("/bakery/", {
+      .get("http://52.78.180.44:8080/bakery/", {
         headers: {
           Authorization: `Token ${token}`,
         },
