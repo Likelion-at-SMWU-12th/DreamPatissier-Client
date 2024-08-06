@@ -187,10 +187,10 @@ const SignForm = () => {
 
     // 서버에 제출
     axios
-      .post("http://127.0.0.1:8000/accounts/signup/", submitData)
+      .post("http://52.78.180.44:8080/accounts/signup/", submitData)
       .then((response) => {
         axios
-          .post("http://127.0.0.1:8000/accounts/login/", {
+          .post("http://52.78.180.44:8080/accounts/login/", {
             username: formData.username,
             password: formData.password,
           })

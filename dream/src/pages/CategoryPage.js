@@ -15,7 +15,7 @@ const CategoryPage = () => {
     const token = localStorage.getItem("token");
 
     axios
-      .get(`http://127.0.0.1:8000/bakery/category/${categoryName}/`, {
+      .get(`http://52.78.180.44:8080/bakery/category/${categoryName}/`, {
         headers: {
           Authorization: `Token ${token}`,
         },

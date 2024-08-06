@@ -43,7 +43,7 @@ const WriteReview = () => {
     const token = localStorage.getItem("token");
 
     axios
-      .post("http://127.0.0.1:8000/users/reviews/", reviewData, {
+      .post("http://52.78.180.44:8080/users/reviews/", reviewData, {
         headers: {
           Authorization: `Token ${token}`,
         },

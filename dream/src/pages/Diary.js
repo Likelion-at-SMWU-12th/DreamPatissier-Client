@@ -127,7 +127,7 @@ const Diary = () => {
     setError(null);
 
     axios
-      .get("http://127.0.0.1:8000/diary/", {
+      .get("http://52.78.180.44:8080/diary/", {
         headers: {
           Authorization: `Token ${token}`,
         },
@@ -199,7 +199,7 @@ const Diary = () => {
     setError(null);
 
     axios
-      .delete(`http://127.0.0.1:8000/diary/${id}`, {
+      .delete(`http://52.78.180.44:8080/diary/${id}`, {
         headers: {
           Authorization: `Token ${token}`,
         },

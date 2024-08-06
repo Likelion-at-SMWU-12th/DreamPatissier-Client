@@ -12,7 +12,7 @@ const Review = () => {
     const token = localStorage.getItem("token");
 
     axios
-      .get("http://127.0.0.1:8000/users/reviews", {
+      .get("http://52.78.180.44:8080/users/reviews", {
         headers: {
           Authorization: `Token ${token}`,
         },
@@ -31,7 +31,7 @@ const Review = () => {
 
     if (confirmed) {
       axios
-        .delete(`http://127.0.0.1:8000/users/reviews/${id}/`, {
+        .delete(`http://52.78.180.44:8080/users/reviews/${id}/`, {
           headers: {
             Authorization: `Token ${token}`,
           },

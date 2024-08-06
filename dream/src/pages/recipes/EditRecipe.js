@@ -27,7 +27,7 @@ const EditRecipe = () => {
   useEffect(() => {
     if (id) {
       axios
-        .get(`http://127.0.0.1:8000/recipes/${id}/`, {
+        .get(`http://52.78.180.44:8080/recipes/${id}/`, {
           headers: {
             Authorization: `Token ${token}`,
           },
@@ -146,7 +146,7 @@ const EditRecipe = () => {
 
     try {
       const response = await axios.put(
-        `http://127.0.0.1:8000/recipes/${id}/`,
+        `http://52.78.180.44:8080/recipes/${id}/`,
         formData,
         {
           headers: {

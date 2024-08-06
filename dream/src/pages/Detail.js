@@ -20,7 +20,7 @@ const Detail = () => {
 
     // Fetch product details and reviews
     axios
-      .get(`http://127.0.0.1:8000/bakery/product/${id}/`, {
+      .get(`http://52.78.180.44:8080/bakery/product/${id}/`, {
         headers: {
           Authorization: `Token ${token}`,
         },
@@ -62,7 +62,7 @@ const Detail = () => {
 
     axios
       .post(
-        `http://127.0.0.1:8000/bakery/${id}/add-to-cart/`,
+        `http://52.78.180.44:8080/bakery/${id}/add-to-cart/`,
         {},
         {
           headers: {
