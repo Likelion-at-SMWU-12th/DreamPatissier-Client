@@ -524,7 +524,7 @@ const Message = styled.div`
 const ErrorMessage = styled.div`
   font-weight: 800;
   color: #ff3b3b;
-  font-size: 11px;
+  font-size: 10.5px;
   padding-top: 10px;
   margin-top: -25px;
   margin-bottom: 7px;

@@ -13,13 +13,12 @@ const Result = ({ resetTest }) => {
   const [recommendedProducts, setRecommendedProducts] = useState([]);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     const fetchResultData = () => {
-      const token = localStorage.getItem("token");
-
       axios
         .get(`/test/result/${resultId}`, {
           headers: {
-            token: token, // 헤더에 token 추가
+            Authorization: `Token ${token}`,
           },
         })
         .then((response) => {
