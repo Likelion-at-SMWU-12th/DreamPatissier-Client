@@ -85,7 +85,7 @@ const Detail = () => {
   };
 
   if (productStatus === "loading") {
-    return <div>Loading...</div>;
+    return <div>Loading....</div>;
   }
 
   if (productStatus === "error" || !product) {
