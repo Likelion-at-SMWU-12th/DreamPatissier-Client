@@ -336,8 +336,8 @@ const PopWrap = styled.div`
   display: flex;
   position: fixed;
   right: 0;
-  left: 730px;
-  bottom: 5%;
+  left: 43%;
+  top: 93%;
   z-index: 4;
   width: 300px;
   animation: ${(props) =>
