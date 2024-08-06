@@ -331,16 +331,26 @@ const fadeOut = keyframes`
 `;
 
 // 팝업
+const CartPop = styled.div`
+  background-color: var(--yellow);
+  border-radius: 10px;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%; // 모바일 디바이스에 더 나은 반응형 디자인 제공
+  max-width: 300px; // 최대 너비 설정으로 큰 화면에서는 고정 너비를 제공
+  height: 46px;
+  display: flex;
+  padding: 0px 19px;
+`;
 
 const PopWrap = styled.div`
-  left: 20%;
-  bottom: 5%;
-  transform: translateX(-10%) translateY(50%); // 중앙 하단 정렬
-
-  justify-content: center;
-  display: flex;
   position: fixed;
-
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%); // 수평으로 정확히 중앙에 위치
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 4;
   width: 330px;
   animation: ${(props) =>
@@ -349,17 +359,6 @@ const PopWrap = styled.div`
           ${fadeOut} 4.5s forwards
         `
       : "none"};
-`;
-
-const CartPop = styled.div`
-  background-color: var(--yellow);
-  border-radius: 10px;
-  justify-content: space-between;
-  align-items: center;
-  width: 300px;
-  height: 46px;
-  display: flex;
-  padding: 0px 19px;
 `;
 
 const PopText = styled.div`
