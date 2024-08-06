@@ -85,7 +85,7 @@ const Detail = () => {
   };
 
   if (productStatus === "loading") {
-    return <div>Loading...</div>;
+    return <div>Loading....</div>;
   }
 
   if (productStatus === "error" || !product) {
@@ -336,7 +336,7 @@ const PopWrap = styled.div`
   justify-content: center;
   display: flex;
   position: fixed;
-  left: 48%;
+  left: 50%;
   bottom: 5%;
   z-index: 4;
   width: 330px;
