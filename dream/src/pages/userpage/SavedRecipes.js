@@ -8,40 +8,37 @@ import savedIcon from "../../assets/saved-icon.png";
 import unsavedIcon from "../../assets/unsaved-icon.png";
 import altIcon from "../../assets/alt.png";
 
-// RecipeCard Component
 const RecipeCard = React.memo(({ recipe, onDetail, onToggleSave }) => (
-  <div key={recipe.id} onClick={() => onDetail(recipe.id)}>
-    <div className="product-card2">
-      <div className="product-show3">
-        <img src={recipe.image} alt={recipe.title} className="product-image3" />
-        <div className="product-info2">
-          <h3 className="product-name">{recipe.title}</h3>
-          <div className="product-tags2">{recipe.tags.join(", ")}</div>
-          <div className="info-container2">
-            <img className="tool_img_saved" src={toolIcon2} alt="Equipment" />
-            <div className="saved-recipe-sub-show">
-              {recipe.equipment.join(", ")}
-            </div>
-            <img
-              className="time_img_saved"
-              src={timerIcon2}
-              alt="Cooking Time"
-            />
-            <div className="saved-recipe-sub-show">
-              {recipe.cookingTime || "시간 미정"}
-            </div>
+  <div
+    key={recipe.id}
+    className="product-card2"
+    onClick={() => onDetail(recipe.id)}
+  >
+    <div className="product-show3">
+      <img src={recipe.image} alt={recipe.title} className="product-image3" />
+      <div className="product-info2">
+        <h3 className="product-name">{recipe.title}</h3>
+        <div className="product-tags2">{recipe.tags.join(", ")}</div>
+        <div className="info-container2">
+          <img className="tool_img_saved" src={toolIcon2} alt="Equipment" />
+          <div className="saved-recipe-sub-show">
+            {recipe.equipment.join(", ")}
+          </div>
+          <img className="time_img_saved" src={timerIcon2} alt="Cooking Time" />
+          <div className="saved-recipe-sub-show">
+            {recipe.cookingTime || "시간 미정"}
           </div>
         </div>
-        <button
-          className="save-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleSave(recipe.id);
-          }}
-        >
-          <img src={recipe.isSaved ? savedIcon : unsavedIcon} alt="Save" />
-        </button>
       </div>
+      <button
+        className="save-btn"
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggleSave(recipe.id);
+        }}
+      >
+        <img src={recipe.isSaved ? savedIcon : unsavedIcon} alt="Save" />
+      </button>
     </div>
     <hr className="divider" />
   </div>
