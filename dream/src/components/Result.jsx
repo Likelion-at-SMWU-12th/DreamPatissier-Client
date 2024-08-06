@@ -22,6 +22,7 @@ const Result = ({ resetTest }) => {
           },
         })
         .then((response) => {
+          console.log(response.data);
           setResult(response.data);
 
           const localResultId = localStorage.getItem("result_id");
