@@ -189,7 +189,7 @@ const MyRecipes = () => {
         ) : (
           <div className="no-recipes-message">
             <img src={altIcon} alt="No Recipes" />
-            <p>No recipes found. Try changing your search terms.</p>
+            <p>저장된 레시피가 없습니다.</p>
           </div>
         )}
       </div>
