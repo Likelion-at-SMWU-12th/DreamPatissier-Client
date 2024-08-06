@@ -18,7 +18,7 @@ const Detail = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    // 제품 정보와 리뷰를 가져오기
+    // Fetch product details and reviews
     axios
       .get(`http://127.0.0.1:8000/bakery/product/${id}/`, {
         headers: {
@@ -56,7 +56,7 @@ const Detail = () => {
     return new Intl.NumberFormat("en-US").format(price);
   };
 
-  // 장바구니에 상품을 추가하는 함수
+  // Function to add product to cart
   const handleAddToCart = () => {
     const token = localStorage.getItem("token");
 
@@ -76,7 +76,7 @@ const Detail = () => {
           setShowPopup(false);
         }, 4000);
 
-        const cartEvent = new CustomEvent("cartUpdated", { detail: 1 }); // quantity 1 추가
+        const cartEvent = new CustomEvent("cartUpdated", { detail: 1 });
         window.dispatchEvent(cartEvent);
       })
       .catch((error) => {
@@ -106,7 +106,11 @@ const Detail = () => {
         onTouchEnd={handleDragEnd}
         onClick={toggleImage}
       >
-        <BreadImg src={product[currentImg]} alt={product.name} />
+        <BreadImg
+          src={product[currentImg]}
+          alt={product.name}
+          draggable="false"
+        />
         <Dots>
           <Dot active={currentImg === "img_src"} />
           <Dot active={currentImg === "img_dtl"} />
@@ -174,6 +178,8 @@ const Detail = () => {
     </>
   );
 };
+
+export default Detail;
 
 // 스타일
 // 장바구니 버튼
@@ -330,10 +336,10 @@ const PopWrap = styled.div`
   display: flex;
   position: fixed;
   right: 0;
-  left: 35%;
+  left: 730px;
   bottom: 5%;
   z-index: 4;
-  width: 30%;
+  width: 300px;
   animation: ${(props) =>
     props.showPopup
       ? css`
@@ -401,7 +407,7 @@ const ImgBox = styled.div`
 
 const BreadImg = styled.img`
   width: 90%;
-  border-radius: 20px;
+  border-radius: 30px;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.25);
 `;
 
@@ -413,14 +419,13 @@ const Dots = styled.div`
   display: flex;
 `;
 
-const Dot = styled.span`
-  height: 10px;
-  width: 10px;
-  margin: 0 5px;
-  background-color: ${({ active }) => (active ? "#fff" : "#bbb")};
-  opacity: 50%;
+const Dot = styled.div`
+  height: 9px;
+  width: 9px;
+  margin: 3px 4px 0px 4px;
+  background-color: white;
+  opacity: ${({ active }) =>
+    active ? "1" : "0.5"}; // active 상태에 따라 투명도 조절
   border-radius: 50%;
-  transition: background-color 0.3s;
+  transition: opacity 0.3s;
 `;
-
-export default Detail;
