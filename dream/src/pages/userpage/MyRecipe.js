@@ -27,7 +27,7 @@ const handleError = (error) => {
 const SearchBar = ({ searchTerm, setSearchTerm }) => (
   <input
     type="text"
-    className="search"
+    className="search2"
     value={searchTerm}
     placeholder="레시피 제목 또는 태그를 검색하세요."
     onChange={(e) => setSearchTerm(e.target.value)}
@@ -42,7 +42,7 @@ const RecipeItem = ({
   onDetailRecipe,
 }) => {
   return (
-    <div className="recipe-item" onClick={() => onDetailRecipe(recipe.id)}>
+    <div className="recipe-item2" onClick={() => onDetailRecipe(recipe.id)}>
       <img
         src={recipe.image || altIcon}
         alt={recipe.title}
@@ -172,7 +172,7 @@ const MyRecipes = () => {
   return (
     <>
       <div className="orderlist-title2">MY 레시피</div>
-      <div className="container">
+      <div className="show-container">
         <div className="search-container">
           <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
