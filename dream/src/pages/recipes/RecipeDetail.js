@@ -179,7 +179,7 @@ const RecipeDetail = () => {
       <div className="header-container">
         <div className="left-content">
           <div className="show_title">{recipe.title}</div>
-          <div className="show_tag">{tags}</div>
+          <div className="show_tag">{recipe.tags}</div>
         </div>
         <div className="recipe-buttons">
           {recipe.author === username ? (
