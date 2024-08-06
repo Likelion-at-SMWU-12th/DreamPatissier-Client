@@ -333,7 +333,7 @@ const fadeOut = keyframes`
 // 팝업
 
 const PopWrap = styled.div`
-  left: 50%;
+  left: 20%;
   bottom: 5%;
   transform: translateX(-30%) translateY(50%); // 중앙 하단 정렬
 
