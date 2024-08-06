@@ -331,11 +331,11 @@ const fadeOut = keyframes`
 `;
 
 // 팝업
+
 const PopWrap = styled.div`
   justify-content: center;
   display: flex;
   position: fixed;
-  right: 0;
   bottom: 5%;
   z-index: 4;
   width: 330px;
