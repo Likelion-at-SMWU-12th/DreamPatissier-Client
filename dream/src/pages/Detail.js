@@ -333,11 +333,14 @@ const fadeOut = keyframes`
 // 팝업
 
 const PopWrap = styled.div`
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%) translateY(50%); // 중앙 하단 정렬
+
   justify-content: center;
   display: flex;
   position: fixed;
-  left: 50%;
-  bottom: 5%;
+
   z-index: 4;
   width: 330px;
   animation: ${(props) =>
