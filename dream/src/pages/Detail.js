@@ -336,7 +336,7 @@ const PopWrap = styled.div`
   justify-content: center;
   display: flex;
   position: fixed;
-  left: 50%;
+  left: 49%;
   bottom: 5%;
   z-index: 4;
   width: 330px;
