@@ -335,7 +335,7 @@ const fadeOut = keyframes`
 const PopWrap = styled.div`
   left: 50%;
   bottom: 5%;
-  transform: translateX(-30%) translateY(50%); // 중앙 하단 정렬
+  transform: translateX(-10%) translateY(50%); // 중앙 하단 정렬
 
   justify-content: center;
   display: flex;
