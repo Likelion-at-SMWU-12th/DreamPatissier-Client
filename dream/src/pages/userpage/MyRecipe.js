@@ -98,7 +98,7 @@ const MyRecipes = () => {
       if (!storedToken) return;
 
       axios
-        .get("http://52.78.180.44:8080/users/my-recipes", {
+        .get("http://54.180.143.179:8080/users/my-recipes", {
           headers: {
             Authorization: `Token ${storedToken}`,
           },
@@ -147,7 +147,7 @@ const MyRecipes = () => {
     }
 
     axios
-      .delete(`http://52.78.180.44:8080/recipes/${recipeId}`, {
+      .delete(`http://54.180.143.179:8080/recipes/${recipeId}`, {
         headers: {
           Authorization: `Token ${token}`,
         },

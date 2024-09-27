@@ -105,7 +105,7 @@ const EditRecord = () => {
   useEffect(() => {
     if (id) {
       axios
-        .get(`http://52.78.180.44:8080/diary/${id}/`, {
+        .get(`http://54.180.143.179:8080/diary/${id}/`, {
           headers: { Authorization: `Token ${token}` },
         })
         .then((response) => {
@@ -217,7 +217,7 @@ const EditRecord = () => {
     });
 
     axios
-      .put(`http://52.78.180.44:8080/diary/${id}/`, formData, {
+      .put(`http://54.180.143.179:8080/diary/${id}/`, formData, {
         headers: { Authorization: `Token ${token}` },
       })
       .then((response) => {

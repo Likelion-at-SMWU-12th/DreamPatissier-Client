@@ -61,7 +61,7 @@ const SavedRecipes = () => {
 
     try {
       const response = await axios.get(
-        "http://52.78.180.44:8080/users/saved-recipes",
+        "http://54.180.143.179:8080/users/saved-recipes",
         {
           headers: { Authorization: `Token ${token}` },
         }
@@ -110,7 +110,7 @@ const SavedRecipes = () => {
       if (recipe.isSaved) {
         // Ensure the URL ends with a trailing slash
         await axios.delete(
-          `http://52.78.180.44:8080/users/saved-recipes/${id}/`,
+          `http://54.180.143.179:8080/users/saved-recipes/${id}/`,
           {
             headers: { Authorization: `Token ${token}` },
           }
@@ -118,7 +118,7 @@ const SavedRecipes = () => {
       } else {
         // Ensure the URL ends with a trailing slash
         await axios.put(
-          `http://52.78.180.44:8080/users/saved-recipes/${id}/`,
+          `http://54.180.143.179:8080/users/saved-recipes/${id}/`,
           {},
           {
             headers: { Authorization: `Token ${token}` },

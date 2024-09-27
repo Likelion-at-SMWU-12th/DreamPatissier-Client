@@ -29,7 +29,7 @@ const TestBread = () => {
     console.log(`Fetching questions for page: ${page}`);
 
     axios
-      .get(`http://52.78.180.44:8080/test/questions/${page}`, {
+      .get(`http://54.180.143.179:8080/test/questions/${page}`, {
         headers: {
           Authorization: `Token ${token}`,
         },
@@ -101,7 +101,7 @@ const TestBread = () => {
     const token = localStorage.getItem("token");
     axios
       .post(
-        "http://52.78.180.44:8080/test/submit",
+        "http://54.180.143.179:8080/test/submit",
         { result: resultString },
         {
           headers: {

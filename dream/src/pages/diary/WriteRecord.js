@@ -128,7 +128,7 @@ const RecordDetail = () => {
     });
 
     axios
-      .post("http://52.78.180.44:8080/diary/", formData, {
+      .post("http://54.180.143.179:8080/diary/", formData, {
         headers: {
           Authorization: `Token ${token}`,
         },

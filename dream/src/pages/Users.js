@@ -30,7 +30,7 @@ const Users = () => {
       if (!token) return;
 
       const response = await axios.get(
-        "http://52.78.180.44:8080/test/result_id",
+        "http://54.180.143.179:8080/test/result_id",
         {
           headers: {
             Authorization: `Token ${token}`,

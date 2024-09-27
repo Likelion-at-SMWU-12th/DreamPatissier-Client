@@ -19,7 +19,7 @@ const Menubar = () => {
   useEffect(() => {
     const fetchCartItems = () => {
       axios
-        .get("http://52.78.180.44:8080/cart-items/", {
+        .get("http://54.180.143.179:8080/cart-items/", {
           headers: { Authorization: `Token ${localStorage.getItem("token")}` },
         })
         .then((response) => {

@@ -15,7 +15,7 @@ const OrderList = () => {
 
     // Fetch orders
     axios
-      .get("http://52.78.180.44:8080/users/orders", {
+      .get("http://54.180.143.179:8080/users/orders", {
         headers: {
           Authorization: `Token ${token}`,
         },
@@ -36,7 +36,7 @@ const OrderList = () => {
 
     // Fetch reviews
     axios
-      .get("http://52.78.180.44:8080/users/reviews", {
+      .get("http://54.180.143.179:8080/users/reviews", {
         headers: {
           Authorization: `Token ${token}`,
         },
@@ -61,7 +61,7 @@ const OrderList = () => {
 
     axios
       .post(
-        `http://52.78.180.44:8080/bakery/${id}/add-to-cart/`,
+        `http://54.180.143.179:8080/bakery/${id}/add-to-cart/`,
         {},
         {
           headers: {

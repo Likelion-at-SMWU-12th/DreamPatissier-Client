@@ -18,7 +18,7 @@ const SearchPage = () => {
       .join(",");
 
     axios
-      .get(`http://52.78.180.44:8080/bakery/search/${encodedTags}/`, {
+      .get(`http://54.180.143.179:8080/bakery/search/${encodedTags}/`, {
         headers: {
           Authorization: `Token ${token}`,
         },

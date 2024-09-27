@@ -50,7 +50,7 @@ const RecipeDetail = () => {
     // fetchRecipe 함수 정의
     const fetchRecipe = () => {
       axios
-        .get(`http://52.78.180.44:8080/recipes/${id}`, {
+        .get(`http://54.180.143.179:8080/recipes/${id}`, {
           headers: {
             Authorization: `Token ${storedToken}`,
           },
@@ -60,7 +60,7 @@ const RecipeDetail = () => {
           setRecipe(recipeData);
 
           return axios.get(
-            `http://52.78.180.44:8080/users/saved-recipes/${id}`,
+            `http://54.180.143.179:8080/users/saved-recipes/${id}`,
             {
               headers: {
                 Authorization: `Token ${storedToken}`,
@@ -84,7 +84,7 @@ const RecipeDetail = () => {
   }, [id, token]);
 
   const handleToggleSave = (recipeId) => {
-    const url = `http://52.78.180.44:8080/users/saved-recipes/${recipeId}`;
+    const url = `http://54.180.143.179:8080/users/saved-recipes/${recipeId}`;
     const headers = { Authorization: `Token ${token}` };
 
     if (isScrapped) {
@@ -117,7 +117,7 @@ const RecipeDetail = () => {
     }
 
     axios
-      .delete(`http://52.78.180.44:8080/recipes/${recipeId}`, {
+      .delete(`http://54.180.143.179:8080/recipes/${recipeId}`, {
         headers: {
           Authorization: `Token ${token}`,
         },

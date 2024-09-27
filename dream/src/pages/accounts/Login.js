@@ -57,7 +57,7 @@ const Login = () => {
 
     //연동
     axios
-      .post("http://52.78.180.44:8080/accounts/login/", {
+      .post("http://54.180.143.179:8080/accounts/login/", {
         username,
         password,
       })

@@ -94,7 +94,7 @@ const WriteRecipe = () => {
 
     try {
       const response = await axios.post(
-        "http://52.78.180.44:8080/recipes/",
+        "http://54.180.143.179:8080/recipes/",
         formData,
         {
           headers: {

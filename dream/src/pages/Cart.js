@@ -21,7 +21,7 @@ const Cart = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://52.78.180.44:8080/cart-items/", {
+      .get("http://54.180.143.179:8080/cart-items/", {
         headers: {
           Authorization: `Token ${token}`,
         },
@@ -60,7 +60,7 @@ const Cart = () => {
     const token = localStorage.getItem("token");
     axios
       .put(
-        `http://52.78.180.44:8080/cart-items/${updatedItem.id}/`, // 엔드포인트 수정
+        `http://54.180.143.179:8080/cart-items/${updatedItem.id}/`, // 엔드포인트 수정
         { quantity: updatedItem.quantity },
         {
           headers: {
@@ -99,7 +99,7 @@ const Cart = () => {
 
     selectedItems.forEach((item) => {
       axios
-        .delete(`http://52.78.180.44:8080/cart-items/${item.id}/`, {
+        .delete(`http://54.180.143.179:8080/cart-items/${item.id}/`, {
           headers: {
             Authorization: `Token ${token}`,
           },

@@ -128,7 +128,7 @@ const Recipes = () => {
     if (!token) return;
 
     axios
-      .get("http://52.78.180.44:8080/users/saved-recipes/", {
+      .get("http://54.180.143.179:8080/users/saved-recipes/", {
         headers: {
           Authorization: `Token ${token}`,
         },
@@ -142,7 +142,7 @@ const Recipes = () => {
       .catch((error) => handleError(error));
 
     axios
-      .get("http://52.78.180.44:8080/recipes/", {
+      .get("http://54.180.143.179:8080/recipes/", {
         headers: {
           Authorization: `Token ${token}`,
         },
@@ -188,7 +188,7 @@ const Recipes = () => {
   const handleToggleSave = (recipeId) => {
     axios
       .post(
-        `http://52.78.180.44:8080/users/saved-recipes/${recipeId}`,
+        `http://54.180.143.179:8080/users/saved-recipes/${recipeId}`,
         {},
         {
           headers: {
@@ -222,7 +222,7 @@ const Recipes = () => {
     }
 
     axios
-      .delete(`http://52.78.180.44:8080/recipes/${recipeId}`, {
+      .delete(`http://54.180.143.179:8080/recipes/${recipeId}`, {
         headers: {
           Authorization: `Token ${token}`,
         },
